@@ -61,8 +61,8 @@
                                         <ControlTemplate>
                                             <Expander IsExpanded="True">
                                                 <Expander.Header>
-                                                    <StackPanel Orientation="Horizontal">
-                                                        <TextBlock Text="{Binding Name}" FontWeight="Bold" Background="LightBlue"  FontSize="12" VerticalAlignment="Bottom" />
+                                                    <StackPanel Orientation="Horizontal" Background="PowderBlue">
+                                                        <TextBlock Margin="2" Text="{Binding Name}" FontWeight="Bold" FontSize="12" VerticalAlignment="Bottom" />
                                                     </StackPanel>
                                                 </Expander.Header>
                                                 <ItemsPresenter />

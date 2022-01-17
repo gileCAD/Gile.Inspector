@@ -8,13 +8,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
+using AcColor = Autodesk.AutoCAD.Colors;
+
 namespace Gile.AutoCAD.Inspector
 {
     public class PropertyItem : LabelItem
     {
         #region Properties
         public bool IsInspectable { get; }
-        
+
         public string Name { get; }
 
         public Type SubType { get; }
@@ -70,7 +72,41 @@ namespace Gile.AutoCAD.Inspector
                         yield return new PropertyItem(name, value, subType, isInspectable);
                     }
                 }
+                if (dbObj is Polyline pl)
+                    yield return new PropertyItem("Vertices", new PolylineVertices(pl), typeof(Polyline), true);
+                else if (dbObj is Polyline3d pl3d)
+                    yield return new PropertyItem("Vertices", new Polyline3dVertices(pl3d), typeof(Polyline3d), true);
+                else if (dbObj is Polyline2d pl2d)
+                    yield return new PropertyItem("Vertices", new Polyline2dVertices(pl2d), typeof(Polyline2d), true);
                 tr.Commit();
+            }
+        }
+
+        public static IEnumerable<PropertyItem> ListCurve3dProperties(Entity3d curve)
+        {
+            var flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly;
+            var types = new List<Type>();
+            var type = curve.GetType();
+            while (true)
+            {
+                types.Add(type);
+                if (type == typeof(Entity3d))
+                    break;
+                type = type.BaseType;
+            }
+            types.Reverse();
+            foreach (Type t in types)
+            {
+                var subType = t;
+                foreach (var prop in t.GetProperties(flags))
+                {
+                    string name = prop.Name;
+                    object value;
+                    try { value = prop.GetValue(curve, null) ?? "(Null)"; }
+                    catch (System.Exception e) { value = e.Message; }
+                    bool isInspectable = CheckIsInspectable(value);
+                    yield return new PropertyItem(name, value, subType, isInspectable);
+                }
             }
         }
 
@@ -100,7 +136,8 @@ namespace Gile.AutoCAD.Inspector
             (value is AttributeCollection attCol && 0 < attCol.Count) ||
             (value is DynamicBlockReferencePropertyCollection props && 0 < props.Count) ||
             value is EntityColor ||
-            value is Color;
+            value is Color ||
+            value is Entity3d;
         #endregion
     }
 }

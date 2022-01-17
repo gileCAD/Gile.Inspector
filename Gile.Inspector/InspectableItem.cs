@@ -17,6 +17,8 @@ namespace Gile.AutoCAD.Inspector
 
         public CoordinateSystem3d CoordinateSystem3d { get; }
 
+        public Entity3d Entity3d { get; }
+
         public DynamicBlockReferenceProperty DynamicProperty { get; }
 
         public EntityColor EntityColor { get; }
@@ -44,6 +46,10 @@ namespace Gile.AutoCAD.Inspector
         public ObjectId ObjectId { get; }
 
         public ResultBuffer ResultBuffer { get; }
+
+        public PolylineVertices PolylineVertices { get; }
+
+        public PolylineVertex PolylineVertex { get; }
         #endregion
 
         #region Constructors
@@ -110,6 +116,24 @@ namespace Gile.AutoCAD.Inspector
         {
             Color = co;
             IsEntityColor = true;
+            Name = Label;
+        }
+
+        public InspectableItem(PolylineVertices vertices) : base(vertices)
+        {
+            PolylineVertices = vertices;
+            Name = Label;
+        }
+
+        public InspectableItem(PolylineVertex vertex) : base(vertex)
+        {
+            PolylineVertex = vertex;
+            Name = Label;
+        }
+
+        public InspectableItem(Entity3d entity3d) : base(entity3d)
+        {
+            Entity3d = entity3d;
             Name = Label;
         }
 

@@ -66,6 +66,10 @@
     <Compile Include="InspectorDialog.xaml.cs">
       <DependentUpon>InspectorDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Polyline2dVertices.cs" />
+    <Compile Include="Polyline3dVertices.cs" />
+    <Compile Include="PolylineVertex.cs" />
+    <Compile Include="PolylineVertices.cs" />
     <Compile Include="PropertyItem.cs" />
     <Compile Include="InspectorViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

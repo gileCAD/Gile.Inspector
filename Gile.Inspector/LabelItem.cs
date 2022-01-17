@@ -35,8 +35,7 @@ namespace Gile.AutoCAD.Inspector
                             Label = $"< {tr.GetObject(id, OpenMode.ForRead).GetType().Name} >";
                     break;
                 case Database _: Label = "< Database>"; break;
-                case ResultBuffer _:
-                    Label = "< ResultBuffer >"; break;
+                case ResultBuffer _: Label = "< ResultBuffer >"; break;
                 case double d: Label = d.ToString(format); break;
                 case Point2d p: Label = p.ToString(format, CultureInfo.CurrentCulture); break;
                 case Point3d p: Label = p.ToString(format, CultureInfo.CurrentCulture); break;
@@ -49,6 +48,11 @@ namespace Gile.AutoCAD.Inspector
                 case DynamicBlockReferencePropertyCollection _: Label = "< DynamicBlockReferencePropertyCollection >"; break;
                 case DynamicBlockReferenceProperty _: Label = "< DynamicBlockReferenceProperty >"; break;
                 case EntityColor _: Label = "< EntityColor >"; break;
+                case PolylineVertices _: Label = "Polyline Vertices"; break;
+                case PolylineVertex _: Label = "Polyline Vertex"; break;
+                case Entity3d c: Label = $"< {c.GetType().Name} >"; break;
+                case Polyline3dVertices _: Label = "Polyline3d Vertices"; break;
+                case Polyline2dVertices _: Label = "Polyline2d Vertices"; break;
                 default: Label = value.ToString(); break;
             }
         }

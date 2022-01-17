@@ -31,6 +31,8 @@ namespace Gile.AutoCAD.Inspector
                 viewModel.SetProperties(item.DynamicProperty);
             else if (item.ResultBuffer != null)
                 viewModel.SetResultBufferProperties(item.ResultBuffer);
+            else if (item.PolylineVertex != null)
+                viewModel.SetProperties(item.PolylineVertex);
         }
         #endregion
     }

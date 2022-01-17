@@ -12,6 +12,12 @@ namespace Gile.AutoCAD.Inspector
         public InspectorContextMenu()
         {
             Title = "Inspector";
+            var itemEntities = new MenuItem("Entities...");
+            itemEntities.Click += ItemEntities_Click;
+            MenuItems.Add(itemEntities);
+            var itemNEntity = new MenuItem("Nested entity...");
+            itemNEntity.Click += ItemNEntity_Click;
+            MenuItems.Add(itemNEntity);
             var itemDatabase = new MenuItem("Database...");
             itemDatabase.Click += ItemDatabase_Click;
             MenuItems.Add(itemDatabase);
@@ -21,12 +27,6 @@ namespace Gile.AutoCAD.Inspector
             var itemDictionaries = new MenuItem("Dictionaries...");
             itemDictionaries.Click += ItemDict_Click;
             MenuItems.Add(itemDictionaries);
-            var itemEntities = new MenuItem("Entities...");
-            itemEntities.Click += ItemEntities_Click;
-            MenuItems.Add(itemEntities);
-            var itemNEntity = new MenuItem("Nested entity...");
-            itemNEntity.Click += ItemNEntity_Click;
-            MenuItems.Add(itemNEntity);
         }
 
         private static void ItemDatabase_Click(object sender, EventArgs e)

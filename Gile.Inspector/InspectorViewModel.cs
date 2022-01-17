@@ -115,6 +115,38 @@ namespace Gile.AutoCAD.Inspector
             item.IsSelected = true;
             SetProperties(co);
         }
+
+        public InspectorViewModel(PolylineVertices vertices)
+        {
+            var item = new InspectableItem(vertices.Vertices[0]);
+            ItemTree = vertices.Vertices.Select(v => new InspectableItem(v));
+            item.IsSelected = true;
+            SetProperties(vertices.Vertices[0]);
+        }
+
+        public InspectorViewModel(Entity3d curve)
+        {
+            var item = new InspectableItem(curve);
+            ItemTree = new List<InspectableItem> { item };
+            item.IsSelected = true;
+            SetCurve3dProperties(curve);
+        }
+
+        public InspectorViewModel(Polyline3dVertices vertices)
+        {
+            var item = new InspectableItem(vertices.Vertices[0]);
+            ItemTree = vertices.Vertices.Cast<ObjectId>().Select(id => new InspectableItem(id));
+            item.IsSelected = true;
+            SetObjectIdProperties(vertices.Vertices[0]);
+        }
+
+        public InspectorViewModel(Polyline2dVertices vertices)
+        {
+            var item = new InspectableItem(vertices.Vertices[0]);
+            ItemTree = vertices.Vertices.Cast<ObjectId>().Select(id => new InspectableItem(id));
+            item.IsSelected = true;
+            SetObjectIdProperties(vertices.Vertices[0]);
+        }
         #endregion
 
         #region Properties
@@ -144,22 +176,30 @@ namespace Gile.AutoCAD.Inspector
                     selectedProperty = null;
                     if (value.Value is ObjectId id)
                         ShowDialog(id);
-                    else if (value.Value is ResultBuffer rb)
-                        ShowDialog(rb);
-                    else if (value.Value is Matrix3d mx)
-                        ShowDialog(mx);
-                    else if (value.Value is Extents3d ex)
-                        ShowDialog(ex);
-                    else if (value.Value is CoordinateSystem3d cs)
-                        ShowDialog(cs);
-                    else if (value.Value is AcDb.AttributeCollection at)
-                        ShowDialog(at);
-                    else if (value.Value is DynamicBlockReferencePropertyCollection dp)
-                        ShowDialog(dp);
-                    else if (value.Value is EntityColor ec)
-                        ShowDialog(ec);
-                    else if (value.Value is Color co)
-                        ShowDialog(co);
+                    else if (value.Value is ResultBuffer resbuf)
+                        ShowDialog(resbuf);
+                    else if (value.Value is Matrix3d matrix)
+                        ShowDialog(matrix);
+                    else if (value.Value is Extents3d extents)
+                        ShowDialog(extents);
+                    else if (value.Value is CoordinateSystem3d coordSystem)
+                        ShowDialog(coordSystem);
+                    else if (value.Value is AcDb.AttributeCollection attrib)
+                        ShowDialog(attrib);
+                    else if (value.Value is DynamicBlockReferencePropertyCollection dynProp)
+                        ShowDialog(dynProp);
+                    else if (value.Value is EntityColor entityColor)
+                        ShowDialog(entityColor);
+                    else if (value.Value is Color color)
+                        ShowDialog(color);
+                    else if (value.Value is PolylineVertices vertices)
+                        ShowDialog(vertices);
+                    else if (value.Value is Entity3d curve)
+                        ShowDialog(curve);
+                    else if (value.Value is Polyline3dVertices vertices3d)
+                        ShowDialog(vertices3d);
+                    else if (value.Value is Polyline2dVertices vertices2d)
+                        ShowDialog(vertices2d);
                 }
             }
         }
@@ -174,7 +214,7 @@ namespace Gile.AutoCAD.Inspector
 
         public static void ShowDialog(ObjectIdCollection ids) => Show(new InspectorViewModel(ids));
 
-        public static void ShowDialog(AcDb.AttributeCollection at) => Show(new InspectorViewModel(at));
+        public static void ShowDialog(AcDb.AttributeCollection attrib) => Show(new InspectorViewModel(attrib));
 
         public static void ShowDialog(DynamicBlockReferencePropertyCollection props) => Show(new InspectorViewModel(props));
 
@@ -182,11 +222,19 @@ namespace Gile.AutoCAD.Inspector
 
         public static void ShowDialog(Extents3d extents) => Show(new InspectorViewModel(extents));
 
-        public static void ShowDialog(CoordinateSystem3d cs) => Show(new InspectorViewModel(cs));
+        public static void ShowDialog(CoordinateSystem3d coordSystems) => Show(new InspectorViewModel(coordSystems));
 
-        public static void ShowDialog(EntityColor co) => Show(new InspectorViewModel(co));
+        public static void ShowDialog(EntityColor entityColor) => Show(new InspectorViewModel(entityColor));
 
-        public static void ShowDialog(Color co) => Show(new InspectorViewModel(co));
+        public static void ShowDialog(Color color) => Show(new InspectorViewModel(color));
+
+        public static void ShowDialog(PolylineVertices vertices) => Show(new InspectorViewModel(vertices));
+
+        public static void ShowDialog(Entity3d entitiy3d) => Show(new InspectorViewModel(entitiy3d));
+
+        public static void ShowDialog(Polyline3dVertices vertices) => Show(new InspectorViewModel(vertices));
+
+        public static void ShowDialog(Polyline2dVertices vertices) => Show(new InspectorViewModel(vertices));
 
         private static void Show(InspectorViewModel viewModel) => AcAp.ShowModalWindow(new InspectorDialog(viewModel));
         #endregion
@@ -195,6 +243,14 @@ namespace Gile.AutoCAD.Inspector
         public void SetObjectIdProperties(ObjectId id)
         {
             Properties = PropertyItem.ListObjectIdProperties(id);
+            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(Properties);
+            PropertyGroupDescription groupDescription = new PropertyGroupDescription("SubType.Name");
+            view.GroupDescriptions.Add(groupDescription);
+        }
+
+        public void SetCurve3dProperties(Entity3d curve)
+        {
+            Properties = PropertyItem.ListCurve3dProperties(curve);
             CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(Properties);
             PropertyGroupDescription groupDescription = new PropertyGroupDescription("SubType.Name");
             view.GroupDescriptions.Add(groupDescription);
