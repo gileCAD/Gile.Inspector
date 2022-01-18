@@ -17,7 +17,6 @@ namespace Gile.AutoCAD.Inspector
     {
         private IEnumerable<PropertyItem> properties;
         private IEnumerable<InspectableItem> inspectables;
-        private PropertyItem selectedProperty;
 
         #region INotitfyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
@@ -208,12 +207,11 @@ namespace Gile.AutoCAD.Inspector
 
         public PropertyItem SelectedProperty
         {
-            get { return selectedProperty; }
+            get { return null; }
             set
             {
-                if (value != null)
+                if (value != null && value.IsInspectable)
                 {
-                    selectedProperty = null;
                     if (value.Value is ObjectId id)
                         ShowDialog(id);
                     else if (value.Value is ResultBuffer resbuf)

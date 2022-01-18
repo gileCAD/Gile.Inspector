@@ -80,10 +80,14 @@ namespace Gile.AutoCAD.Inspector
                     object value;
                     try { value = prop.GetValue(dbObj, null) ?? "(Null)"; }
                     catch (System.Exception e) { value = e.Message; }
-                    bool isInspectable = CheckIsInspectable(value);
-                    if (((value is ObjectId id) && id == dbObj.ObjectId) ||
-                        ((value is DBObject obj) && obj.GetType() == dbObj.GetType() && obj.Handle == dbObj.Handle))
-                        isInspectable = false;
+                    //bool isInspectable = CheckIsInspectable(value);
+                    //if (((value is ObjectId id) && id == dbObj.ObjectId) ||
+                    //    ((value is DBObject obj) && obj.GetType() == dbObj.GetType() && obj.Handle == dbObj.Handle))
+                    //    isInspectable = false;
+                    bool isInspectable = 
+                        CheckIsInspectable(value) &&
+                        !((value is ObjectId id) && id == dbObj.ObjectId) &&
+                        !((value is DBObject obj) && obj.GetType() == dbObj.GetType() && obj.Handle == dbObj.Handle);
                     yield return new PropertyItem(name, value, subType, isInspectable);
                 }
             }
@@ -91,7 +95,6 @@ namespace Gile.AutoCAD.Inspector
 
         public static IEnumerable<PropertyItem> ListCurve3dProperties(Entity3d curve)
         {
-            var flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly;
             var types = new List<Type>();
             var type = curve.GetType();
             while (true)
@@ -102,6 +105,7 @@ namespace Gile.AutoCAD.Inspector
                 type = type.BaseType;
             }
             types.Reverse();
+            var flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly;
             foreach (Type t in types)
             {
                 var subType = t;
@@ -117,17 +121,25 @@ namespace Gile.AutoCAD.Inspector
             }
         }
 
-        public static IEnumerable<PropertyItem> ListFitDataProperties(FitData data)
+        public static IEnumerable<PropertyItem> ListProperties<T>(T item)
         {
             var flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly;
-            foreach (var prop in typeof(FitData).GetProperties(flags))
+            foreach (var prop in typeof(T).GetProperties(flags))
             {
                 string name = prop.Name;
                 object value;
-                try { value = prop.GetValue(data, null) ?? "(Null)"; }
+                try { value = prop.GetValue(item, null) ?? "(Null)"; }
                 catch (System.Exception e) { value = e.Message; }
                 bool isInspectable = CheckIsInspectable(value);
-                yield return new PropertyItem(name, value, typeof(FitData), isInspectable);
+                yield return new PropertyItem(name, value, typeof(T), isInspectable);
+            }
+        }
+
+        public static IEnumerable<PropertyItem> ListFitDataProperties(FitData data)
+        {
+            foreach (var item in ListProperties(data))
+            {
+                yield return item;
             }
             var fitPoints = data.GetFitPoints();
             yield return new PropertyItem("FitPoints", fitPoints, typeof(FitData), 0 < fitPoints.Count);
@@ -135,15 +147,9 @@ namespace Gile.AutoCAD.Inspector
 
         public static IEnumerable<PropertyItem> ListNurbsDataProperties(NurbsData data)
         {
-            var flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly;
-            foreach (var prop in typeof(NurbsData).GetProperties(flags))
+            foreach (var item in ListProperties(data))
             {
-                string name = prop.Name;
-                object value;
-                try { value = prop.GetValue(data, null) ?? "(Null)"; }
-                catch (System.Exception e) { value = e.Message; }
-                bool isInspectable = CheckIsInspectable(value);
-                yield return new PropertyItem(name, value, typeof(NurbsData), isInspectable);
+                yield return item;
             }
             var controlPoints = data.GetControlPoints();
             var knots = data.GetKnots();
@@ -169,20 +175,6 @@ namespace Gile.AutoCAD.Inspector
             for (int i = 0; i < doubles.Count; i++)
             {
                 yield return new PropertyItem($"[{i}]", doubles[i], typeof(DoubleCollection), false);
-            }
-        }
-
-        public static IEnumerable<PropertyItem> ListProperties<T>(T item)
-        {
-            var flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly;
-            foreach (var prop in typeof(T).GetProperties(flags))
-            {
-                string name = prop.Name;
-                object value;
-                try { value = prop.GetValue(item, null) ?? "(Null)"; }
-                catch (System.Exception e) { value = e.Message; }
-                bool isInspectable = CheckIsInspectable(value);
-                yield return new PropertyItem(name, value, typeof(T), isInspectable);
             }
         }
 
