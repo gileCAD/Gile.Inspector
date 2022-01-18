@@ -73,6 +73,8 @@
     <Compile Include="PropertyItem.cs" />
     <Compile Include="InspectorViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SplineControlPoints.cs" />
+    <Compile Include="SplineFitPoints.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="start.scr">

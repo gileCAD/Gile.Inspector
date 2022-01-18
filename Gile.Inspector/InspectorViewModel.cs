@@ -9,6 +9,7 @@ using System.Windows.Data;
 
 using AcDb = Autodesk.AutoCAD.DatabaseServices;
 using AcAp = Autodesk.AutoCAD.ApplicationServices.Core.Application;
+using System;
 
 namespace Gile.AutoCAD.Inspector
 {
@@ -147,6 +148,45 @@ namespace Gile.AutoCAD.Inspector
             item.IsSelected = true;
             SetObjectIdProperties(vertices.Vertices[0]);
         }
+
+        public InspectorViewModel(FitData fitData)
+        {
+            var item = new InspectableItem(fitData);
+            ItemTree = new List<InspectableItem> { item };
+            item.IsSelected = true;
+            SetFitDataProperties(fitData);
+        }
+
+        public InspectorViewModel(NurbsData nurbsData)
+        {
+            var item = new InspectableItem(nurbsData);
+            ItemTree = new List<InspectableItem> { item };
+            item.IsSelected = true;
+            SetNurbsDataProperties(nurbsData);
+        }
+
+        public InspectorViewModel(Point3dCollection points)
+        {
+            var item = new InspectableItem(points);
+            ItemTree = new List<InspectableItem>{ item };
+            item.IsSelected = true;
+            SetProperties(points);
+        }
+
+        public InspectorViewModel(DoubleCollection doubles)
+        {
+            var item = new InspectableItem(doubles);
+            ItemTree = new List<InspectableItem> { item };
+            item.IsSelected = true;
+            SetProperties(doubles);
+        }
+        public InspectorViewModel(Spline spline)
+        {
+            var item = new InspectableItem(spline);
+            ItemTree = new List<InspectableItem> { item };
+            item.IsSelected = true;
+            SetSplineProperties(spline);
+        }
         #endregion
 
         #region Properties
@@ -200,6 +240,16 @@ namespace Gile.AutoCAD.Inspector
                         ShowDialog(vertices3d);
                     else if (value.Value is Polyline2dVertices vertices2d)
                         ShowDialog(vertices2d);
+                    else if (value.Value is FitData fitData)
+                        ShowDialog(fitData);
+                    else if (value.Value is NurbsData nurbsData)
+                        ShowDialog(nurbsData);
+                    else if (value.Value is Point3dCollection points)
+                        ShowDialog(points);
+                    else if (value.Value is DoubleCollection doubles)
+                        ShowDialog(doubles);
+                    else if (value.Value is Spline spline)
+                        ShowDialog(spline);
                 }
             }
         }
@@ -236,6 +286,16 @@ namespace Gile.AutoCAD.Inspector
 
         public static void ShowDialog(Polyline2dVertices vertices) => Show(new InspectorViewModel(vertices));
 
+        public static void ShowDialog(FitData fitData) => Show(new InspectorViewModel(fitData));
+
+        public static void ShowDialog(NurbsData nurbsData) => Show(new InspectorViewModel(nurbsData));
+
+        public static void ShowDialog(Point3dCollection points) => Show(new InspectorViewModel(points));
+
+        public static void ShowDialog(DoubleCollection doubles) => Show(new InspectorViewModel(doubles));
+
+        public static void ShowDialog(Spline spline) => Show(new InspectorViewModel(spline));
+
         private static void Show(InspectorViewModel viewModel) => AcAp.ShowModalWindow(new InspectorDialog(viewModel));
         #endregion
 
@@ -256,7 +316,35 @@ namespace Gile.AutoCAD.Inspector
             view.GroupDescriptions.Add(groupDescription);
         }
 
+        public void SetFitDataProperties(FitData data)
+        {
+            Properties = PropertyItem.ListFitDataProperties(data);
+            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(Properties);
+            PropertyGroupDescription groupDescription = new PropertyGroupDescription("SubType.Name");
+            view.GroupDescriptions.Add(groupDescription);
+        }
+
+        public void SetNurbsDataProperties(NurbsData data)
+        {
+            Properties = PropertyItem.ListNurbsDataProperties(data);
+            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(Properties);
+            PropertyGroupDescription groupDescription = new PropertyGroupDescription("SubType.Name");
+            view.GroupDescriptions.Add(groupDescription);
+        }
+
+        public  void SetSplineProperties(Spline spline)
+        {
+            Properties = PropertyItem.ListDBObjectProperties(spline);
+            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(Properties);
+            PropertyGroupDescription groupDescription = new PropertyGroupDescription("SubType.Name");
+            view.GroupDescriptions.Add(groupDescription);
+        }
+
         public void SetResultBufferProperties(ResultBuffer resbuf) => Properties = PropertyItem.ListResultBufferProperties(resbuf);
+
+        public void SetPoint3dCollectionProperties(Point3dCollection points) => Properties = PropertyItem.ListPoint3dCollectionProperties(points);
+
+        public void SetDoubleCollectionProperties(DoubleCollection doubles) => Properties = PropertyItem.ListDoubleCollectionProperties(doubles);
 
         public void SetProperties<T>(T item) => Properties = PropertyItem.ListProperties(item);
         #endregion

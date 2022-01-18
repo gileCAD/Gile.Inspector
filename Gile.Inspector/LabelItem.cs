@@ -53,6 +53,11 @@ namespace Gile.AutoCAD.Inspector
                 case Entity3d c: Label = $"< {c.GetType().Name} >"; break;
                 case Polyline3dVertices _: Label = "Polyline3d Vertices"; break;
                 case Polyline2dVertices _: Label = "Polyline2d Vertices"; break;
+                case FitData _: Label = "< FitData >"; break;
+                case NurbsData _: Label = "< NurbsData >"; break;
+                case Point3dCollection _: Label = "< Point3dCollection >"; break;
+                case DoubleCollection _: Label = "< DoubleCollection >"; break;
+                case Spline _: Label = "< Spline >"; break;
                 default: Label = value.ToString(); break;
             }
         }
