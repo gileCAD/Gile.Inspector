@@ -1,6 +1,7 @@
 ﻿using Autodesk.AutoCAD.Colors;
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.Geometry;
+using Autodesk.AutoCAD.LayerManager;
 using Autodesk.AutoCAD.Runtime;
 
 using System;
@@ -80,10 +81,6 @@ namespace Gile.AutoCAD.Inspector
                     object value;
                     try { value = prop.GetValue(dbObj, null) ?? "(Null)"; }
                     catch (System.Exception e) { value = e.Message; }
-                    //bool isInspectable = CheckIsInspectable(value);
-                    //if (((value is ObjectId id) && id == dbObj.ObjectId) ||
-                    //    ((value is DBObject obj) && obj.GetType() == dbObj.GetType() && obj.Handle == dbObj.Handle))
-                    //    isInspectable = false;
                     bool isInspectable = 
                         CheckIsInspectable(value) &&
                         !((value is ObjectId id) && id == dbObj.ObjectId) &&
@@ -178,6 +175,14 @@ namespace Gile.AutoCAD.Inspector
             }
         }
 
+        public static IEnumerable<PropertyItem> ListDictEnumProperties(Dictionary<string, string>.Enumerator dictEnum)
+        {
+            while (dictEnum.MoveNext())
+            {
+                yield return new PropertyItem(dictEnum.Current.Key, dictEnum.Current.Value, typeof(DatabaseSummaryInfo), false);
+            }
+        }
+
         private static bool CheckIsInspectable(object value) =>
             (value is ObjectId id && !id.IsNull) ||
             (value is ResultBuffer && value != null) ||
@@ -191,7 +196,14 @@ namespace Gile.AutoCAD.Inspector
             value is Entity3d ||
             value is FitData ||
             value is NurbsData ||
-            value is Spline;
+            value is Spline ||
+            value is Database ||
+            value is LayerFilterTree ||
+            (value is LayerFilterCollection filters && 0 < filters.Count) ||
+            value is LayerFilter ||
+            value is LayerFilterDisplayImages ||
+            value is DatabaseSummaryInfo ||
+            value is Dictionary<string, string>.Enumerator dictEnum && dictEnum.MoveNext();
         #endregion
     }
 }

@@ -17,27 +17,10 @@ namespace Gile.AutoCAD.Inspector
         #endregion
 
         #region Event handlers
-        private void OK_Click(object sender, RoutedEventArgs e)
-        {
-            DialogResult = true;
-        }
+        private void OK_Click(object sender, RoutedEventArgs e) => DialogResult = true;
 
-        private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
-        {
-            var item = (InspectableItem)e.NewValue;
-            if (!item.ObjectId.IsNull)
-                viewModel.SetObjectIdProperties(item.ObjectId);
-            else if (item.DynamicProperty != null)
-                viewModel.SetProperties(item.DynamicProperty);
-            else if (item.ResultBuffer != null)
-                viewModel.SetResultBufferProperties(item.ResultBuffer);
-            else if (item.PolylineVertex != null)
-                viewModel.SetProperties(item.PolylineVertex);
-            else if (item.Points != null)
-                viewModel.SetPoint3dCollectionProperties(item.Points);
-            else if (item.Doubles != null)
-                viewModel.SetDoubleCollectionProperties(item.Doubles);
-        }
+        private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) => 
+            viewModel.SetProperties(e.NewValue);
         #endregion
     }
 }

@@ -14,7 +14,7 @@ namespace Gile.AutoCAD.Inspector
         public static void InspectDatabase()
         {
             var db = HostApplicationServices.WorkingDatabase;
-            InspectorViewModel.ShowDialog(db);
+            new InspectorViewModel(db).ShowDialog();
         }
 
         [CommandMethod("INSPECT_TABLE", CommandFlags.Modal)]
@@ -35,14 +35,14 @@ namespace Gile.AutoCAD.Inspector
                 ids.Add(db.ViewportTableId);
                 tr.Commit();
             }
-            InspectorViewModel.ShowDialog(ids);
+            new InspectorViewModel(ids).ShowDialog();
         }
 
         [CommandMethod("INSPECT_DICTIONARY", CommandFlags.Modal)]
         public static void InspectDictionary()
         {
             var db = HostApplicationServices.WorkingDatabase;
-            InspectorViewModel.ShowDialog(db.NamedObjectsDictionaryId);
+            new InspectorViewModel(db.NamedObjectsDictionaryId).ShowDialog();
         }
 
         [CommandMethod("INSPECT_ENTITIES", CommandFlags.Modal | CommandFlags.UsePickSet)]
@@ -52,7 +52,7 @@ namespace Gile.AutoCAD.Inspector
             var psr = ed.GetSelection();
             if (psr.Status == PromptStatus.OK)
             {
-                InspectorViewModel.ShowDialog(new ObjectIdCollection(psr.Value.GetObjectIds()));
+                new InspectorViewModel(new ObjectIdCollection(psr.Value.GetObjectIds())).ShowDialog();
             }
         }
 
@@ -63,7 +63,7 @@ namespace Gile.AutoCAD.Inspector
             var per = ed.GetNestedEntity("\nSelect nested entity: ");
             if (per.Status == PromptStatus.OK)
             {
-                InspectorViewModel.ShowDialog(per.ObjectId);
+                new InspectorViewModel(per.ObjectId).ShowDialog();
             }
         }
     }

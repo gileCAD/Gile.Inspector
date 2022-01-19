@@ -1,6 +1,7 @@
 ﻿using Autodesk.AutoCAD.Colors;
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.Geometry;
+using Autodesk.AutoCAD.LayerManager;
 
 using System.Collections;
 using System.Collections.Generic;
@@ -25,13 +26,19 @@ namespace Gile.AutoCAD.Inspector
 
         public Extents3d Extents { get; }
 
+        public DatabaseSummaryInfo DatabaseSummaryInfo { get; }
+
+        public Dictionary<string, string>.Enumerator DictionaryEnumerator { get; }
+
         public DoubleCollection Doubles { get; }
 
         public FitData FitData { get; }
 
         public bool IsCoordinateSystem3d { get; }
 
-        public bool IsDatabase { get; } = false;
+        public bool IsDatabase { get; }
+
+        public bool IsDatabaseSummaryInfo { get; }
 
         public bool IsEntityColor { get; }
 
@@ -40,6 +47,8 @@ namespace Gile.AutoCAD.Inspector
         public bool IsExtents3d { get; }
 
         public bool IsFitData { get; }
+
+        public bool IsLayerFilterDisplayImages { get; }
 
         public bool IsMatrix3d { get; }
 
@@ -64,6 +73,14 @@ namespace Gile.AutoCAD.Inspector
         public PolylineVertex PolylineVertex { get; }
 
         public Spline Spline { get; }
+
+        public LayerFilterTree LayerFilterTree { get; }
+
+        public LayerFilterCollection LayerFilterTCollection { get; }
+
+        public LayerFilter LayerFilter { get; }
+
+        LayerFilterDisplayImages LayerFilterDisplayImages { get; }
         #endregion
 
         #region Constructors
@@ -79,14 +96,14 @@ namespace Gile.AutoCAD.Inspector
             Initialize(id);
         }
 
-        public InspectableItem(string name, ObjectId id) : base (id)
+        public InspectableItem(string name, ObjectId id) : base(id)
         {
             ObjectId = id;
             Name = name;
             Initialize(id);
         }
 
-        public InspectableItem(DynamicBlockReferenceProperty prop) : base (prop)
+        public InspectableItem(DynamicBlockReferenceProperty prop) : base(prop)
         {
             DynamicProperty = prop;
             Name = Label;
@@ -180,6 +197,37 @@ namespace Gile.AutoCAD.Inspector
         public InspectableItem(Spline spline) : base(spline)
         {
             Spline = spline;
+            Name = Label;
+        }
+        public InspectableItem(LayerFilterTree filterTree) : base(filterTree)
+        {
+            LayerFilterTree = filterTree;
+            Name = Label;
+        }
+
+        public InspectableItem(LayerFilter filter) : base(filter)
+        {
+            LayerFilter = filter;
+            Name = Label;
+        }
+
+        public InspectableItem(LayerFilterDisplayImages images) : base(images)
+        {
+            LayerFilterDisplayImages = images;
+            IsLayerFilterDisplayImages = true;
+            Name = Label;
+        }
+
+        public InspectableItem(DatabaseSummaryInfo info) : base(info)
+        {
+            DatabaseSummaryInfo = info;
+            IsDatabaseSummaryInfo = true;
+            Name = Label;
+        }
+
+        public InspectableItem(Dictionary<string, string>.Enumerator dictEnum) : base(dictEnum)
+        {
+            DictionaryEnumerator = dictEnum;
             Name = Label;
         }
 

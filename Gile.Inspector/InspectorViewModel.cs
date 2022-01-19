@@ -10,6 +10,8 @@ using System.Windows.Data;
 using AcDb = Autodesk.AutoCAD.DatabaseServices;
 using AcAp = Autodesk.AutoCAD.ApplicationServices.Core.Application;
 using System;
+using Autodesk.AutoCAD.LayerManager;
+using System.Collections;
 
 namespace Gile.AutoCAD.Inspector
 {
@@ -31,7 +33,7 @@ namespace Gile.AutoCAD.Inspector
         public InspectorViewModel(Database db)
         {
             var item = new InspectableItem(db);
-            ItemTree = new List<InspectableItem> { item };
+            ItemTree = new [] { item };
             item.IsSelected = true;
             SetProperties(db);
         }
@@ -39,7 +41,7 @@ namespace Gile.AutoCAD.Inspector
         public InspectorViewModel(ObjectId id)
         {
             var item = new InspectableItem(id);
-            ItemTree = new List<InspectableItem> { item };
+            ItemTree = new [] { item };
             item.IsSelected = true;
             SetObjectIdProperties(id);
         }
@@ -47,7 +49,7 @@ namespace Gile.AutoCAD.Inspector
         public InspectorViewModel(ResultBuffer resbuf)
         {
             var item = new InspectableItem(resbuf);
-            ItemTree = new List<InspectableItem> { item };
+            ItemTree = new [] { item };
             item.IsSelected = true;
             SetProperties(resbuf);
         }
@@ -79,7 +81,7 @@ namespace Gile.AutoCAD.Inspector
         public InspectorViewModel(Matrix3d matrix)
         {
             var item = new InspectableItem(matrix);
-            ItemTree = new List<InspectableItem> { item };
+            ItemTree = new [] { item };
             item.IsSelected = true;
             SetProperties(matrix);
         }
@@ -87,7 +89,7 @@ namespace Gile.AutoCAD.Inspector
         public InspectorViewModel(Extents3d extents)
         {
             var item = new InspectableItem(extents);
-            ItemTree = new List<InspectableItem> { item };
+            ItemTree = new [] { item };
             item.IsSelected = true;
             SetProperties(extents);
         }
@@ -95,7 +97,7 @@ namespace Gile.AutoCAD.Inspector
         public InspectorViewModel(CoordinateSystem3d cs)
         {
             var item = new InspectableItem(cs);
-            ItemTree = new List<InspectableItem> { item };
+            ItemTree = new [] { item };
             item.IsSelected = true;
             SetProperties(cs);
         }
@@ -103,7 +105,7 @@ namespace Gile.AutoCAD.Inspector
         public InspectorViewModel(EntityColor co)
         {
             var item = new InspectableItem(co);
-            ItemTree = new List<InspectableItem> { item };
+            ItemTree = new [] { item };
             item.IsSelected = true;
             SetProperties(co);
         }
@@ -111,7 +113,7 @@ namespace Gile.AutoCAD.Inspector
         public InspectorViewModel(Color co)
         {
             var item = new InspectableItem(co);
-            ItemTree = new List<InspectableItem> { item };
+            ItemTree = new [] { item };
             item.IsSelected = true;
             SetProperties(co);
         }
@@ -127,7 +129,7 @@ namespace Gile.AutoCAD.Inspector
         public InspectorViewModel(Entity3d curve)
         {
             var item = new InspectableItem(curve);
-            ItemTree = new List<InspectableItem> { item };
+            ItemTree = new [] { item };
             item.IsSelected = true;
             SetCurve3dProperties(curve);
         }
@@ -151,7 +153,7 @@ namespace Gile.AutoCAD.Inspector
         public InspectorViewModel(FitData fitData)
         {
             var item = new InspectableItem(fitData);
-            ItemTree = new List<InspectableItem> { item };
+            ItemTree = new [] { item };
             item.IsSelected = true;
             SetFitDataProperties(fitData);
         }
@@ -159,7 +161,7 @@ namespace Gile.AutoCAD.Inspector
         public InspectorViewModel(NurbsData nurbsData)
         {
             var item = new InspectableItem(nurbsData);
-            ItemTree = new List<InspectableItem> { item };
+            ItemTree = new [] { item };
             item.IsSelected = true;
             SetNurbsDataProperties(nurbsData);
         }
@@ -167,7 +169,7 @@ namespace Gile.AutoCAD.Inspector
         public InspectorViewModel(Point3dCollection points)
         {
             var item = new InspectableItem(points);
-            ItemTree = new List<InspectableItem>{ item };
+            ItemTree = new [] { item };
             item.IsSelected = true;
             SetProperties(points);
         }
@@ -175,16 +177,64 @@ namespace Gile.AutoCAD.Inspector
         public InspectorViewModel(DoubleCollection doubles)
         {
             var item = new InspectableItem(doubles);
-            ItemTree = new List<InspectableItem> { item };
+            ItemTree = new [] { item };
             item.IsSelected = true;
             SetProperties(doubles);
         }
         public InspectorViewModel(Spline spline)
         {
             var item = new InspectableItem(spline);
-            ItemTree = new List<InspectableItem> { item };
+            ItemTree = new [] { item };
             item.IsSelected = true;
             SetSplineProperties(spline);
+        }
+
+        public InspectorViewModel(LayerFilterTree filterTree)
+        {
+            var item = new InspectableItem(filterTree.Root);
+            ItemTree = new[] { item };
+            item.IsSelected = true;
+            SetProperties(filterTree.Root);
+        }
+
+        public InspectorViewModel(LayerFilterCollection filters)
+        {
+            var item = new InspectableItem(filters[0]);
+            ItemTree = filters.Cast<LayerFilter>().Select(f => new InspectableItem(f));
+            item.IsSelected = true;
+            SetProperties(filters[0]);
+        }
+
+        public InspectorViewModel(LayerFilter filter)
+        {
+            var item = new InspectableItem(filter);
+            ItemTree = filter.NestedFilters.Cast<LayerFilter>().Select(f => new InspectableItem(f));
+            item.IsSelected = true;
+            SetProperties(filter);
+        }
+
+        public InspectorViewModel(LayerFilterDisplayImages images)
+        {
+            var item = new InspectableItem(images);
+            ItemTree = new[] { item };
+            item.IsSelected = true;
+            SetProperties(images);
+        }
+
+        public InspectorViewModel(DatabaseSummaryInfo info)
+        {
+            var item = new InspectableItem(info);
+            ItemTree = new[] { item };
+            item.IsSelected = true;
+            SetProperties(info);
+        }
+
+        public InspectorViewModel(Dictionary<string, string>.Enumerator dict)
+        {
+            var item = new InspectableItem(dict);
+            ItemTree = new[] { item };
+            item.IsSelected = true;
+            SetDictEnumProperties(dict);
         }
         #endregion
 
@@ -192,17 +242,13 @@ namespace Gile.AutoCAD.Inspector
         public IEnumerable<InspectableItem> ItemTree
         {
             get { return inspectables; }
-            set { 
-                inspectables = value; 
-                NotifyPropertyChanged(nameof(ItemTree)); }
+            set { inspectables = value; NotifyPropertyChanged(nameof(ItemTree)); }
         }
 
         public IEnumerable<PropertyItem> Properties
         {
             get { return properties; }
-            set { 
-                properties = value; 
-                NotifyPropertyChanged(nameof(Properties)); }
+            set { properties = value; NotifyPropertyChanged(nameof(Properties)); }
         }
 
         public PropertyItem SelectedProperty
@@ -212,139 +258,110 @@ namespace Gile.AutoCAD.Inspector
             {
                 if (value != null && value.IsInspectable)
                 {
-                    if (value.Value is ObjectId id)
-                        ShowDialog(id);
-                    else if (value.Value is ResultBuffer resbuf)
-                        ShowDialog(resbuf);
-                    else if (value.Value is Matrix3d matrix)
-                        ShowDialog(matrix);
-                    else if (value.Value is Extents3d extents)
-                        ShowDialog(extents);
-                    else if (value.Value is CoordinateSystem3d coordSystem)
-                        ShowDialog(coordSystem);
-                    else if (value.Value is AcDb.AttributeCollection attrib)
-                        ShowDialog(attrib);
-                    else if (value.Value is DynamicBlockReferencePropertyCollection dynProp)
-                        ShowDialog(dynProp);
-                    else if (value.Value is EntityColor entityColor)
-                        ShowDialog(entityColor);
-                    else if (value.Value is Color color)
-                        ShowDialog(color);
-                    else if (value.Value is PolylineVertices vertices)
-                        ShowDialog(vertices);
-                    else if (value.Value is Entity3d curve)
-                        ShowDialog(curve);
-                    else if (value.Value is Polyline3dVertices vertices3d)
-                        ShowDialog(vertices3d);
-                    else if (value.Value is Polyline2dVertices vertices2d)
-                        ShowDialog(vertices2d);
-                    else if (value.Value is FitData fitData)
-                        ShowDialog(fitData);
-                    else if (value.Value is NurbsData nurbsData)
-                        ShowDialog(nurbsData);
-                    else if (value.Value is Point3dCollection points)
-                        ShowDialog(points);
-                    else if (value.Value is DoubleCollection doubles)
-                        ShowDialog(doubles);
-                    else if (value.Value is Spline spline)
-                        ShowDialog(spline);
+                    InspectorViewModel viewModel = null;
+                    switch (value.Value)
+                    {
+                        case ObjectId id: viewModel = new InspectorViewModel(id); break;
+                        case ResultBuffer resbuf: viewModel = new InspectorViewModel(resbuf); break;
+                        case Matrix3d matrix: viewModel = new InspectorViewModel(matrix); break;
+                        case CoordinateSystem3d coordSystem: viewModel = new InspectorViewModel(coordSystem); break;
+                        case Extents3d extents: viewModel = new InspectorViewModel(extents); break;
+                        case AcDb.AttributeCollection attribs: viewModel = new InspectorViewModel(attribs); break;
+                        case DynamicBlockReferencePropertyCollection dynProps: viewModel = new InspectorViewModel(dynProps); break;
+                        case EntityColor entityColor: viewModel = new InspectorViewModel(entityColor); break;
+                        case Color color: viewModel = new InspectorViewModel(color); break;
+                        case PolylineVertices vertices: viewModel = new InspectorViewModel(vertices); break;
+                        case Entity3d entity3d: viewModel = new InspectorViewModel(entity3d); break;
+                        case Polyline3dVertices vertices: viewModel = new InspectorViewModel(vertices); break;
+                        case Polyline2dVertices vertices: viewModel = new InspectorViewModel(vertices); break;
+                        case FitData fitData: viewModel = new InspectorViewModel(fitData); break;
+                        case NurbsData nurbsData: viewModel = new InspectorViewModel(nurbsData); break;
+                        case Point3dCollection points: viewModel = new InspectorViewModel(points); break;
+                        case DoubleCollection doubles: viewModel = new InspectorViewModel(doubles); break;
+                        case Spline spline: viewModel = new InspectorViewModel(spline); break;
+                        case Database db: viewModel = new InspectorViewModel(db); break;
+                        case LayerFilterTree filterTree: viewModel = new InspectorViewModel(filterTree); break;
+                        case LayerFilterCollection filters: viewModel = new InspectorViewModel(filters); break;
+                        case LayerFilter filter: viewModel = new InspectorViewModel(filter); break;
+                        case LayerFilterDisplayImages images: viewModel = new InspectorViewModel(images); break;
+                        case DatabaseSummaryInfo info: viewModel = new InspectorViewModel(info); break;
+                        case Dictionary<string, string>.Enumerator dict: viewModel = new InspectorViewModel(dict); break;
+                        default: break;
+                    }
+                    viewModel?.ShowDialog();
                 }
             }
         }
         #endregion
 
-        #region ShowDialog methods
-        public static void ShowDialog(Database db) => Show(new InspectorViewModel(db));
-
-        public static void ShowDialog(ObjectId id) => Show(new InspectorViewModel(id));
-
-        public static void ShowDialog(ResultBuffer resbuf) => Show(new InspectorViewModel(resbuf));
-
-        public static void ShowDialog(ObjectIdCollection ids) => Show(new InspectorViewModel(ids));
-
-        public static void ShowDialog(AcDb.AttributeCollection attrib) => Show(new InspectorViewModel(attrib));
-
-        public static void ShowDialog(DynamicBlockReferencePropertyCollection props) => Show(new InspectorViewModel(props));
-
-        public static void ShowDialog(Matrix3d matrix) => Show(new InspectorViewModel(matrix));
-
-        public static void ShowDialog(Extents3d extents) => Show(new InspectorViewModel(extents));
-
-        public static void ShowDialog(CoordinateSystem3d coordSystems) => Show(new InspectorViewModel(coordSystems));
-
-        public static void ShowDialog(EntityColor entityColor) => Show(new InspectorViewModel(entityColor));
-
-        public static void ShowDialog(Color color) => Show(new InspectorViewModel(color));
-
-        public static void ShowDialog(PolylineVertices vertices) => Show(new InspectorViewModel(vertices));
-
-        public static void ShowDialog(Entity3d entitiy3d) => Show(new InspectorViewModel(entitiy3d));
-
-        public static void ShowDialog(Polyline3dVertices vertices) => Show(new InspectorViewModel(vertices));
-
-        public static void ShowDialog(Polyline2dVertices vertices) => Show(new InspectorViewModel(vertices));
-
-        public static void ShowDialog(FitData fitData) => Show(new InspectorViewModel(fitData));
-
-        public static void ShowDialog(NurbsData nurbsData) => Show(new InspectorViewModel(nurbsData));
-
-        public static void ShowDialog(Point3dCollection points) => Show(new InspectorViewModel(points));
-
-        public static void ShowDialog(DoubleCollection doubles) => Show(new InspectorViewModel(doubles));
-
-        public static void ShowDialog(Spline spline) => Show(new InspectorViewModel(spline));
-
-        private static void Show(InspectorViewModel viewModel) => AcAp.ShowModalWindow(new InspectorDialog(viewModel));
-        #endregion
+        public void ShowDialog() => AcAp.ShowModalWindow(new InspectorDialog(this));
 
         #region SetProperties methods
-        public void SetObjectIdProperties(ObjectId id)
+        public void SetProperties(object obj)
+        {
+            var item = (InspectableItem)obj;
+            if (!item.ObjectId.IsNull)
+                SetObjectIdProperties(item.ObjectId);
+            else if (item.DynamicProperty != null)
+                SetProperties(item.DynamicProperty);
+            else if (item.ResultBuffer != null)
+                SetResultBufferProperties(item.ResultBuffer);
+            else if (item.PolylineVertex != null)
+                SetProperties(item.PolylineVertex);
+            else if (item.Points != null)
+                SetPoint3dCollectionProperties(item.Points);
+            else if (item.Doubles != null)
+                SetDoubleCollectionProperties(item.Doubles);
+            else if (item.LayerFilter != null)
+                SetProperties(item.LayerFilter);
+        }
+
+        private void SetObjectIdProperties(ObjectId id)
         {
             Properties = PropertyItem.ListObjectIdProperties(id);
-            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(Properties);
-            PropertyGroupDescription groupDescription = new PropertyGroupDescription("SubType.Name");
-            view.GroupDescriptions.Add(groupDescription);
+            SetSubTypeGroups();
         }
 
-        public void SetCurve3dProperties(Entity3d curve)
+        private void SetCurve3dProperties(Entity3d curve)
         {
             Properties = PropertyItem.ListCurve3dProperties(curve);
-            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(Properties);
-            PropertyGroupDescription groupDescription = new PropertyGroupDescription("SubType.Name");
-            view.GroupDescriptions.Add(groupDescription);
+            SetSubTypeGroups();
         }
 
-        public void SetFitDataProperties(FitData data)
+        private void SetFitDataProperties(FitData data)
         {
             Properties = PropertyItem.ListFitDataProperties(data);
-            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(Properties);
-            PropertyGroupDescription groupDescription = new PropertyGroupDescription("SubType.Name");
-            view.GroupDescriptions.Add(groupDescription);
+            SetSubTypeGroups();
         }
 
-        public void SetNurbsDataProperties(NurbsData data)
+        private void SetNurbsDataProperties(NurbsData data)
         {
             Properties = PropertyItem.ListNurbsDataProperties(data);
-            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(Properties);
-            PropertyGroupDescription groupDescription = new PropertyGroupDescription("SubType.Name");
-            view.GroupDescriptions.Add(groupDescription);
+            SetSubTypeGroups();
         }
 
-        public  void SetSplineProperties(Spline spline)
+        private void SetSplineProperties(Spline spline)
         {
             Properties = PropertyItem.ListDBObjectProperties(spline);
+            SetSubTypeGroups();
+        }
+
+        private void SetSubTypeGroups()
+        {
             CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(Properties);
             PropertyGroupDescription groupDescription = new PropertyGroupDescription("SubType.Name");
             view.GroupDescriptions.Add(groupDescription);
         }
 
-        public void SetResultBufferProperties(ResultBuffer resbuf) => Properties = PropertyItem.ListResultBufferProperties(resbuf);
+        private void SetResultBufferProperties(ResultBuffer resbuf) => Properties = PropertyItem.ListResultBufferProperties(resbuf);
 
-        public void SetPoint3dCollectionProperties(Point3dCollection points) => Properties = PropertyItem.ListPoint3dCollectionProperties(points);
+        private void SetPoint3dCollectionProperties(Point3dCollection points) => Properties = PropertyItem.ListPoint3dCollectionProperties(points);
 
-        public void SetDoubleCollectionProperties(DoubleCollection doubles) => Properties = PropertyItem.ListDoubleCollectionProperties(doubles);
+        private void SetDoubleCollectionProperties(DoubleCollection doubles) => Properties = PropertyItem.ListDoubleCollectionProperties(doubles);
 
-        public void SetProperties<T>(T item) => Properties = PropertyItem.ListProperties(item);
+        public void SetDictEnumProperties(Dictionary<string, string>.Enumerator dict) => Properties = PropertyItem.ListDictEnumProperties(dict);
+
+        private void SetProperties<T>(T item) => Properties = PropertyItem.ListProperties(item);
         #endregion
     }
 }
