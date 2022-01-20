@@ -21,6 +21,7 @@ namespace Gile.AutoCAD.Inspector
             string format = GetNumberFormat();
             switch (value)
             {
+                case null: Label = "(Null)"; break;
                 // ObjectId
                 case ObjectId id:
                     if (id.IsNull)

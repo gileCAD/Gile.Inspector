@@ -14,53 +14,15 @@ namespace Gile.AutoCAD.Inspector
         #region Properties
         public IEnumerable<InspectableItem> Children { get; private set; }
 
-        public Color Color { get; }
-
-        public CoordinateSystem3d CoordinateSystem3d { get; }
-
-        public Entity3d Entity3d { get; }
-
         public DynamicBlockReferenceProperty DynamicProperty { get; }
-
-        public EntityColor EntityColor { get; }
-
-        public Extents3d Extents { get; }
-
-        public DatabaseSummaryInfo DatabaseSummaryInfo { get; }
-
-        public Dictionary<string, string>.Enumerator DictionaryEnumerator { get; }
 
         public DoubleCollection Doubles { get; }
 
-        public FitData FitData { get; }
-
-        public bool IsCoordinateSystem3d { get; }
-
-        public bool IsDatabase { get; }
-
-        public bool IsDatabaseSummaryInfo { get; }
-
-        public bool IsEntityColor { get; }
-
         public bool IsExpanded { get; set; }
-
-        public bool IsExtents3d { get; }
-
-        public bool IsFitData { get; }
-
-        public bool IsLayerFilterDisplayImages { get; }
-
-        public bool IsMatrix3d { get; }
-
-        public bool IsNurbsData { get; }
 
         public bool IsSelected { get; set; }
 
-        public Matrix3d Matrix3d { get; }
-
         public string Name { get; private set; }
-
-        public NurbsData NurbsData { get; }
 
         public ObjectId ObjectId { get; }
 
@@ -68,27 +30,13 @@ namespace Gile.AutoCAD.Inspector
 
         public ResultBuffer ResultBuffer { get; }
 
-        public PolylineVertices PolylineVertices { get; }
-
         public PolylineVertex PolylineVertex { get; }
 
-        public Spline Spline { get; }
-
-        public LayerFilterTree LayerFilterTree { get; }
-
-        public LayerFilterCollection LayerFilterTCollection { get; }
-
         public LayerFilter LayerFilter { get; }
-
-        LayerFilterDisplayImages LayerFilterDisplayImages { get; }
         #endregion
 
         #region Constructors
-        public InspectableItem(Database db) : base(db)
-        {
-            IsDatabase = true;
-            Name = Label;
-        }
+        public InspectableItem(Database db) : base(db) { Name = Label; }
 
         public InspectableItem(ObjectId id) : base(id)
         {
@@ -115,72 +63,23 @@ namespace Gile.AutoCAD.Inspector
             Name = Label;
         }
 
-        public InspectableItem(Matrix3d matrix) : base(matrix)
-        {
-            Matrix3d = matrix;
-            IsMatrix3d = true;
-            Name = Label;
-        }
+        public InspectableItem(Matrix3d matrix) : base(matrix) { Name = Label; }
 
-        public InspectableItem(Extents3d extents) : base(extents)
-        {
-            Extents = extents;
-            IsExtents3d = true;
-            Name = Label;
-        }
+        public InspectableItem(Extents3d extents) : base(extents) { Name = Label; }
 
-        public InspectableItem(CoordinateSystem3d cs) : base(cs)
-        {
-            CoordinateSystem3d = cs;
-            IsCoordinateSystem3d = true;
-            Name = Label;
-        }
+        public InspectableItem(CoordinateSystem3d cs) : base(cs) { Name = Label; }
 
-        public InspectableItem(EntityColor co) : base(co)
-        {
-            EntityColor = co;
-            IsEntityColor = true;
-            Name = Label;
-        }
+        public InspectableItem(EntityColor co) : base(co) { Name = Label; }
 
-        public InspectableItem(Color co) : base(co)
-        {
-            Color = co;
-            IsEntityColor = true;
-            Name = Label;
-        }
+        public InspectableItem(Color co) : base(co) { Name = Label; }
 
-        public InspectableItem(PolylineVertices vertices) : base(vertices)
-        {
-            PolylineVertices = vertices;
-            Name = Label;
-        }
+        public InspectableItem(PolylineVertex vertex) : base(vertex) { Name = Label; }
 
-        public InspectableItem(PolylineVertex vertex) : base(vertex)
-        {
-            PolylineVertex = vertex;
-            Name = Label;
-        }
+        public InspectableItem(Entity3d entity3d) : base(entity3d) { Name = Label; }
 
-        public InspectableItem(Entity3d entity3d) : base(entity3d)
-        {
-            Entity3d = entity3d;
-            Name = Label;
-        }
+        public InspectableItem(FitData fitData) : base(fitData) { Name = Label; }
 
-        public InspectableItem(FitData fitData) : base(fitData)
-        {
-            FitData = fitData;
-            IsFitData = true;
-            Name = Label;
-        }
-
-        public InspectableItem(NurbsData nurbsData) : base(nurbsData)
-        {
-            NurbsData = nurbsData;
-            IsFitData = true;
-            Name = Label;
-        }
+        public InspectableItem(NurbsData nurbsData) : base(nurbsData) { Name = Label; }
 
         public InspectableItem(DoubleCollection doubles) : base(doubles)
         {
@@ -194,42 +93,25 @@ namespace Gile.AutoCAD.Inspector
             Name = Label;
         }
 
-        public InspectableItem(Spline spline) : base(spline)
-        {
-            Spline = spline;
-            Name = Label;
-        }
-        public InspectableItem(LayerFilterTree filterTree) : base(filterTree)
-        {
-            LayerFilterTree = filterTree;
-            Name = Label;
-        }
+        public InspectableItem(Spline spline) : base(spline) { Name = Label; }
 
         public InspectableItem(LayerFilter filter) : base(filter)
         {
             LayerFilter = filter;
-            Name = Label;
+            Name = filter.Name;
+            Children = filter
+                .NestedFilters
+                .Cast<LayerFilter>()
+                .Select(f => new InspectableItem(f));
+            if (filter.Parent == null)
+                IsExpanded = true;
         }
 
-        public InspectableItem(LayerFilterDisplayImages images) : base(images)
-        {
-            LayerFilterDisplayImages = images;
-            IsLayerFilterDisplayImages = true;
-            Name = Label;
-        }
+        public InspectableItem(LayerFilterDisplayImages images) : base(images) { Name = Label; }
 
-        public InspectableItem(DatabaseSummaryInfo info) : base(info)
-        {
-            DatabaseSummaryInfo = info;
-            IsDatabaseSummaryInfo = true;
-            Name = Label;
-        }
+        public InspectableItem(DatabaseSummaryInfo info) : base(info) { Name = Label; }
 
-        public InspectableItem(Dictionary<string, string>.Enumerator dictEnum) : base(dictEnum)
-        {
-            DictionaryEnumerator = dictEnum;
-            Name = Label;
-        }
+        public InspectableItem(Dictionary<string, string>.Enumerator dictEnum) : base(dictEnum) { Name = Label; }
 
         private void Initialize(ObjectId id)
         {

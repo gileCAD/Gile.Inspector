@@ -181,6 +181,7 @@ namespace Gile.AutoCAD.Inspector
             item.IsSelected = true;
             SetProperties(doubles);
         }
+
         public InspectorViewModel(Spline spline)
         {
             var item = new InspectableItem(spline);
@@ -202,7 +203,7 @@ namespace Gile.AutoCAD.Inspector
             var item = new InspectableItem(filters[0]);
             ItemTree = filters.Cast<LayerFilter>().Select(f => new InspectableItem(f));
             item.IsSelected = true;
-            SetProperties(filters[0]);
+            SetLayerFilterProperties(filters[0]);
         }
 
         public InspectorViewModel(LayerFilter filter)
@@ -297,6 +298,10 @@ namespace Gile.AutoCAD.Inspector
         public void ShowDialog() => AcAp.ShowModalWindow(new InspectorDialog(this));
 
         #region SetProperties methods
+        /// <summary>
+        /// Handles the TreeView_SelectedItemChanged event.
+        /// </summary>
+        /// <param name="obj">e.NewValue</param>
         public void SetProperties(object obj)
         {
             var item = (InspectableItem)obj;
@@ -313,7 +318,7 @@ namespace Gile.AutoCAD.Inspector
             else if (item.Doubles != null)
                 SetDoubleCollectionProperties(item.Doubles);
             else if (item.LayerFilter != null)
-                SetProperties(item.LayerFilter);
+                SetLayerFilterProperties(item.LayerFilter);
         }
 
         private void SetObjectIdProperties(ObjectId id)
@@ -360,6 +365,8 @@ namespace Gile.AutoCAD.Inspector
         private void SetDoubleCollectionProperties(DoubleCollection doubles) => Properties = PropertyItem.ListDoubleCollectionProperties(doubles);
 
         public void SetDictEnumProperties(Dictionary<string, string>.Enumerator dict) => Properties = PropertyItem.ListDictEnumProperties(dict);
+
+        public void SetLayerFilterProperties(LayerFilter filter) => Properties = PropertyItem.ListLayerFilterProperties(filter);
 
         private void SetProperties<T>(T item) => Properties = PropertyItem.ListProperties(item);
         #endregion

@@ -63,11 +63,11 @@ namespace Gile.AutoCAD.Inspector
         {
             var types = new List<Type>();
             var type = dbObj.GetType();
-            while (true)
+            while (type != typeof(Autodesk.AutoCAD.GraphicsInterface.Drawable) 
+                && type != typeof(DisposableWrapper)
+                && type != null)
             {
                 types.Add(type);
-                if (type == typeof(DBObject))
-                    break;
                 type = type.BaseType;
             }
             types.Reverse();
@@ -81,7 +81,7 @@ namespace Gile.AutoCAD.Inspector
                     object value;
                     try { value = prop.GetValue(dbObj, null) ?? "(Null)"; }
                     catch (System.Exception e) { value = e.Message; }
-                    bool isInspectable = 
+                    bool isInspectable =
                         CheckIsInspectable(value) &&
                         !((value is ObjectId id) && id == dbObj.ObjectId) &&
                         !((value is DBObject obj) && obj.GetType() == dbObj.GetType() && obj.Handle == dbObj.Handle);
@@ -94,11 +94,9 @@ namespace Gile.AutoCAD.Inspector
         {
             var types = new List<Type>();
             var type = curve.GetType();
-            while (true)
+            while (type != typeof(DisposableWrapper) && type != null)
             {
                 types.Add(type);
-                if (type == typeof(Entity3d))
-                    break;
                 type = type.BaseType;
             }
             types.Reverse();
@@ -115,6 +113,23 @@ namespace Gile.AutoCAD.Inspector
                     bool isInspectable = CheckIsInspectable(value);
                     yield return new PropertyItem(name, value, subType, isInspectable);
                 }
+            }
+        }
+
+        public static IEnumerable<PropertyItem> ListLayerFilterProperties(LayerFilter layerFilter)
+        {
+            var flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly;
+            foreach (var prop in typeof(LayerFilter).GetProperties(flags))
+            {
+                string name = prop.Name;
+                object value;
+                try { value = prop.GetValue(layerFilter, null) ?? "(Null)"; }
+                catch (System.Exception e) { value = e.Message; }
+                bool isInspectable = CheckIsInspectable(value);
+                if (name == "Parent" && value is LayerFilter f)
+                    yield return new PropertyItem(name, f.Parent, typeof(LayerFilter), isInspectable && f.Parent != null);
+                else
+                    yield return new PropertyItem(name, value, typeof(LayerFilter), isInspectable);
             }
         }
 
