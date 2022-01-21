@@ -62,6 +62,7 @@ namespace Gile.AutoCAD.Inspector
                 case AnnotationScale _:
                 case Dictionary<string, string>.Enumerator _:
                 case FontDescriptor _:
+                case ObjectIdCollection _:
                     Label = $"< {value.GetType().Name} >";
                     break;
                 // Inspector types

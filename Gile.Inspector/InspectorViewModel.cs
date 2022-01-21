@@ -315,6 +315,7 @@ namespace Gile.AutoCAD.Inspector
                         case Dictionary<string, string>.Enumerator dict: viewModel = new InspectorViewModel(dict); break;
                         case AnnotationScale scale: viewModel = new InspectorViewModel(scale); break;
                         case FontDescriptor font: viewModel = new InspectorViewModel(font); break;
+                        case ObjectIdCollection ids: viewModel = new InspectorViewModel(ids); break;
                         default: break;
                     }
                     viewModel?.ShowDialog();
@@ -370,6 +371,19 @@ namespace Gile.AutoCAD.Inspector
                     yield return new PropertyItem("Vertices", new Polyline3dVertices(pl3d), typeof(Polyline3d), true);
                 else if (dbObj is Polyline2d pl2d)
                     yield return new PropertyItem("Vertices", new Polyline2dVertices(pl2d), typeof(Polyline2d), true);
+                else if (dbObj is BlockTableRecord)
+                {
+                    var btr = (BlockTableRecord)dbObj;
+                    var ids = new ObjectIdCollection(btr.Cast<ObjectId>().ToArray());
+                    yield return new PropertyItem("Entities within block", ids, typeof(BlockTableRecord), 0 < ids.Count);
+                    if (!btr.IsLayout)
+                    {
+                        ids = btr.GetBlockReferenceIds(true, true);
+                        yield return new PropertyItem("Block reference Ids (directOnly = true)", ids, typeof(BlockTableRecord), 0 < ids.Count);
+                        ids = btr.GetBlockReferenceIds(false, true);
+                        yield return new PropertyItem("Block reference Ids (directOnly = false)", ids, typeof(BlockTableRecord), 0 < ids.Count);
+                    }
+                }
                 tr.Commit();
             }
         }
@@ -378,7 +392,7 @@ namespace Gile.AutoCAD.Inspector
         {
             var types = new List<Type>();
             var type = dbObj.GetType();
-            while (type != typeof(Autodesk.AutoCAD.GraphicsInterface.Drawable)
+            while (type != typeof(Drawable)
                 && type != typeof(DisposableWrapper)
                 && type != null)
             {
