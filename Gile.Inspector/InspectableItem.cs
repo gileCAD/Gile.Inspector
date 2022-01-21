@@ -1,6 +1,7 @@
 ﻿using Autodesk.AutoCAD.Colors;
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.Geometry;
+using Autodesk.AutoCAD.GraphicsInterface;
 using Autodesk.AutoCAD.LayerManager;
 
 using System.Collections;
@@ -9,7 +10,10 @@ using System.Linq;
 
 namespace Gile.AutoCAD.Inspector
 {
-    public class InspectableItem : LabelItem
+    /// <summary>
+    /// Type bounded to the items of the TreeView control.
+    /// </summary>
+    public class InspectableItem : ItemBase
     {
         #region Properties
         public IEnumerable<InspectableItem> Children { get; private set; }
@@ -73,7 +77,11 @@ namespace Gile.AutoCAD.Inspector
 
         public InspectableItem(Color co) : base(co) { Name = Label; }
 
-        public InspectableItem(PolylineVertex vertex) : base(vertex) { Name = Label; }
+        public InspectableItem(PolylineVertex vertex) : base(vertex) 
+        {
+            PolylineVertex = vertex;
+            Name = Label; 
+        }
 
         public InspectableItem(Entity3d entity3d) : base(entity3d) { Name = Label; }
 
@@ -112,6 +120,10 @@ namespace Gile.AutoCAD.Inspector
         public InspectableItem(DatabaseSummaryInfo info) : base(info) { Name = Label; }
 
         public InspectableItem(Dictionary<string, string>.Enumerator dictEnum) : base(dictEnum) { Name = Label; }
+
+        public InspectableItem(AnnotationScale scale) : base(scale) { Name = Label; }
+
+        public InspectableItem(FontDescriptor font) : base(font) { Name = Label; }
 
         private void Initialize(ObjectId id)
         {

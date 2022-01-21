@@ -1,24 +1,26 @@
 ﻿using Autodesk.AutoCAD.Colors;
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.Geometry;
+using Autodesk.AutoCAD.GraphicsInterface;
 using Autodesk.AutoCAD.LayerManager;
 
 using System.Collections.Generic;
 using System.Globalization;
-using System.Text.RegularExpressions;
 
 namespace Gile.AutoCAD.Inspector
 {
-    public abstract class LabelItem
+    /// <summary>
+    /// Base class for TreeView and ListView items.
+    /// </summary>
+    public abstract class ItemBase
     {
         public object Value { get; }
 
         public string Label { get; private set; }
 
-        public LabelItem(object value)
+        public ItemBase(object value)
         {
             Value = value;
-            string format = GetNumberFormat();
             switch (value)
             {
                 case null: Label = "(Null)"; break;
@@ -31,40 +33,44 @@ namespace Gile.AutoCAD.Inspector
                             Label = $"< {tr.GetObject(id, OpenMode.ForRead).GetType().Name} >";
                     break;
                 // Numeric values
-                case double d: Label = d.ToString(format); break;
-                case Point2d p: Label = p.ToString(format, CultureInfo.CurrentCulture); break;
-                case Point3d p: Label = p.ToString(format, CultureInfo.CurrentCulture); break;
-                case Vector2d v: Label = v.ToString(format, CultureInfo.CurrentCulture); break;
-                case Vector3d v: Label = v.ToString(format, CultureInfo.CurrentCulture); break;
+                case double d: Label = d.ToString(GetNumberFormat()); break;
+                case Point2d p: Label = p.ToString(GetNumberFormat(), CultureInfo.CurrentCulture); break;
+                case Point3d p: Label = p.ToString(GetNumberFormat(), CultureInfo.CurrentCulture); break;
+                case Vector2d v: Label = v.ToString(GetNumberFormat(), CultureInfo.CurrentCulture); break;
+                case Vector3d v: Label = v.ToString(GetNumberFormat(), CultureInfo.CurrentCulture); break;
                 // AutoCAD types
-                case Matrix3d x: SetAcadTypeLabel(x); break;
-                case Extents3d x: SetAcadTypeLabel(x); break;
-                case Database x: SetAcadTypeLabel(x); break;
-                case ResultBuffer x: SetAcadTypeLabel(x); break;
-                case CoordinateSystem3d x: SetAcadTypeLabel(x); break;
-                case AttributeCollection x: SetAcadTypeLabel(x); break;
-                case DynamicBlockReferencePropertyCollection x: SetAcadTypeLabel(x); break;
-                case DynamicBlockReferenceProperty x: SetAcadTypeLabel(x); break;
-                case EntityColor x: SetAcadTypeLabel(x); break;
-                case Entity3d x: SetAcadTypeLabel(x); break;
-                case FitData x: SetAcadTypeLabel(x); break;
-                case NurbsData x: SetAcadTypeLabel(x); break;
-                case Point3dCollection x: SetAcadTypeLabel(x); break;
-                case DoubleCollection x: SetAcadTypeLabel(x); break;
-                case Spline x: SetAcadTypeLabel(x); break;
-                case LayerFilterTree x: SetAcadTypeLabel(x); break;
-                case LayerFilterCollection x: SetAcadTypeLabel(x); break;
-                case LayerFilter x: SetAcadTypeLabel(x); break;
-                case LayerFilterDisplayImages x: SetAcadTypeLabel(x); break;
-                case DatabaseSummaryInfo x: SetAcadTypeLabel(x); break;
+                case Matrix3d _:
+                case Extents3d _:
+                case Database _:
+                case ResultBuffer _:
+                case CoordinateSystem3d _:
+                case AttributeCollection _:
+                case DynamicBlockReferencePropertyCollection _:
+                case DynamicBlockReferenceProperty _:
+                case EntityColor _:
+                case Entity3d _:
+                case FitData _:
+                case NurbsData _:
+                case Point3dCollection _:
+                case DoubleCollection _:
+                case Spline _:
+                case LayerFilterTree _:
+                case LayerFilterCollection _:
+                case LayerFilter _:
+                case LayerFilterDisplayImages _:
+                case DatabaseSummaryInfo _:
+                case AnnotationScale _:
+                case Dictionary<string, string>.Enumerator _:
+                case FontDescriptor _:
+                    Label = $"< {value.GetType().Name} >";
+                    break;
                 // Inspector types
-                case PolylineVertices x: SetInspectorTypeLabel(x); break;
-                case PolylineVertex x: SetInspectorTypeLabel(x); break;
-                case Polyline3dVertices x: SetInspectorTypeLabel(x); break;
-                case Polyline2dVertices x: SetInspectorTypeLabel(x); break;
-
-                case Dictionary<string, string>.Enumerator x: SetAcadTypeLabel(x); break;
-
+                case PolylineVertices _:
+                case PolylineVertex _:
+                case Polyline3dVertices _:
+                case Polyline2dVertices _:
+                    Label = $"< Inspector.{value.GetType().Name} >";
+                    break;
                 default: Label = value.ToString(); break;
             }
         }
@@ -76,15 +82,9 @@ namespace Gile.AutoCAD.Inspector
             if (0 < luprec)
             {
                 format += ".";
-                for (int i = 0; i < luprec; i++)
-                {
-                    format += "0";
-                }
+                for (int i = 0; i < luprec; i++) format += "0";
             }
-
             return format;
         }
-        private void SetAcadTypeLabel(object x) => Label = $"< {x.GetType().Name} >";
-        private void SetInspectorTypeLabel(object x) => Label = $"< Inspector.{x.GetType().Name} >";
     }
 }
