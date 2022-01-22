@@ -10,7 +10,11 @@ namespace Gile.AutoCAD.Inspector
 
         public Polyline3dVertices(Polyline3d pline)
         {
-            Vertices = new ObjectIdCollection(pline.Cast<ObjectId>().ToArray());
+            Vertices = new ObjectIdCollection();
+            foreach (ObjectId id in pline)
+            {
+                Vertices.Add(id);
+            }
         }
     }
 }

@@ -374,7 +374,11 @@ namespace Gile.AutoCAD.Inspector
                 else if (dbObj is BlockTableRecord)
                 {
                     var btr = (BlockTableRecord)dbObj;
-                    var ids = new ObjectIdCollection(btr.Cast<ObjectId>().ToArray());
+                    var ids = new ObjectIdCollection();
+                    foreach (ObjectId oId in btr)
+                    {
+                        ids.Add(oId);
+                    }
                     yield return new PropertyItem("Entities within block", ids, typeof(BlockTableRecord), 0 < ids.Count);
                     if (!btr.IsLayout)
                     {
