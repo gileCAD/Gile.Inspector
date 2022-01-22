@@ -27,10 +27,16 @@ namespace Gile.AutoCAD.Inspector
                 // ObjectId
                 case ObjectId id:
                     if (id.IsNull)
+                    {
                         Label = "(Null)";
+                    }
                     else
-                        using (var tr = new OpenCloseTransaction())
+                    {
+                        using (var tr = id.Database.TransactionManager.StartTransaction())
+                        {
                             Label = $"< {tr.GetObject(id, OpenMode.ForRead).GetType().Name} >";
+                        }
+                    }
                     break;
                 // Numeric values
                 case double d: Label = d.ToString(GetNumberFormat()); break;
@@ -70,6 +76,8 @@ namespace Gile.AutoCAD.Inspector
                 case PolylineVertex _:
                 case Polyline3dVertices _:
                 case Polyline2dVertices _:
+                case ReferencesTo _:
+                case ReferencedBy _:
                     Label = $"< Inspector.{value.GetType().Name} >";
                     break;
                 default: Label = value.ToString(); break;

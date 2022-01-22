@@ -48,7 +48,7 @@ namespace Gile.AutoCAD.Inspector
             Initialize(id);
         }
 
-        public InspectableItem(string name, ObjectId id) : base(id)
+        public InspectableItem(ObjectId id, string name) : base(id)
         {
             ObjectId = id;
             Name = name;
@@ -77,10 +77,10 @@ namespace Gile.AutoCAD.Inspector
 
         public InspectableItem(Color co) : base(co) { Name = Label; }
 
-        public InspectableItem(PolylineVertex vertex) : base(vertex) 
+        public InspectableItem(PolylineVertex vertex) : base(vertex)
         {
             PolylineVertex = vertex;
-            Name = Label; 
+            Name = Label;
         }
 
         public InspectableItem(Entity3d entity3d) : base(entity3d) { Name = Label; }
@@ -125,14 +125,27 @@ namespace Gile.AutoCAD.Inspector
 
         public InspectableItem(FontDescriptor font) : base(font) { Name = Label; }
 
+        public InspectableItem(string name, ObjectIdCollection ids) : base(ids)
+        {
+            Name = name;
+            Children = ids
+                .Cast<ObjectId>()
+                .Select(id => new InspectableItem(id, "<_>"));
+            IsExpanded = true;
+        }
+
         private void Initialize(ObjectId id)
         {
-            using (var tr = new OpenCloseTransaction())
+            using (var tr = id.Database.TransactionManager.StartTransaction())
             {
                 var dbObj = tr.GetObject(id, OpenMode.ForRead);
                 if (string.IsNullOrEmpty(Name))
                 {
                     Name = dbObj is SymbolTableRecord r ? r.Name : $"< {dbObj.GetType().Name} >";
+                }
+                else if (Name == "<_>")
+                {
+                    Name = $"< {dbObj.GetType().Name} >";
                 }
                 if (dbObj is SymbolTable)
                 {
@@ -149,7 +162,7 @@ namespace Gile.AutoCAD.Inspector
                     }
                     Children = ((DBDictionary)dbObj)
                         .Cast<DictionaryEntry>()
-                        .Select(e => new InspectableItem((string)e.Key, (ObjectId)e.Value));
+                        .Select(e => new InspectableItem((ObjectId)e.Value, (string)e.Key));
                 }
             }
         }

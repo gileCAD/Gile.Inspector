@@ -112,6 +112,12 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_469476D61A348127AAE3D271962AAE7F"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_3537704F49874E2CA7D84AA94A60CD23"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -143,12 +149,6 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_703091F5279464A9AE0E3811C2F812D0"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_469476D61A348127AAE3D271962AAE7F"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -530,15 +530,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:InspectorSetup"
-        "ProductCode" = "8:{6593F4C9-6094-4802-A6FE-0E1574CC46F7}"
-        "PackageCode" = "8:{28BB1C85-D0F7-4E60-BDE5-BA0F71D61C24}"
+        "ProductCode" = "8:{A7C82539-9C1C-47B5-B203-14758E38030A}"
+        "PackageCode" = "8:{31366CEE-4479-42C5-8EAA-459C8F5E7835}"
         "UpgradeCode" = "8:{593AC09A-0221-43F6-B541-5A9F8542D1FC}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.4"
+        "ProductVersion" = "8:1.0.5"
         "Manufacturer" = "8:HP Inc."
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

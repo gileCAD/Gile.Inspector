@@ -73,7 +73,6 @@ namespace Gile.AutoCAD.Inspector
             ItemTree = attribs.Cast<ObjectId>().Select(id => new InspectableItem(id));
             item.IsSelected = true;
             Properties = ListObjectIdProperties(attribs[0]);
-            //SetSubTypeGroups();
         }
 
         public InspectorViewModel(DynamicBlockReferencePropertyCollection props)
@@ -254,10 +253,24 @@ namespace Gile.AutoCAD.Inspector
 
         public InspectorViewModel(FontDescriptor font)
         {
-            var item = new InspectableItem(font); ItemTree = new[] { item };
+            var item = new InspectableItem(font);
             ItemTree = new[] { item };
             item.IsSelected = true;
             Properties = ListProperties(font);
+        }
+
+        public InspectorViewModel(IReferences references)
+        {
+            var item = new InspectableItem("Hard pointer", references.HardPointerIds);
+            ItemTree = new[]
+            {
+                item,
+                new InspectableItem("Soft pointer", references.SoftPointerIds),
+                new InspectableItem("Hard ownership", references.HardOwnershipIds),
+                new InspectableItem("Soft ownership", references.SoftOwnershipIds),
+            };
+            item.IsSelected = true;
+            Properties = new PropertyItem[0];
         }
         #endregion
 
@@ -316,6 +329,7 @@ namespace Gile.AutoCAD.Inspector
                         case AnnotationScale scale: viewModel = new InspectorViewModel(scale); break;
                         case FontDescriptor font: viewModel = new InspectorViewModel(font); break;
                         case ObjectIdCollection ids: viewModel = new InspectorViewModel(ids); break;
+                        case IReferences references: viewModel = new InspectorViewModel(references); break;
                         default: break;
                     }
                     viewModel?.ShowDialog();
@@ -326,7 +340,6 @@ namespace Gile.AutoCAD.Inspector
 
         public void ShowDialog() => AcAp.ShowModalWindow(new InspectorDialog(this));
 
-        #region SetProperties methods
         /// <summary>
         /// Handles the TreeView_SelectedItemChanged event.
         /// </summary>
@@ -349,7 +362,6 @@ namespace Gile.AutoCAD.Inspector
             else if (item.LayerFilter != null)
                 Properties = ListLayerFilterProperties(item.LayerFilter);
         }
-        #endregion
 
         #region ListProperties methods
         private IEnumerable<PropertyItem> ListObjectIdProperties(ObjectId id)
@@ -358,7 +370,7 @@ namespace Gile.AutoCAD.Inspector
                 throw new ArgumentNullException("id");
             yield return new PropertyItem("Name", id.ObjectClass.Name, typeof(RXClass), false);
             yield return new PropertyItem("DxfName", id.ObjectClass.DxfName, typeof(RXClass), false);
-            using (var tr = new OpenCloseTransaction())
+            using (var tr = id.Database.TransactionManager.StartTransaction())
             {
                 var dbObj = tr.GetObject(id, OpenMode.ForRead);
                 foreach (var item in ListDBObjectProperties(dbObj))
@@ -388,6 +400,8 @@ namespace Gile.AutoCAD.Inspector
                         yield return new PropertyItem("Block reference Ids (directOnly = false)", ids, typeof(BlockTableRecord), 0 < ids.Count);
                     }
                 }
+                yield return new PropertyItem("References to", new ReferencesTo(id), typeof(DBObject), true);
+                yield return new PropertyItem("Referenced by", new ReferencedBy(id), typeof(DBObject), true);
                 tr.Commit();
             }
         }

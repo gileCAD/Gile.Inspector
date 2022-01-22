@@ -59,7 +59,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ContextMenu.cs" />
-    <Compile Include="LabelItem.cs" />
+    <Compile Include="IReferences.cs" />
+    <Compile Include="ItemBase.cs" />
     <Compile Include="Commands.cs" />
     <Compile Include="Initialization.cs" />
     <Compile Include="InspectableItem.cs" />
@@ -73,6 +74,9 @@
     <Compile Include="PropertyItem.cs" />
     <Compile Include="InspectorViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReferencedBy.cs" />
+    <Compile Include="ReferenceFiler.cs" />
+    <Compile Include="ReferencesTo.cs" />
     <Compile Include="SplineControlPoints.cs" />
     <Compile Include="SplineFitPoints.cs" />
   </ItemGroup>
