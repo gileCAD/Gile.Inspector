@@ -37,6 +37,8 @@ namespace Gile.AutoCAD.Inspector
         public PolylineVertex PolylineVertex { get; }
 
         public LayerFilter LayerFilter { get; }
+
+        public DBObject DBObject { get; }
         #endregion
 
         #region Constructors
@@ -101,7 +103,11 @@ namespace Gile.AutoCAD.Inspector
             Name = Label;
         }
 
-        public InspectableItem(DBObject dbObject) : base(dbObject) { Name = Label; }
+        public InspectableItem(DBObject dbObject) : base(dbObject)
+        {
+            DBObject = dbObject;
+            Name = Label;
+        }
 
         public InspectableItem(LayerFilter filter) : base(filter)
         {
@@ -133,6 +139,15 @@ namespace Gile.AutoCAD.Inspector
                 .Select(id => new InspectableItem(id, "<_>"));
             IsExpanded = true;
         }
+
+        public InspectableItem(Profile3d profile) : base(profile) { Name = Label; }
+
+        public InspectableItem(LoftOptions options) : base(options) { Name = Label; }
+
+        public InspectableItem(SweepOptions options) : base(options) { Name = Label; }
+
+        public InspectableItem(RevolveOptions options) : base(options) { Name = Label; }
+
 
         private void Initialize(ObjectId id)
         {

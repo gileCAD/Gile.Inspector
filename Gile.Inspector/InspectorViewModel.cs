@@ -242,6 +242,48 @@ namespace Gile.AutoCAD.Inspector
             };
             Properties = new PropertyItem[0];
         }
+
+        public InspectorViewModel(Profile3d profile)
+        {
+            var item = new InspectableItem(profile);
+            ItemTree = new[] { item };
+            Properties = ListProperties(profile);
+        }
+
+        public InspectorViewModel(Entity[] entities)
+        {
+            var item = new InspectableItem(entities[0]);
+            ItemTree = entities.Select(e => new InspectableItem(e));
+            Properties = ListProperties(entities[0]);
+        }
+
+        public InspectorViewModel(Profile3d[] profiles)
+        {
+            var item = new InspectableItem(profiles[0]);
+            ItemTree = profiles.Select(p => new InspectableItem(p));
+            Properties = ListProperties(profiles[0]);
+        }
+
+        public InspectorViewModel(LoftOptions options)
+        {
+            var item = new InspectableItem(options);
+            ItemTree = new[] { item };
+            Properties = ListProperties(options);
+        }
+
+        public InspectorViewModel(SweepOptions options)
+        {
+            var item = new InspectableItem(options);
+            ItemTree = new[] { item };
+            Properties = ListProperties(options);
+        }
+
+        public InspectorViewModel(RevolveOptions options)
+        {
+            var item = new InspectableItem(options);
+            ItemTree = new[] { item };
+            Properties = ListProperties(options);
+        }
         #endregion
 
         #region Properties
@@ -300,6 +342,12 @@ namespace Gile.AutoCAD.Inspector
                         case FontDescriptor font: viewModel = new InspectorViewModel(font); break;
                         case ObjectIdCollection ids: viewModel = new InspectorViewModel(ids); break;
                         case IReferences references: viewModel = new InspectorViewModel(references); break;
+                        case Profile3d profile: viewModel = new InspectorViewModel(profile); break;
+                        case Entity[] entities: viewModel = new InspectorViewModel(entities); break;
+                        case Profile3d[] profiles: viewModel = new InspectorViewModel(profiles); break;
+                        case LoftOptions options: viewModel = new InspectorViewModel(options); break;
+                        case SweepOptions options: viewModel = new InspectorViewModel(options); break;
+                        case RevolveOptions options: viewModel = new InspectorViewModel(options); break;
                         default: break;
                     }
                     viewModel?.ShowDialog();
@@ -331,6 +379,8 @@ namespace Gile.AutoCAD.Inspector
                 Properties = ListDoubleCollectionProperties(item.Doubles);
             else if (item.LayerFilter != null)
                 Properties = ListLayerFilterProperties(item.LayerFilter);
+            else if (item.DBObject != null)
+                Properties = ListDBObjectProperties(item.DBObject);
         }
 
         #region ListProperties methods
@@ -546,7 +596,13 @@ namespace Gile.AutoCAD.Inspector
             value is DatabaseSummaryInfo ||
             value is Dictionary<string, string>.Enumerator dictEnum && dictEnum.MoveNext() ||
             value is AnnotationScale ||
-            value is FontDescriptor;
+            value is FontDescriptor ||
+            value is Profile3d ||
+            value is Entity[] entities && 0 < entities.Length ||
+            value is Profile3d[] profiles && 0 < profiles.Length ||
+            value is LoftOptions ||
+            value is SweepOptions ||
+            value is RevolveOptions;
         #endregion
     }
 }

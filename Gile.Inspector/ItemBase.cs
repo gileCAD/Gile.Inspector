@@ -69,6 +69,12 @@ namespace Gile.AutoCAD.Inspector
                 case Dictionary<string, string>.Enumerator _:
                 case FontDescriptor _:
                 case ObjectIdCollection _:
+                case Profile3d _:
+                case LoftProfile[] _:
+                case Entity[] _:
+                case LoftOptions _:
+                case SweepOptions _:
+                case RevolveOptions _:
                     Label = $"< {value.GetType().Name} >";
                     break;
                 // Inspector types
