@@ -58,7 +58,7 @@ namespace Gile.AutoCAD.Inspector
         public InspectableItem(DynamicBlockReferenceProperty prop) : base(prop)
         {
             DynamicProperty = prop;
-            Name = Label;
+            Name = prop.PropertyName;
         }
 
         public InspectableItem(ResultBuffer resbuf) : base(resbuf)

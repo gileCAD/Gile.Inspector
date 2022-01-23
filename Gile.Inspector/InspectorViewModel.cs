@@ -33,235 +33,206 @@ namespace Gile.AutoCAD.Inspector
         }
         #endregion
 
-
         #region Constructors
         public InspectorViewModel(Database db)
         {
-            var item = new InspectableItem(db);
+            var item = new InspectableItem(db) { IsSelected = true };
             ItemTree = new[] { item };
-            item.IsSelected = true;
             Properties = ListProperties(db);
         }
 
         public InspectorViewModel(ObjectId id)
         {
-            var item = new InspectableItem(id);
+            var item = new InspectableItem(id) { IsSelected = true };
             ItemTree = new[] { item };
-            item.IsSelected = true;
             Properties = ListObjectIdProperties(id);
         }
 
         public InspectorViewModel(ResultBuffer resbuf)
         {
-            var item = new InspectableItem(resbuf);
+            var item = new InspectableItem(resbuf) { IsSelected = true };
             ItemTree = new[] { item };
-            item.IsSelected = true;
             Properties = ListProperties(resbuf);
         }
 
         public InspectorViewModel(ObjectIdCollection ids)
         {
-            var item = new InspectableItem(ids[0]);
+            var item = new InspectableItem(ids[0]) { IsSelected = true };
             ItemTree = ids.Cast<ObjectId>().Select(id => new InspectableItem(id));
-            item.IsSelected = true;
             Properties = ListObjectIdProperties(ids[0]);
         }
 
         public InspectorViewModel(AcDb.AttributeCollection attribs)
         {
-            var item = new InspectableItem(attribs[0]);
+            var item = new InspectableItem(attribs[0]) { IsSelected = true };
             ItemTree = attribs.Cast<ObjectId>().Select(id => new InspectableItem(id));
-            item.IsSelected = true;
             Properties = ListObjectIdProperties(attribs[0]);
         }
 
         public InspectorViewModel(DynamicBlockReferencePropertyCollection props)
         {
-            var item = new InspectableItem(props[0]);
+            var item = new InspectableItem(props[0]) { IsSelected = true };
             ItemTree = props.Cast<DynamicBlockReferenceProperty>().Select(p => new InspectableItem(p));
-            item.IsSelected = true;
             Properties = ListProperties(props[0]);
         }
 
         public InspectorViewModel(Matrix3d matrix)
         {
-            var item = new InspectableItem(matrix);
+            var item = new InspectableItem(matrix) { IsSelected = true };
             ItemTree = new[] { item };
-            item.IsSelected = true;
             Properties = ListProperties(matrix);
         }
 
         public InspectorViewModel(Extents3d extents)
         {
-            var item = new InspectableItem(extents);
+            var item = new InspectableItem(extents) { IsSelected = true };
             ItemTree = new[] { item };
-            item.IsSelected = true;
             Properties = ListProperties(extents);
         }
 
         public InspectorViewModel(CoordinateSystem3d cs)
         {
-            var item = new InspectableItem(cs);
+            var item = new InspectableItem(cs) { IsSelected = true };
             ItemTree = new[] { item };
-            item.IsSelected = true;
             Properties = ListProperties(cs);
         }
 
         public InspectorViewModel(EntityColor co)
         {
-            var item = new InspectableItem(co);
+            var item = new InspectableItem(co) { IsSelected = true };
             ItemTree = new[] { item };
-            item.IsSelected = true;
             Properties = ListProperties(co);
         }
 
         public InspectorViewModel(Color co)
         {
-            var item = new InspectableItem(co);
+            var item = new InspectableItem(co) { IsSelected = true };
             ItemTree = new[] { item };
-            item.IsSelected = true;
             Properties = ListProperties(co);
         }
 
         public InspectorViewModel(PolylineVertices vertices)
         {
-            var item = new InspectableItem(vertices.Vertices[0]);
+            var item = new InspectableItem(vertices.Vertices[0]) { IsSelected = true };
             ItemTree = vertices.Vertices.Select(v => new InspectableItem(v));
-            item.IsSelected = true;
             Properties = ListProperties(vertices.Vertices[0]);
         }
 
         public InspectorViewModel(Entity3d curve)
         {
-            var item = new InspectableItem(curve);
+            var item = new InspectableItem(curve) { IsSelected = true };
             ItemTree = new[] { item };
-            item.IsSelected = true;
             Properties = ListCurve3dProperties(curve);
         }
 
         public InspectorViewModel(Polyline3dVertices vertices)
         {
-            var item = new InspectableItem(vertices.Vertices[0]);
+            var item = new InspectableItem(vertices.Vertices[0]) { IsSelected = true };
             ItemTree = vertices.Vertices.Cast<ObjectId>().Select(id => new InspectableItem(id));
-            item.IsSelected = true;
             Properties = ListObjectIdProperties(vertices.Vertices[0]);
         }
 
         public InspectorViewModel(Polyline2dVertices vertices)
         {
-            var item = new InspectableItem(vertices.Vertices[0]);
+            var item = new InspectableItem(vertices.Vertices[0]) { IsSelected = true };
             ItemTree = vertices.Vertices.Cast<ObjectId>().Select(id => new InspectableItem(id));
-            item.IsSelected = true;
             Properties = ListObjectIdProperties(vertices.Vertices[0]);
         }
 
         public InspectorViewModel(FitData fitData)
         {
-            var item = new InspectableItem(fitData);
+            var item = new InspectableItem(fitData) { IsSelected = true };
             ItemTree = new[] { item };
-            item.IsSelected = true;
             Properties = ListFitDataProperties(fitData);
         }
 
         public InspectorViewModel(NurbsData nurbsData)
         {
-            var item = new InspectableItem(nurbsData);
+            var item = new InspectableItem(nurbsData) { IsSelected = true };
             ItemTree = new[] { item };
-            item.IsSelected = true;
             Properties = ListNurbsDataProperties(nurbsData);
         }
 
         public InspectorViewModel(Point3dCollection points)
         {
-            var item = new InspectableItem(points);
+            var item = new InspectableItem(points) { IsSelected = true };
             ItemTree = new[] { item };
-            item.IsSelected = true;
             Properties = ListProperties(points);
         }
 
         public InspectorViewModel(DoubleCollection doubles)
         {
-            var item = new InspectableItem(doubles);
+            var item = new InspectableItem(doubles) { IsSelected = true };
             ItemTree = new[] { item };
-            item.IsSelected = true;
             Properties = ListProperties(doubles);
         }
 
         public InspectorViewModel(Spline spline)
         {
-            var item = new InspectableItem(spline);
+            var item = new InspectableItem(spline) { IsSelected = true };
             ItemTree = new[] { item };
-            item.IsSelected = true;
             Properties = ListDBObjectProperties(spline);
         }
 
         public InspectorViewModel(LayerFilterTree filterTree)
         {
-            var item = new InspectableItem(filterTree.Root);
+            var item = new InspectableItem(filterTree.Root) { IsSelected = true };
             ItemTree = new[] { item };
-            item.IsSelected = true;
             Properties = ListProperties(filterTree.Root);
         }
 
         public InspectorViewModel(LayerFilterCollection filters)
         {
-            var item = new InspectableItem(filters[0]);
+            var item = new InspectableItem(filters[0]) { IsSelected = true };
             ItemTree = filters.Cast<LayerFilter>().Select(f => new InspectableItem(f));
-            item.IsSelected = true;
             Properties = ListLayerFilterProperties(filters[0]);
         }
 
         public InspectorViewModel(LayerFilter filter)
         {
-            var item = new InspectableItem(filter);
+            var item = new InspectableItem(filter) { IsSelected = true };
             ItemTree = filter.NestedFilters.Cast<LayerFilter>().Select(f => new InspectableItem(f));
-            item.IsSelected = true;
             Properties = ListProperties(filter);
         }
 
         public InspectorViewModel(LayerFilterDisplayImages images)
         {
-            var item = new InspectableItem(images);
+            var item = new InspectableItem(images) { IsSelected = true };
             ItemTree = new[] { item };
-            item.IsSelected = true;
             Properties = ListProperties(images);
         }
 
         public InspectorViewModel(DatabaseSummaryInfo info)
         {
-            var item = new InspectableItem(info);
+            var item = new InspectableItem(info) { IsSelected = true };
             ItemTree = new[] { item };
-            item.IsSelected = true;
             Properties = ListProperties(info);
         }
 
         public InspectorViewModel(Dictionary<string, string>.Enumerator dict)
         {
-            var item = new InspectableItem(dict);
+            var item = new InspectableItem(dict) { IsSelected = true };
             ItemTree = new[] { item };
-            item.IsSelected = true;
             Properties = ListDictEnumProperties(dict);
         }
 
         public InspectorViewModel(AnnotationScale scale)
         {
-            var item = new InspectableItem(scale);
+            var item = new InspectableItem(scale) { IsSelected = true };
             ItemTree = new[] { item };
-            item.IsSelected = true;
             Properties = ListProperties(scale);
         }
 
         public InspectorViewModel(FontDescriptor font)
         {
-            var item = new InspectableItem(font);
+            var item = new InspectableItem(font) { IsSelected = true };
             ItemTree = new[] { item };
-            item.IsSelected = true;
             Properties = ListProperties(font);
         }
 
         public InspectorViewModel(IReferences references)
         {
-            var item = new InspectableItem("Hard pointer", references.HardPointerIds);
+            var item = new InspectableItem("Hard pointer", references.HardPointerIds) { IsSelected = true };
             ItemTree = new[]
             {
                 item,
@@ -269,7 +240,6 @@ namespace Gile.AutoCAD.Inspector
                 new InspectableItem("Hard ownership", references.HardOwnershipIds),
                 new InspectableItem("Soft ownership", references.SoftOwnershipIds),
             };
-            item.IsSelected = true;
             Properties = new PropertyItem[0];
         }
         #endregion
@@ -426,8 +396,17 @@ namespace Gile.AutoCAD.Inspector
                 {
                     string name = prop.Name;
                     object value;
-                    try { value = prop.GetValue(dbObj, null) ?? "(Null)"; }
-                    catch (System.Exception e) { value = e.Message; }
+                    // From Jeff_M http://www.theswamp.org/index.php?topic=57317.msg608371#msg608371
+                    var obsAtt = prop.CustomAttributes.FirstOrDefault(x => x.AttributeType.Name == "ObsoleteAttribute");
+                    if (obsAtt != null)
+                    {
+                        value = obsAtt.ConstructorArguments.FirstOrDefault().Value;
+                    }
+                    else
+                    {
+                        try { value = prop.GetValue(dbObj, null) ?? "(Null)"; }
+                        catch (System.Exception e) { value = e.Message; }
+                    }
                     bool isInspectable =
                         CheckIsInspectable(value) &&
                         !((value is ObjectId id) && id == dbObj.ObjectId) &&

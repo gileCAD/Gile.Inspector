@@ -112,12 +112,6 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_469476D61A348127AAE3D271962AAE7F"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_3537704F49874E2CA7D84AA94A60CD23"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -149,6 +143,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_703091F5279464A9AE0E3811C2F812D0"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_469476D61A348127AAE3D271962AAE7F"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -530,15 +530,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:InspectorSetup"
-        "ProductCode" = "8:{A7C82539-9C1C-47B5-B203-14758E38030A}"
-        "PackageCode" = "8:{31366CEE-4479-42C5-8EAA-459C8F5E7835}"
+        "ProductCode" = "8:{6ECDE9E2-ACA5-4AC5-8852-79DF591F0BFD}"
+        "PackageCode" = "8:{FE709180-6B5C-4CAF-B55A-9ECB45E73BBF}"
         "UpgradeCode" = "8:{593AC09A-0221-43F6-B541-5A9F8542D1FC}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.5"
+        "ProductVersion" = "8:1.0.6"
         "Manufacturer" = "8:HP Inc."
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -995,7 +995,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_3537704F49874E2CA7D84AA94A60CD23"
             {
-            "SourcePath" = "8:..\\Gile.Inspector\\obj\\Release\\Gile.Inspector.dll"
+            "SourcePath" = "8:..\\Gile.Inspector\\obj\\Debug\\Gile.Inspector.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_186FDE9CF97B44008E259858DFB78448"
