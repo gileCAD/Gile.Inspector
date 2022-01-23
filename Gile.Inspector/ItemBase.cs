@@ -59,7 +59,7 @@ namespace Gile.AutoCAD.Inspector
                 case NurbsData _:
                 case Point3dCollection _:
                 case DoubleCollection _:
-                case Spline _:
+                case DBObject _:
                 case LayerFilterTree _:
                 case LayerFilterCollection _:
                 case LayerFilter _:

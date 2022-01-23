@@ -167,11 +167,11 @@ namespace Gile.AutoCAD.Inspector
             Properties = ListProperties(doubles);
         }
 
-        public InspectorViewModel(Spline spline)
+        public InspectorViewModel(DBObject dbObject)
         {
-            var item = new InspectableItem(spline) { IsSelected = true };
+            var item = new InspectableItem(dbObject) { IsSelected = true };
             ItemTree = new[] { item };
-            Properties = ListDBObjectProperties(spline);
+            Properties = ListDBObjectProperties(dbObject);
         }
 
         public InspectorViewModel(LayerFilterTree filterTree)
@@ -288,7 +288,7 @@ namespace Gile.AutoCAD.Inspector
                         case NurbsData nurbsData: viewModel = new InspectorViewModel(nurbsData); break;
                         case Point3dCollection points: viewModel = new InspectorViewModel(points); break;
                         case DoubleCollection doubles: viewModel = new InspectorViewModel(doubles); break;
-                        case Spline spline: viewModel = new InspectorViewModel(spline); break;
+                        case DBObject dbObject: viewModel = new InspectorViewModel(dbObject); break;
                         case Database db: viewModel = new InspectorViewModel(db); break;
                         case LayerFilterTree filterTree: viewModel = new InspectorViewModel(filterTree); break;
                         case LayerFilterCollection filters: viewModel = new InspectorViewModel(filters); break;
@@ -537,7 +537,7 @@ namespace Gile.AutoCAD.Inspector
             value is Entity3d ||
             value is FitData ||
             value is NurbsData ||
-            value is Spline ||
+            value is DBObject ||
             value is Database ||
             value is LayerFilterTree ||
             (value is LayerFilterCollection filters && 0 < filters.Count) ||

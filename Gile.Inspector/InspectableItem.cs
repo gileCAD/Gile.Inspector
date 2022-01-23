@@ -101,7 +101,7 @@ namespace Gile.AutoCAD.Inspector
             Name = Label;
         }
 
-        public InspectableItem(Spline spline) : base(spline) { Name = Label; }
+        public InspectableItem(DBObject dbObject) : base(dbObject) { Name = Label; }
 
         public InspectableItem(LayerFilter filter) : base(filter)
         {
