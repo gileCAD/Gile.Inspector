@@ -148,6 +148,7 @@ namespace Gile.AutoCAD.Inspector
 
         public InspectableItem(RevolveOptions options) : base(options) { Name = Label; }
 
+        public InspectableItem(Solid3dMassProperties massProps) : base(massProps) { Name = Label; }
 
         private void Initialize(ObjectId id)
         {

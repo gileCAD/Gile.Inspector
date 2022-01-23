@@ -284,6 +284,13 @@ namespace Gile.AutoCAD.Inspector
             ItemTree = new[] { item };
             Properties = ListProperties(options);
         }
+
+        public InspectorViewModel(Solid3dMassProperties massProps)
+        {
+            var item = new InspectableItem(massProps);
+            ItemTree = new[] { item };
+            Properties = ListProperties(massProps);
+        }
         #endregion
 
         #region Properties
@@ -348,6 +355,7 @@ namespace Gile.AutoCAD.Inspector
                         case LoftOptions options: viewModel = new InspectorViewModel(options); break;
                         case SweepOptions options: viewModel = new InspectorViewModel(options); break;
                         case RevolveOptions options: viewModel = new InspectorViewModel(options); break;
+                        case Solid3dMassProperties massProps: viewModel = new InspectorViewModel(massProps); break;
                         default: break;
                     }
                     viewModel?.ShowDialog();
@@ -602,7 +610,8 @@ namespace Gile.AutoCAD.Inspector
             value is Profile3d[] profiles && 0 < profiles.Length ||
             value is LoftOptions ||
             value is SweepOptions ||
-            value is RevolveOptions;
+            value is RevolveOptions || 
+            value is Solid3dMassProperties;
         #endregion
     }
 }

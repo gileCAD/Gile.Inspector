@@ -75,6 +75,7 @@ namespace Gile.AutoCAD.Inspector
                 case LoftOptions _:
                 case SweepOptions _:
                 case RevolveOptions _:
+                case Solid3dMassProperties _:
                     Label = $"< {value.GetType().Name} >";
                     break;
                 // Inspector types
