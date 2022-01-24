@@ -59,6 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ContextMenu.cs" />
+    <Compile Include="HatchLoopCollection.cs" />
     <Compile Include="IReferences.cs" />
     <Compile Include="ItemBase.cs" />
     <Compile Include="Commands.cs" />

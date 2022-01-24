@@ -39,11 +39,11 @@ namespace Gile.AutoCAD.Inspector
                     }
                     break;
                 // Numeric values
-                case double d: Label = d.ToString(GetNumberFormat()); break;
-                case Point2d p: Label = p.ToString(GetNumberFormat(), CultureInfo.CurrentCulture); break;
-                case Point3d p: Label = p.ToString(GetNumberFormat(), CultureInfo.CurrentCulture); break;
-                case Vector2d v: Label = v.ToString(GetNumberFormat(), CultureInfo.CurrentCulture); break;
-                case Vector3d v: Label = v.ToString(GetNumberFormat(), CultureInfo.CurrentCulture); break;
+                case double d: Label = d.ToString(Commands.NumberFormat); break;
+                case Point2d p: Label = p.ToString(Commands.NumberFormat, CultureInfo.CurrentCulture); break;
+                case Point3d p: Label = p.ToString(Commands.NumberFormat, CultureInfo.CurrentCulture); break;
+                case Vector2d v: Label = v.ToString(Commands.NumberFormat, CultureInfo.CurrentCulture); break;
+                case Vector3d v: Label = v.ToString(Commands.NumberFormat, CultureInfo.CurrentCulture); break;
                 // AutoCAD types
                 case Matrix3d _:
                 case Extents3d _:
@@ -84,6 +84,23 @@ namespace Gile.AutoCAD.Inspector
                 case DataTypeParameter _:
                 case RowsCollection _:
                 case ColumnsCollection _:
+                case HyperLinkCollection _:
+                case HyperLink _:
+                case GeomRef _:
+                case EdgeRef[] _:
+                case SubentityId _:
+                case CompoundObjectId _:
+                case HatchLoop _:
+                case Curve2dCollection _:
+                case BulgeVertexCollection _:
+                case Entity2d _:
+                case BulgeVertex _:
+
+                case KnotCollection _:
+                case NurbCurve2dData _:
+                case NurbCurve2dFitData _:
+                case Tolerance _:
+                case Point2dCollection _:
                     Label = $"< {value.GetType().Name} >";
                     break;
                 // Inspector types
@@ -94,22 +111,11 @@ namespace Gile.AutoCAD.Inspector
                 case ReferencesTo _:
                 case ReferencedBy _:
                 case MlineVertices _:
+                case HatchLoopCollection _:
                     Label = $"< Inspector.{value.GetType().Name} >";
                     break;
                 default: Label = value.ToString(); break;
             }
-        }
-
-        private static string GetNumberFormat()
-        {
-            int luprec = HostApplicationServices.WorkingDatabase.Luprec;
-            string format = "0";
-            if (0 < luprec)
-            {
-                format += ".";
-                for (int i = 0; i < luprec; i++) format += "0";
-            }
-            return format;
         }
     }
 }

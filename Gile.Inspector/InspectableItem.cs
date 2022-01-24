@@ -23,7 +23,7 @@ namespace Gile.AutoCAD.Inspector
         public bool IsSelected { get; set; }
         public string Name { get; private set; }
         public ObjectId ObjectId { get; }
-        public Point3dCollection Points { get; }
+        public Point3dCollection Point3dCollection { get; }
         public ResultBuffer ResultBuffer { get; }
         public PolylineVertex PolylineVertex { get; }
         public LayerFilter LayerFilter { get; }
@@ -33,6 +33,12 @@ namespace Gile.AutoCAD.Inspector
         public CellBorder CellBorder { get; }
         public Row Row { get; }
         public Column Column { get; }
+        public HyperLink HyperLink { get; }
+        public GeomRef GeomRef { get; }
+        public HatchLoop HatchLoop { get; }
+        public Entity2d Entity2D { get; }
+        public BulgeVertex BulgeVertex { get; }
+        public Point2dCollection Point2dCollection { get; }
         #endregion
 
         #region Constructors
@@ -93,7 +99,7 @@ namespace Gile.AutoCAD.Inspector
 
         public InspectableItem(Point3dCollection points) : base(points)
         {
-            Points = points;
+            Point3dCollection = points;
             Name = Label;
         }
 
@@ -144,8 +150,6 @@ namespace Gile.AutoCAD.Inspector
 
         public InspectableItem(Solid3dMassProperties massProps) : base(massProps) { Name = Label; }
 
-        public InspectableItem(MlineStyleElementCollection mlineStyles) : base(mlineStyles) { Name = Label; }
-
         public InspectableItem(MlineStyleElement mlineStyle) : base(mlineStyle) 
         { 
             Name = Label;
@@ -166,6 +170,34 @@ namespace Gile.AutoCAD.Inspector
         public InspectableItem(Column column) : base(column) { Name = Label; Column = column; }
 
         public InspectableItem(DataTypeParameter param) : base(param) { Name = Label; }
+
+        public InspectableItem(HyperLink link) : base(link) { Name = Label; HyperLink = link; }
+
+        public InspectableItem(GeomRef geomRef) : base(geomRef) { Name = Label; GeomRef = geomRef; }
+
+        public InspectableItem(SubentityId id) : base(id) { Name = Label; }
+
+        public InspectableItem(CompoundObjectId id) : base(id) { Name = Label; }
+
+        public InspectableItem(HatchLoop loop) : base(loop) { Name = Label; HatchLoop = loop; }
+
+        public InspectableItem(Entity2d entity2D) : base(entity2D) { Name = Label; Entity2D = entity2D; }
+
+        public InspectableItem(BulgeVertex bulgeVertex) : base(bulgeVertex) { Name = Label; BulgeVertex = bulgeVertex; }
+
+        public InspectableItem(Tolerance tolerance) : base(tolerance) { Name = Label; }
+
+        public InspectableItem(Point2dCollection points): base(points)
+        {
+            Name = Label;
+            Point2dCollection = points;
+        }
+
+        public InspectableItem(KnotCollection knots) : base(knots) { Name = Label; }
+
+        public InspectableItem(NurbCurve2dData curve2dData) : base(curve2dData) { Name = Label; }
+
+        public InspectableItem(NurbCurve2dFitData curve2dFitData) : base(curve2dFitData) { Name = Label; }
 
         private void Initialize(ObjectId id)
         {
