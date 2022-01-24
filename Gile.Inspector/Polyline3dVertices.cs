@@ -1,7 +1,5 @@
 ﻿using Autodesk.AutoCAD.DatabaseServices;
 
-using System.Linq;
-
 namespace Gile.AutoCAD.Inspector
 {
     public class Polyline3dVertices

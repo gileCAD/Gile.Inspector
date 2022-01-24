@@ -76,6 +76,14 @@ namespace Gile.AutoCAD.Inspector
                 case SweepOptions _:
                 case RevolveOptions _:
                 case Solid3dMassProperties _:
+                case MlineStyleElementCollection _:
+                case MlineStyleElement _:
+                case CellRange _:
+                case CellBorders _:
+                case CellBorder _:
+                case DataTypeParameter _:
+                case RowsCollection _:
+                case ColumnsCollection _:
                     Label = $"< {value.GetType().Name} >";
                     break;
                 // Inspector types
@@ -85,6 +93,7 @@ namespace Gile.AutoCAD.Inspector
                 case Polyline2dVertices _:
                 case ReferencesTo _:
                 case ReferencedBy _:
+                case MlineVertices _:
                     Label = $"< Inspector.{value.GetType().Name} >";
                     break;
                 default: Label = value.ToString(); break;

@@ -17,28 +17,22 @@ namespace Gile.AutoCAD.Inspector
     {
         #region Properties
         public IEnumerable<InspectableItem> Children { get; private set; }
-
         public DynamicBlockReferenceProperty DynamicProperty { get; }
-
         public DoubleCollection Doubles { get; }
-
         public bool IsExpanded { get; set; }
-
         public bool IsSelected { get; set; }
-
         public string Name { get; private set; }
-
         public ObjectId ObjectId { get; }
-
         public Point3dCollection Points { get; }
-
         public ResultBuffer ResultBuffer { get; }
-
         public PolylineVertex PolylineVertex { get; }
-
         public LayerFilter LayerFilter { get; }
-
         public DBObject DBObject { get; }
+        public MlineStyleElement MlineStyleElement { get; }
+        public bool IsMlineStyleElement { get; }
+        public CellBorder CellBorder { get; }
+        public Row Row { get; }
+        public Column Column { get; }
         #endregion
 
         #region Constructors
@@ -149,6 +143,29 @@ namespace Gile.AutoCAD.Inspector
         public InspectableItem(RevolveOptions options) : base(options) { Name = Label; }
 
         public InspectableItem(Solid3dMassProperties massProps) : base(massProps) { Name = Label; }
+
+        public InspectableItem(MlineStyleElementCollection mlineStyles) : base(mlineStyles) { Name = Label; }
+
+        public InspectableItem(MlineStyleElement mlineStyle) : base(mlineStyle) 
+        { 
+            Name = Label;
+            IsMlineStyleElement = true;
+            MlineStyleElement = mlineStyle;
+        }
+
+        public InspectableItem(CellRange range) : base(range) { Name = Label; }
+
+        public InspectableItem(CellBorder border, string name) : base(border) 
+        { 
+            Name = name;
+            CellBorder = border;
+        }
+
+        public InspectableItem(Row row) : base(row) { Name = Label; Row = row; }
+
+        public InspectableItem(Column column) : base(column) { Name = Label; Column = column; }
+
+        public InspectableItem(DataTypeParameter param) : base(param) { Name = Label; }
 
         private void Initialize(ObjectId id)
         {

@@ -291,6 +291,63 @@ namespace Gile.AutoCAD.Inspector
             ItemTree = new[] { item };
             Properties = ListProperties(massProps);
         }
+
+        public InspectorViewModel(MlineStyleElementCollection styles)
+        {
+            var item = new InspectableItem(styles[0]) { IsSelected = true };
+            ItemTree = styles.Cast<MlineStyleElement>().Select(e => new InspectableItem(e));
+            Properties = ListProperties(styles[0]);
+        }
+
+        public InspectorViewModel(MlineVertices vertices)
+        {
+            var item = new InspectableItem(vertices.Vertices) { IsSelected = true };
+            ItemTree = new[] { item };
+            Properties = ListProperties(vertices.Vertices);
+        }
+
+        public InspectorViewModel(CellRange range)
+        {
+            var item = new InspectableItem(range);
+            ItemTree = new[] { item };
+            Properties = ListProperties(range);
+        }
+
+        public InspectorViewModel(CellBorders borders)
+        {
+            var item = new InspectableItem(borders.Vertical, "Vertical");
+            ItemTree = new[]
+            {
+                item,
+                new InspectableItem(borders.Horizontal, "Horizontal"),
+                new InspectableItem(borders.Bottom, "Bottom"),
+                new InspectableItem(borders.Right, "Right"),
+                new InspectableItem(borders.Top, "Top"),
+                new InspectableItem(borders.Left, "Left")
+            };
+            Properties = ListProperties(borders.Vertical);
+        }
+
+        public InspectorViewModel(DataTypeParameter param)
+        {
+            var item = new InspectableItem(param);
+            ItemTree = new[] { item };
+            Properties = ListProperties(param);
+        }
+
+        public InspectorViewModel(RowsCollection rows)
+        {
+            var item = new InspectableItem(rows[0]);
+            ItemTree = rows.Cast<Row>().Select(r => new InspectableItem(r));
+            Properties = ListProperties(rows[0]);
+        }
+
+        public InspectorViewModel(ColumnsCollection columns)
+        {
+            var item = new InspectableItem(columns[0]);
+            ItemTree = columns.Cast<Column>().Select(r => new InspectableItem(r));
+            Properties = ListProperties(columns[0]);
+        }
         #endregion
 
         #region Properties
@@ -356,6 +413,13 @@ namespace Gile.AutoCAD.Inspector
                         case SweepOptions options: viewModel = new InspectorViewModel(options); break;
                         case RevolveOptions options: viewModel = new InspectorViewModel(options); break;
                         case Solid3dMassProperties massProps: viewModel = new InspectorViewModel(massProps); break;
+                        case MlineStyleElementCollection styles: viewModel = new InspectorViewModel(styles); break;
+                        case MlineVertices vertices: viewModel = new InspectorViewModel(vertices); break;
+                        case CellRange range: viewModel = new InspectorViewModel(range); break;
+                        case CellBorders borders: viewModel = new InspectorViewModel(borders); break;
+                        case DataTypeParameter param: viewModel = new InspectorViewModel(param); break;
+                        case RowsCollection rows: viewModel = new InspectorViewModel(rows); break;
+                        case ColumnsCollection columns: viewModel = new InspectorViewModel(columns); break;
                         default: break;
                     }
                     viewModel?.ShowDialog();
@@ -389,6 +453,14 @@ namespace Gile.AutoCAD.Inspector
                 Properties = ListLayerFilterProperties(item.LayerFilter);
             else if (item.DBObject != null)
                 Properties = ListDBObjectProperties(item.DBObject);
+            else if (item.IsMlineStyleElement)
+                Properties = ListProperties(item.MlineStyleElement);
+            else if (item.CellBorder != null)
+                Properties = ListProperties(item.CellBorder);
+            else if (item.Row != null)
+                Properties = ListProperties(item.Row);
+            else if (item.Column != null)
+                Properties = ListProperties(item.Column);
         }
 
         #region ListProperties methods
@@ -411,6 +483,8 @@ namespace Gile.AutoCAD.Inspector
                     yield return new PropertyItem("Vertices", new Polyline3dVertices(pl3d), typeof(Polyline3d), true);
                 else if (dbObj is Polyline2d pl2d)
                     yield return new PropertyItem("Vertices", new Polyline2dVertices(pl2d), typeof(Polyline2d), true);
+                else if (dbObj is Mline mline)
+                    yield return new PropertyItem("Vertices", new MlineVertices(mline), typeof(Mline), true);
                 else if (dbObj is BlockTableRecord)
                 {
                     var btr = (BlockTableRecord)dbObj;
@@ -611,7 +685,15 @@ namespace Gile.AutoCAD.Inspector
             value is LoftOptions ||
             value is SweepOptions ||
             value is RevolveOptions || 
-            value is Solid3dMassProperties;
+            value is Solid3dMassProperties ||
+            value is MlineStyleElementCollection styles && 0 < styles.Count ||
+            value is MlineVertices ||
+            value is CellRange ||
+            value is CellBorders ||
+            //value is CellBorder ||
+            value is DataTypeParameter ||
+            value is RowsCollection ||
+            value is ColumnsCollection;
         #endregion
     }
 }
