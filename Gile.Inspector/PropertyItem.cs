@@ -1,13 +1,4 @@
-﻿using Autodesk.AutoCAD.Colors;
-using Autodesk.AutoCAD.DatabaseServices;
-using Autodesk.AutoCAD.Geometry;
-using Autodesk.AutoCAD.LayerManager;
-using Autodesk.AutoCAD.Runtime;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
+﻿using System;
 
 namespace Gile.AutoCAD.Inspector
 {
