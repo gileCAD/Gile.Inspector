@@ -73,6 +73,8 @@ namespace Gile.AutoCAD.Inspector
 
         public InspectableItem(Extents3d extents) : base(extents) { Name = Label; }
 
+        public InspectableItem(Extents2d extents) : base(extents) { Name = Label; }
+
         public InspectableItem(CoordinateSystem3d cs) : base(cs) { Name = Label; }
 
         public InspectableItem(EntityColor co) : base(co) { Name = Label; }
@@ -198,6 +200,10 @@ namespace Gile.AutoCAD.Inspector
         public InspectableItem(NurbCurve2dData curve2dData) : base(curve2dData) { Name = Label; }
 
         public InspectableItem(NurbCurve2dFitData curve2dFitData) : base(curve2dFitData) { Name = Label; }
+
+        public InspectableItem(NurbCurve3dData curve3dData) : base(curve3dData) { Name = Label; }
+
+        public InspectableItem(NurbCurve3dFitData curve3dFitData) : base(curve3dFitData) { Name = Label; }
 
         private void Initialize(ObjectId id)
         {

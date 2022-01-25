@@ -91,6 +91,13 @@ namespace Gile.AutoCAD.Inspector
             Properties = ListProperties(extents);
         }
 
+        public InspectorViewModel(Extents2d extents)
+        {
+            var item = new InspectableItem(extents) { IsSelected = true };
+            ItemTree = new[] { item };
+            Properties = ListProperties(extents);
+        }
+
         public InspectorViewModel(CoordinateSystem3d cs)
         {
             var item = new InspectableItem(cs) { IsSelected = true };
@@ -119,11 +126,11 @@ namespace Gile.AutoCAD.Inspector
             Properties = ListProperties(vertices.Vertices[0]);
         }
 
-        public InspectorViewModel(Entity3d curve)
+        public InspectorViewModel(Entity3d entity3d)
         {
-            var item = new InspectableItem(curve) { IsSelected = true };
+            var item = new InspectableItem(entity3d) { IsSelected = true };
             ItemTree = new[] { item };
-            Properties = ListEntity3dProperties(curve);
+            Properties = ListProperties(entity3d, typeof(DisposableWrapper));
         }
 
         public InspectorViewModel(Polyline3dVertices vertices)
@@ -361,14 +368,14 @@ namespace Gile.AutoCAD.Inspector
         {
             var item = new InspectableItem(geomRef);
             ItemTree = new[] { item };
-            Properties = ListGeomRefProperties(geomRef);
+            Properties = ListProperties(geomRef, typeof(DisposableWrapper));
         }
 
         public InspectorViewModel(EdgeRef[] edges)
         {
             var item = new InspectableItem(edges[0]) { IsSelected = true };
             ItemTree = edges.Select(e => new InspectableItem(e));
-            Properties = ListGeomRefProperties(edges[0]);
+            Properties = ListProperties(edges[0], typeof(DisposableWrapper));
         }
 
         public InspectorViewModel(SubentityId id)
@@ -403,14 +410,14 @@ namespace Gile.AutoCAD.Inspector
         {
             var item = new InspectableItem(curves[0]) { IsSelected = true };
             ItemTree = curves.Cast<Entity2d>().Select(e => new InspectableItem(e));
-            Properties = ListEntity2dProperties(curves[0]);
+            Properties = ListProperties(curves[0], typeof(DisposableWrapper));
         }
 
         public InspectorViewModel(Entity2d entity2D)
         {
             var item = new InspectableItem(entity2D) { IsSelected = true };
             ItemTree = new[] { item };
-            Properties = ListEntity2dProperties(entity2D);
+            Properties = ListProperties(entity2D, typeof(DisposableWrapper));
         }
 
         public InspectorViewModel(BulgeVertexCollection bulgeVertices)
@@ -454,6 +461,20 @@ namespace Gile.AutoCAD.Inspector
             ItemTree = new[] { item };
             Properties = ListProperties(curve2dFitData);
         }
+
+        public InspectorViewModel(NurbCurve3dData curve3dData)
+        {
+            var item = new InspectableItem(curve3dData);
+            ItemTree = new[] { item };
+            Properties = ListProperties(curve3dData);
+        }
+
+        public InspectorViewModel(NurbCurve3dFitData curve3dFitData)
+        {
+            var item = new InspectableItem(curve3dFitData);
+            ItemTree = new[] { item };
+            Properties = ListProperties(curve3dFitData);
+        }
         #endregion
 
         #region Properties
@@ -488,6 +509,7 @@ namespace Gile.AutoCAD.Inspector
                         case Matrix3d matrix: viewModel = new InspectorViewModel(matrix); break;
                         case CoordinateSystem3d coordSystem: viewModel = new InspectorViewModel(coordSystem); break;
                         case Extents3d extents: viewModel = new InspectorViewModel(extents); break;
+                        case Extents2d extents: viewModel = new InspectorViewModel(extents); break;
                         case AcDb.AttributeCollection attribs: viewModel = new InspectorViewModel(attribs); break;
                         case DynamicBlockReferencePropertyCollection dynProps: viewModel = new InspectorViewModel(dynProps); break;
                         case EntityColor entityColor: viewModel = new InspectorViewModel(entityColor); break;
@@ -540,6 +562,8 @@ namespace Gile.AutoCAD.Inspector
                         case KnotCollection knots: viewModel = new InspectorViewModel(knots); break;
                         case NurbCurve2dData curve2dData: viewModel = new InspectorViewModel(curve2dData); break;
                         case NurbCurve2dFitData curve2dFitData: viewModel = new InspectorViewModel(curve2dFitData); break;
+                        case NurbCurve3dData curve3dData: viewModel = new InspectorViewModel(curve3dData); break;
+                        case NurbCurve3dFitData curve3dFitData: viewModel = new InspectorViewModel(curve3dFitData); break;
                         default: break;
                     }
                     viewModel?.ShowDialog();
@@ -584,11 +608,11 @@ namespace Gile.AutoCAD.Inspector
             else if (item.HyperLink != null)
                 Properties = ListProperties(item.HyperLink);
             else if (item.GeomRef != null)
-                Properties = ListGeomRefProperties(item.GeomRef);
+                Properties = ListProperties(item.GeomRef, typeof(DisposableWrapper));
             else if (item.HatchLoop != null)
                 Properties = ListProperties(item.HatchLoop);
             else if (item.Entity2D != null)
-                Properties = ListEntity2dProperties(item.Entity2D);
+                Properties = ListProperties(item.Entity2D, typeof(DisposableWrapper));
             else if (item.BulgeVertex != null)
                 Properties = ListProperties(item.BulgeVertex);
         }
@@ -682,84 +706,6 @@ namespace Gile.AutoCAD.Inspector
             }
         }
 
-        private IEnumerable<PropertyItem> ListEntity3dProperties(Entity3d entity3D)
-        {
-            var types = new List<Type>();
-            var type = entity3D.GetType();
-            while (type != typeof(DisposableWrapper) && type != null)
-            {
-                types.Add(type);
-                type = type.BaseType;
-            }
-            types.Reverse();
-            var flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly;
-            foreach (Type t in types)
-            {
-                var subType = t;
-                foreach (var prop in t.GetProperties(flags))
-                {
-                    string name = prop.Name;
-                    object value;
-                    try { value = prop.GetValue(entity3D, null) ?? "(Null)"; }
-                    catch (System.Exception e) { value = e.Message; }
-                    bool isInspectable = CheckIsInspectable(value);
-                    yield return new PropertyItem(name, value, subType, isInspectable);
-                }
-            }
-        }
-
-        private IEnumerable<PropertyItem> ListEntity2dProperties(Entity2d entity2D)
-        {
-            var types = new List<Type>();
-            var type = entity2D.GetType();
-            while (type != typeof(DisposableWrapper) && type != null)
-            {
-                types.Add(type);
-                type = type.BaseType;
-            }
-            types.Reverse();
-            var flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly;
-            foreach (Type t in types)
-            {
-                var subType = t;
-                foreach (var prop in t.GetProperties(flags))
-                {
-                    string name = prop.Name;
-                    object value;
-                    try { value = prop.GetValue(entity2D, null) ?? "(Null)"; }
-                    catch (System.Exception e) { value = e.Message; }
-                    bool isInspectable = CheckIsInspectable(value);
-                    yield return new PropertyItem(name, value, subType, isInspectable);
-                }
-            }
-        }
-
-        private IEnumerable<PropertyItem> ListGeomRefProperties(GeomRef geomRef)
-        {
-            var types = new List<Type>();
-            var type = geomRef.GetType();
-            while (type != typeof(DisposableWrapper) && type != null)
-            {
-                types.Add(type);
-                type = type.BaseType;
-            }
-            types.Reverse();
-            var flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly;
-            foreach (Type t in types)
-            {
-                var subType = t;
-                foreach (var prop in t.GetProperties(flags))
-                {
-                    string name = prop.Name;
-                    object value;
-                    try { value = prop.GetValue(geomRef, null) ?? "(Null)"; }
-                    catch (System.Exception e) { value = e.Message; }
-                    bool isInspectable = CheckIsInspectable(value);
-                    yield return new PropertyItem(name, value, subType, isInspectable);
-                }
-            }
-        }
-
         private IEnumerable<PropertyItem> ListLayerFilterProperties(LayerFilter layerFilter)
         {
             var flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly;
@@ -774,6 +720,32 @@ namespace Gile.AutoCAD.Inspector
                     yield return new PropertyItem(name, f.Parent, typeof(LayerFilter), isInspectable && f.Parent != null);
                 else
                     yield return new PropertyItem(name, value, typeof(LayerFilter), isInspectable);
+            }
+        }
+
+        private IEnumerable<PropertyItem> ListProperties<T>(T item, Type stopType)
+        {
+            var types = new List<Type>();
+            var type = item.GetType();
+            while (type != null && type != stopType)
+            {
+                types.Add(type);
+                type = type.BaseType;
+            }
+            types.Reverse();
+            var flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly;
+            foreach (Type t in types)
+            {
+                var subType = t;
+                foreach (var prop in t.GetProperties(flags))
+                {
+                    string name = prop.Name;
+                    object value;
+                    try { value = prop.GetValue(item, null) ?? "(Null)"; }
+                    catch (System.Exception e) { value = e.Message; }
+                    bool isInspectable = CheckIsInspectable(value);
+                    yield return new PropertyItem(name, value, subType, isInspectable);
+                }
             }
         }
 
@@ -856,6 +828,7 @@ namespace Gile.AutoCAD.Inspector
             (value is ResultBuffer && value != null) ||
             value is Matrix3d ||
             (value is Extents3d && value != null) ||
+            (value is Extents2d && value != null) ||
             value is CoordinateSystem3d ||
             (value is AcDb.AttributeCollection attCol && 0 < attCol.Count) ||
             (value is DynamicBlockReferencePropertyCollection props && 0 < props.Count) ||
@@ -900,7 +873,9 @@ namespace Gile.AutoCAD.Inspector
             value is Point2dCollection points && 0 < points.Count ||
             value is KnotCollection ||
             value is NurbCurve2dData ||
-            value is NurbCurve2dFitData;
+            value is NurbCurve2dFitData ||
+            value is NurbCurve3dData ||
+            value is NurbCurve3dFitData;
         #endregion
     }
 }
