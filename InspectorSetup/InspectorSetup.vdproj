@@ -46,6 +46,12 @@
         "Entry"
         {
         "MsmKey" = "8:_469476D61A348127AAE3D271962AAE7F"
+        "OwnerKey" = "8:_541F7DFAC31700A3EA86C09FF1787D91"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_469476D61A348127AAE3D271962AAE7F"
         "OwnerKey" = "8:_1F94D2F8B210B71EDB24897CDA093AC3"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -65,6 +71,12 @@
         {
         "MsmKey" = "8:_469476D61A348127AAE3D271962AAE7F"
         "OwnerKey" = "8:_95C540CEAEFEC50D17A8D033C5837151"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_541F7DFAC31700A3EA86C09FF1787D91"
+        "OwnerKey" = "8:_3537704F49874E2CA7D84AA94A60CD23"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -113,6 +125,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_3537704F49874E2CA7D84AA94A60CD23"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_541F7DFAC31700A3EA86C09FF1787D91"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -339,6 +357,37 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_541F7DFAC31700A3EA86C09FF1787D91"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:acdbmgdbrep, Version=21.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_541F7DFAC31700A3EA86C09FF1787D91"
+                    {
+                    "Name" = "8:acdbmgdbrep.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:acdbmgdbrep.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_186FDE9CF97B44008E259858DFB78448"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_703091F5279464A9AE0E3811C2F812D0"
             {
             "AssemblyRegister" = "3:1"
@@ -530,15 +579,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:InspectorSetup"
-        "ProductCode" = "8:{6ECDE9E2-ACA5-4AC5-8852-79DF591F0BFD}"
-        "PackageCode" = "8:{FE709180-6B5C-4CAF-B55A-9ECB45E73BBF}"
+        "ProductCode" = "8:{2469A7AC-1B21-4AF2-A111-B812DB93967F}"
+        "PackageCode" = "8:{7A45DA86-A044-424D-906E-B4FDB142BD67}"
         "UpgradeCode" = "8:{593AC09A-0221-43F6-B541-5A9F8542D1FC}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.6"
+        "ProductVersion" = "8:1.0.7"
         "Manufacturer" = "8:HP Inc."
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -995,7 +1044,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_3537704F49874E2CA7D84AA94A60CD23"
             {
-            "SourcePath" = "8:..\\Gile.Inspector\\obj\\Debug\\Gile.Inspector.dll"
+            "SourcePath" = "8:"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_186FDE9CF97B44008E259858DFB78448"

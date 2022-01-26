@@ -11,10 +11,10 @@ namespace Gile.AutoCAD.Inspector
     /// </summary>
     public class InspectableItem : ItemBase
     {
-        public IEnumerable<InspectableItem> Children { get; private set; }
+        public IEnumerable<InspectableItem> Children { get; protected set; }
         public bool IsExpanded { get; set; }
         public bool IsSelected { get; set; }
-        public string Name { get; private set; }
+        public string Name { get; protected set; }
 
         public InspectableItem(object value, bool isSelected = false, bool isExpanded = false, IEnumerable<InspectableItem> children = null, string name = null)
             : base(value)
@@ -35,12 +35,12 @@ namespace Gile.AutoCAD.Inspector
                 var dbObj = tr.GetObject(id, OpenMode.ForRead);
                 if (string.IsNullOrEmpty(name))
                 {
-                    Name = dbObj is SymbolTableRecord r ? r.Name : $"< {dbObj.GetType().Name} >";
+                    Name = dbObj is SymbolTableRecord r ? r.Name : $"< {dbObj.GetType().Name}\t{dbObj.Handle} >";
                 }
                 else 
                 {
                     if (name == "<_>")
-                        Name = $"< {dbObj.GetType().Name} >";
+                        Name = $"< {dbObj.GetType().Name}\t{dbObj.Handle} >";
                     else
                         Name = name;
                 }

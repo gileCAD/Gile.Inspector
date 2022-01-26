@@ -1,4 +1,5 @@
-﻿using Autodesk.AutoCAD.Colors;
+﻿using Autodesk.AutoCAD.BoundaryRepresentation;
+using Autodesk.AutoCAD.Colors;
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.Geometry;
 using Autodesk.AutoCAD.GraphicsInterface;
@@ -14,6 +15,7 @@ using System.Reflection;
 
 using AcAp = Autodesk.AutoCAD.ApplicationServices.Core.Application;
 using AcDb = Autodesk.AutoCAD.DatabaseServices;
+using AcBr = Autodesk.AutoCAD.BoundaryRepresentation;
 
 namespace Gile.AutoCAD.Inspector
 {
@@ -35,168 +37,40 @@ namespace Gile.AutoCAD.Inspector
         #endregion
 
         #region Constructors
-        public InspectorViewModel(Database db)
-        {
-            var item = new InspectableItem(db, true);
-            ItemTree = new[] { item };
-            Properties = ListProperties(db);
-        }
-
-        public InspectorViewModel(ObjectId id)
-        {
-            var item = new InspectableItem(id, true);
-            ItemTree = new[] { item };
-            Properties = ListObjectIdProperties(id);
-        }
-
-        public InspectorViewModel(ResultBuffer resbuf)
-        {
-            var item = new InspectableItem(resbuf, true);
-            ItemTree = new[] { item };
-            Properties = ListProperties(resbuf);
-        }
-
+        #region Collection
         public InspectorViewModel(ObjectIdCollection ids)
         {
             var children = ids
                 .Cast<ObjectId>()
                 .Select(id => new InspectableItem(id, name: "<_>"));
-            var item = new InspectableItem(ids[0], true, true, children);
-            ItemTree = ids.Cast<ObjectId>().Select(id => new InspectableItem(id));
+            var items = ids.Cast<ObjectId>().Select(id => new InspectableItem(id));
+            items.First().IsSelected = true;
+            ItemTree = items;
             Properties = ListObjectIdProperties(ids[0]);
-        }
-
-        public InspectorViewModel(AcDb.AttributeCollection attribs)
-        {
-            var item = new InspectableItem(attribs[0], true);
-            ItemTree = attribs.Cast<ObjectId>().Select(id => new InspectableItem(id));
-            Properties = ListObjectIdProperties(attribs[0]);
-        }
-
-        public InspectorViewModel(DynamicBlockReferencePropertyCollection props)
-        {
-            var item = new InspectableItem(props[0], true);
-            ItemTree = props.Cast<DynamicBlockReferenceProperty>().Select(p => new InspectableItem(p));
-            Properties = ListProperties(props[0]);
-        }
-
-        public InspectorViewModel(Matrix3d matrix)
-        {
-            var item = new InspectableItem(matrix, true);
-            ItemTree = new[] { item };
-            Properties = ListProperties(matrix);
-        }
-
-        public InspectorViewModel(Extents3d extents)
-        {
-            var item = new InspectableItem(extents, true);
-            ItemTree = new[] { item };
-            Properties = ListProperties(extents);
-        }
-
-        public InspectorViewModel(Extents2d extents)
-        {
-            var item = new InspectableItem(extents, true);
-            ItemTree = new[] { item };
-            Properties = ListProperties(extents);
-        }
-
-        public InspectorViewModel(CoordinateSystem3d cs)
-        {
-            var item = new InspectableItem(cs, true);
-            ItemTree = new[] { item };
-            Properties = ListProperties(cs);
-        }
-
-        public InspectorViewModel(EntityColor co)
-        {
-            var item = new InspectableItem(co, true);
-            ItemTree = new[] { item };
-            Properties = ListProperties(co);
-        }
-
-        public InspectorViewModel(Color co)
-        {
-            var item = new InspectableItem(co, true);
-            ItemTree = new[] { item };
-            Properties = ListProperties(co);
         }
 
         public InspectorViewModel(PolylineVertices vertices)
         {
-            var item = new InspectableItem(vertices.Vertices[0], true);
-            ItemTree = vertices.Vertices.Select(v => new InspectableItem(v));
+            var items = vertices.Vertices.Select(v => new InspectableItem(v));
+            items.First().IsSelected = true;
+            ItemTree = items;
             Properties = ListProperties(vertices.Vertices[0]);
-        }
-
-        public InspectorViewModel(Entity3d entity3d)
-        {
-            var item = new InspectableItem(entity3d, true);
-            ItemTree = new[] { item };
-            Properties = ListProperties(entity3d, typeof(DisposableWrapper));
         }
 
         public InspectorViewModel(Polyline3dVertices vertices)
         {
-            var item = new InspectableItem(vertices.Vertices[0], true);
-            ItemTree = vertices.Vertices.Cast<ObjectId>().Select(id => new InspectableItem(id));
+            var items = vertices.Vertices.Cast<ObjectId>().Select(id => new InspectableItem(id));
+            items.First().IsSelected = true;
+            ItemTree = items;
             Properties = ListObjectIdProperties(vertices.Vertices[0]);
         }
 
         public InspectorViewModel(Polyline2dVertices vertices)
         {
-            var item = new InspectableItem(vertices.Vertices[0], true);
-            ItemTree = vertices.Vertices.Cast<ObjectId>().Select(id => new InspectableItem(id));
+            var items = vertices.Vertices.Cast<ObjectId>().Select(id => new InspectableItem(id));
+            items.First().IsSelected = true;
+            ItemTree = items;
             Properties = ListObjectIdProperties(vertices.Vertices[0]);
-        }
-
-        public InspectorViewModel(FitData fitData)
-        {
-            var item = new InspectableItem(fitData, true);
-            ItemTree = new[] { item };
-            Properties = ListFitDataProperties(fitData);
-        }
-
-        public InspectorViewModel(NurbsData nurbsData)
-        {
-            var item = new InspectableItem(nurbsData, true);
-            ItemTree = new[] { item };
-            Properties = ListNurbsDataProperties(nurbsData);
-        }
-
-        public InspectorViewModel(Point3dCollection points)
-        {
-            var item = new InspectableItem(points, true);
-            ItemTree = new[] { item };
-            Properties = ListProperties(points);
-        }
-
-        public InspectorViewModel(DoubleCollection doubles)
-        {
-            var item = new InspectableItem(doubles, true);
-            ItemTree = new[] { item };
-            Properties = ListProperties(doubles);
-        }
-
-        public InspectorViewModel(DBObject dbObject)
-        {
-            var item = new InspectableItem(dbObject, true);
-            ItemTree = new[] { item };
-            Properties = ListDBObjectProperties(dbObject);
-        }
-
-        public InspectorViewModel(LayerFilterTree filterTree)
-        {
-            var item = new InspectableItem(filterTree.Root, true);
-            ItemTree = new[] { item };
-            Properties = ListProperties(filterTree.Root);
-        }
-
-        public InspectorViewModel(LayerFilterCollection filters)
-        {
-            var item = new InspectableItem(filters[0], true);
-            ItemTree = filters.Cast<LayerFilter>().Select(f => new InspectableItem(f));
-            Properties = ListLayerFilterProperties(filters[0]);
         }
 
         public InspectorViewModel(LayerFilter filter)
@@ -205,44 +79,10 @@ namespace Gile.AutoCAD.Inspector
                 .NestedFilters
                 .Cast<LayerFilter>()
                 .Select(f => new InspectableItem(f));
-            var item = new InspectableItem(filter, true, filter.Parent == null, children);
-            ItemTree = filter.NestedFilters.Cast<LayerFilter>().Select(f => new InspectableItem(f));
+            var items = filter.NestedFilters.Cast<LayerFilter>().Select(f => new InspectableItem(f)); 
+            items.First().IsSelected = true;
+            ItemTree = items;
             Properties = ListProperties(filter);
-        }
-
-        public InspectorViewModel(LayerFilterDisplayImages images)
-        {
-            var item = new InspectableItem(images, true);
-            ItemTree = new[] { item };
-            Properties = ListProperties(images);
-        }
-
-        public InspectorViewModel(DatabaseSummaryInfo info)
-        {
-            var item = new InspectableItem(info, true);
-            ItemTree = new[] { item };
-            Properties = ListProperties(info);
-        }
-
-        public InspectorViewModel(Dictionary<string, string>.Enumerator dict)
-        {
-            var item = new InspectableItem(dict, true);
-            ItemTree = new[] { item };
-            Properties = ListDictEnumProperties(dict);
-        }
-
-        public InspectorViewModel(AnnotationScale scale)
-        {
-            var item = new InspectableItem(scale, true);
-            ItemTree = new[] { item };
-            Properties = ListProperties(scale);
-        }
-
-        public InspectorViewModel(FontDescriptor font)
-        {
-            var item = new InspectableItem(font, true);
-            ItemTree = new[] { item };
-            Properties = ListProperties(font);
         }
 
         public InspectorViewModel(IReferences references)
@@ -251,10 +91,9 @@ namespace Gile.AutoCAD.Inspector
                 ids
                 .Cast<ObjectId>()
                 .Select(id => new InspectableItem(id, name: "<_>"));
-            var item = new InspectableItem(references.HardPointerIds, true, true, children(references.HardPointerIds), name: "Hard pointer");
             ItemTree = new[]
             {
-                item,
+                new InspectableItem(references.HardPointerIds, true, true, children(references.HardPointerIds), name: "Hard pointer"),
                 new InspectableItem(references.SoftPointerIds, false, true, children(references.SoftPointerIds), name: "Soft pointer"),
                 new InspectableItem(references.HardOwnershipIds, false, true, children(references.HardOwnershipIds), name: "Hard ownership"),
                 new InspectableItem(references.SoftOwnershipIds, false, true, children(references.SoftOwnershipIds), name: "Soft ownership"),
@@ -262,82 +101,11 @@ namespace Gile.AutoCAD.Inspector
             Properties = new PropertyItem[0];
         }
 
-        public InspectorViewModel(Profile3d profile)
-        {
-            var item = new InspectableItem(profile, true);
-            ItemTree = new[] { item };
-            Properties = ListProperties(profile);
-        }
-
-        public InspectorViewModel(Entity[] entities)
-        {
-            var item = new InspectableItem(entities[0], true);
-            ItemTree = entities.Select(e => new InspectableItem(e));
-            Properties = ListProperties(entities[0]);
-        }
-
-        public InspectorViewModel(Profile3d[] profiles)
-        {
-            var item = new InspectableItem(profiles[0], true);
-            ItemTree = profiles.Select(p => new InspectableItem(p));
-            Properties = ListProperties(profiles[0]);
-        }
-
-        public InspectorViewModel(LoftOptions options)
-        {
-            var item = new InspectableItem(options, true);
-            ItemTree = new[] { item };
-            Properties = ListProperties(options);
-        }
-
-        public InspectorViewModel(SweepOptions options)
-        {
-            var item = new InspectableItem(options, true);
-            ItemTree = new[] { item };
-            Properties = ListProperties(options);
-        }
-
-        public InspectorViewModel(RevolveOptions options)
-        {
-            var item = new InspectableItem(options, true);
-            ItemTree = new[] { item };
-            Properties = ListProperties(options);
-        }
-
-        public InspectorViewModel(Solid3dMassProperties massProps)
-        {
-            var item = new InspectableItem(massProps, true);
-            ItemTree = new[] { item };
-            Properties = ListProperties(massProps);
-        }
-
-        public InspectorViewModel(MlineStyleElementCollection styles)
-        {
-            var item = new InspectableItem(styles[0], true);
-            ItemTree = styles.Cast<MlineStyleElement>().Select(e => new InspectableItem(e));
-            Properties = ListProperties(styles[0]);
-        }
-
-        public InspectorViewModel(MlineVertices vertices)
-        {
-            var item = new InspectableItem(vertices.Vertices, true);
-            ItemTree = new[] { item };
-            Properties = ListProperties(vertices.Vertices);
-        }
-
-        public InspectorViewModel(CellRange range)
-        {
-            var item = new InspectableItem(range, true);
-            ItemTree = new[] { item };
-            Properties = ListProperties(range);
-        }
-
         public InspectorViewModel(CellBorders borders)
         {
-            var item = new InspectableItem(borders.Vertical, true, name: "Vertical");
             ItemTree = new[]
             {
-                item,
+                new InspectableItem(borders.Vertical, true, name: "Vertical"),
                 new InspectableItem(borders.Horizontal, name: "Horizontal"),
                 new InspectableItem(borders.Bottom, name: "Bottom"),
                 new InspectableItem(borders.Right, name: "Right"),
@@ -347,176 +115,168 @@ namespace Gile.AutoCAD.Inspector
             Properties = ListProperties(borders.Vertical);
         }
 
-        public InspectorViewModel(DataTypeParameter param)
-        {
-            var item = new InspectableItem(param, true);
-            ItemTree = new[] { item };
-            Properties = ListProperties(param);
-        }
-
-        public InspectorViewModel(RowsCollection rows)
-        {
-            var item = new InspectableItem(rows[0], true);
-            ItemTree = rows.Cast<Row>().Select(r => new InspectableItem(r));
-            Properties = ListProperties(rows[0]);
-        }
-
-        public InspectorViewModel(ColumnsCollection columns)
-        {
-            var item = new InspectableItem(columns[0], true);
-            ItemTree = columns.Cast<Column>().Select(r => new InspectableItem(r));
-            Properties = ListProperties(columns[0]);
-        }
-
-        public InspectorViewModel(HyperLinkCollection links)
-        {
-            var item = new InspectableItem(links[0]) { IsSelected = true };
-            ItemTree = links.Cast<HyperLink>().Select(l => new InspectableItem(l));
-            Properties = ListProperties(links[0]);
-        }
-
-        public InspectorViewModel(GeomRef geomRef)
-        {
-            var item = new InspectableItem(geomRef, true);
-            ItemTree = new[] { item };
-            Properties = ListProperties(geomRef, typeof(DisposableWrapper));
-        }
-
         public InspectorViewModel(EdgeRef[] edges)
         {
-            var item = new InspectableItem(edges[0], true);
-            ItemTree = edges.Select(e => new InspectableItem(e));
-            Properties = ListProperties(edges[0], typeof(DisposableWrapper));
-        }
-
-        public InspectorViewModel(SubentityId id)
-        {
-            var item = new InspectableItem(id, true);
-            ItemTree = new[] { item };
-            Properties = ListProperties(id);
-        }
-
-        public InspectorViewModel(CompoundObjectId id)
-        {
-            var item = new InspectableItem(id, true);
-            ItemTree = new[] { item };
-            Properties = ListProperties(id);
+            var items = edges.Select(e => new InspectableItem(e));
+            items.First().IsSelected = true;
+            ItemTree = items;
+            Properties = ListGroupedProperties(edges[0], typeof(DisposableWrapper));
         }
 
         public InspectorViewModel(HatchLoopCollection loops)
         {
-            var item = new InspectableItem(loops.Loops[0], true);
-            ItemTree = loops.Loops.Select(l => new InspectableItem(l));
+            var items = loops.Loops.Select(l => new InspectableItem(l));
+            items.First().IsSelected = true;
+            ItemTree = items;
             Properties = ListProperties(loops.Loops[0]);
-        }
-
-        public InspectorViewModel(HatchLoop loop)
-        {
-            var item = new InspectableItem(loop, true);
-            ItemTree = new[] { item };
-            Properties = ListProperties(loop);
         }
 
         public InspectorViewModel(Curve2dCollection curves)
         {
-            var item = new InspectableItem(curves[0], true);
-            ItemTree = curves.Cast<Entity2d>().Select(e => new InspectableItem(e));
-            Properties = ListProperties(curves[0], typeof(DisposableWrapper));
+            var items = curves.Cast<Entity2d>().Select(e => new InspectableItem(e));
+            items.First().IsSelected = true;
+            ItemTree = items;
+            Properties = ListGroupedProperties(curves[0], typeof(DisposableWrapper));
         }
 
-        public InspectorViewModel(Entity2d entity2D)
+        public InspectorViewModel(LayerFilterCollection collection) { InitializeCollection<LayerFilter>(collection, ListLayerFilterProperties); }
+        public InspectorViewModel(AcDb.AttributeCollection collection) { InitializeCollection<ObjectId>(collection, ListObjectIdProperties); }
+        public InspectorViewModel(MlineStyleElementCollection collection) { InitializeCollection<MlineStyleElement>(collection); }
+        public InspectorViewModel(DynamicBlockReferencePropertyCollection collection) { InitializeCollection<DynamicBlockReferenceProperty>(collection); }
+        public InspectorViewModel(HyperLinkCollection collection) { InitializeCollection<HyperLink>(collection); }
+        public InspectorViewModel(BulgeVertexCollection collection) { InitializeCollection<BulgeVertex>(collection); }
+        public InspectorViewModel(Entity[] collection) { InitializeCollection(collection); }
+        public InspectorViewModel(Profile3d[] collection) { InitializeCollection(collection); }
+        public InspectorViewModel(RowsCollection collection) { InitializeCollection(collection); }
+        public InspectorViewModel(ColumnsCollection collection) { InitializeCollection(collection); }
+
+        #region Brep
+        public InspectorViewModel(BrepVertexCollection value) { InitializeCollection(value); }
+        public InspectorViewModel(BrepEdgeCollection value) { InitializeCollection(value); }
+        public InspectorViewModel(BrepFaceCollection value) { InitializeCollection(value); }
+        public InspectorViewModel(BrepComplexCollection value) { InitializeCollection(value); }
+        public InspectorViewModel(BrepShellCollection value) { InitializeCollection(value); }
+        public InspectorViewModel(FaceLoopCollection value) { InitializeCollection(value); }
+        public InspectorViewModel(EdgeLoopCollection value) { InitializeCollection(value); }
+        public InspectorViewModel(ComplexShellCollection value) { InitializeCollection(value); }
+        public InspectorViewModel(ShellFaceCollection value) { InitializeCollection(value); }
+        public InspectorViewModel(LoopVertexCollection value) { InitializeCollection(value); }
+        public InspectorViewModel(LoopEdgeCollection value) { InitializeCollection(value); }
+        public InspectorViewModel(VertexEdgeCollection value) { InitializeCollection(value); }
+        public InspectorViewModel(VertexLoopCollection value) { InitializeCollection(value); }
+        #endregion
+
+        private void InitializeCollection<T>(ICollection collection, Func<T, IEnumerable<PropertyItem>> listFunction = null)
         {
-            var item = new InspectableItem(entity2D, true);
-            ItemTree = new[] { item };
-            Properties = ListProperties(entity2D, typeof(DisposableWrapper));
+            var items = collection.Cast<T>().Select(x => new InspectableItem(x)).ToList();
+            items[0].IsSelected = true;
+            ItemTree = items;
+            Properties = listFunction == null ?
+                ListProperties(collection.Cast<T>().First()) :
+                listFunction(collection.Cast<T>().First());
         }
 
-        public InspectorViewModel(BulgeVertexCollection bulgeVertices)
+        private void InitializeCollection<T>(IEnumerable<T> collection, Func<T, IEnumerable<PropertyItem>> listFunction = null)
         {
-            var item = new InspectableItem(bulgeVertices[0], true);
-            ItemTree = bulgeVertices.Cast<BulgeVertex>().Select(e => new InspectableItem(e));
-            Properties = ListProperties(bulgeVertices[0]);
-        }
-
-        public InspectorViewModel(Tolerance tolerance)
-        {
-            var item = new InspectableItem(tolerance, true);
-            ItemTree = new[] { item };
-            Properties = ListProperties(tolerance);
-        }
-
-        public InspectorViewModel(Point2dCollection points)
-        {
-            var item = new InspectableItem(points, true);
-            ItemTree = new[] { item };
-            Properties = ListCollection(points);
-        }
-
-        public InspectorViewModel(KnotCollection knots)
-        {
-            var item = new InspectableItem(knots, true);
-            ItemTree = new[] { item };
-            Properties = ListKnotCollectionProperties(knots);
-        }
-
-        public InspectorViewModel(NurbCurve2dData curve2dData)
-        {
-            var item = new InspectableItem(curve2dData, true);
-            ItemTree = new[] { item };
-            Properties = ListProperties(curve2dData);
-        }
-
-        public InspectorViewModel(NurbCurve2dFitData curve2dFitData)
-        {
-            var item = new InspectableItem(curve2dFitData, true);
-            ItemTree = new[] { item };
-            Properties = ListProperties(curve2dFitData);
-        }
-
-        public InspectorViewModel(NurbCurve3dData curve3dData)
-        {
-            var item = new InspectableItem(curve3dData, true);
-            ItemTree = new[] { item };
-            Properties = ListProperties(curve3dData);
-        }
-
-        public InspectorViewModel(NurbCurve3dFitData curve3dFitData)
-        {
-            var item = new InspectableItem(curve3dFitData, true);
-            ItemTree = new[] { item };
-            Properties = ListProperties(curve3dFitData);
-        }
-
-        public InspectorViewModel(Transparency transparency)
-        {
-            var item = new InspectableItem(transparency, true);
-            ItemTree = new[] { item };
-            Properties = ListProperties(transparency);
-        }
-
-        public InspectorViewModel(FullDwgVersion version)
-        {
-            var item = new InspectableItem(version, true);
-            ItemTree = new[] { item };
-            Properties = ListProperties(version);
-        }
-
-        public InspectorViewModel(PlotStyleDescriptor plotStyleDescriptor)
-        {
-            var item = new InspectableItem(plotStyleDescriptor, true);
-            ItemTree = new[] { item };
-            Properties = ListProperties(plotStyleDescriptor);
-        }
-
-        public InspectorViewModel(PhotographicExposureParameters parameters)
-        {
-            var item = new InspectableItem(parameters, true);
-            ItemTree = new[] { item };
-            Properties = ListProperties(parameters);
+            var items = collection.Select(e => new InspectableItem(e)).ToList();
+            items[0].IsSelected = true;
+            ItemTree = items;
+            Properties = listFunction == null ?
+                ListProperties(collection.First()) :
+                listFunction(collection.First());
         }
         #endregion
 
+        #region Single
+        public InspectorViewModel(Database value) { InitializeSingle(value); }
+        public InspectorViewModel(ObjectId value) { InitializeSingle(value, ListObjectIdProperties); }
+        public InspectorViewModel(ResultBuffer value) { InitializeSingle(value); }
+        public InspectorViewModel(Matrix3d value) { InitializeSingle(value); }
+        public InspectorViewModel(Extents3d value) { InitializeSingle(value); }
+        public InspectorViewModel(Extents2d value) { InitializeSingle(value); }
+        public InspectorViewModel(CoordinateSystem3d value) { InitializeSingle(value); }
+        public InspectorViewModel(EntityColor value) { InitializeSingle(value); }
+        public InspectorViewModel(Color value) { InitializeSingle(value); }
+        public InspectorViewModel(FitData value) { InitializeSingle(value); }
+        public InspectorViewModel(NurbsData value) { InitializeSingle(value); }
+        public InspectorViewModel(Point3dCollection value) { InitializeSingle(value); }
+        public InspectorViewModel(DoubleCollection value) { InitializeSingle(value); }
+        public InspectorViewModel(DBObject value) { InitializeSingle(value, ListDBObjectProperties); }
+        public InspectorViewModel(LayerFilterTree filterTree) { InitializeSingle(filterTree.Root); }
+        public InspectorViewModel(LayerFilterDisplayImages value) { InitializeSingle(value); }
+        public InspectorViewModel(DatabaseSummaryInfo value) { InitializeSingle(value); }
+        public InspectorViewModel(Dictionary<string, string>.Enumerator value) { InitializeSingle(value, ListDictEnumProperties); }
+        public InspectorViewModel(AnnotationScale value) { InitializeSingle(value); }
+        public InspectorViewModel(FontDescriptor value) { InitializeSingle(value); }
+        public InspectorViewModel(Profile3d value) { InitializeSingle(value); }
+        public InspectorViewModel(LoftOptions value) { InitializeSingle(value); }
+        public InspectorViewModel(SweepOptions value) { InitializeSingle(value); }
+        public InspectorViewModel(RevolveOptions value) { InitializeSingle(value); }
+        public InspectorViewModel(Solid3dMassProperties value) { InitializeSingle(value); }
+        public InspectorViewModel(MlineVertices vertices) { InitializeSingle(vertices.Vertices); }
+        public InspectorViewModel(CellRange value) { InitializeSingle(value); }
+        public InspectorViewModel(DataTypeParameter value) { InitializeSingle(value); }
+        public InspectorViewModel(SubentityId value) { InitializeSingle(value); }
+        public InspectorViewModel(CompoundObjectId value) { InitializeSingle(value); }
+        public InspectorViewModel(HatchLoop value) { InitializeSingle(value); }
+        public InspectorViewModel(Tolerance value) { InitializeSingle(value); }
+        public InspectorViewModel(Point2dCollection value) { InitializeSingle(value, ListCollection); }
+        public InspectorViewModel(KnotCollection value) { InitializeSingle(value); }
+        public InspectorViewModel(NurbCurve2dData value) { InitializeSingle(value); }
+        public InspectorViewModel(NurbCurve2dFitData value) { InitializeSingle(value); }
+        public InspectorViewModel(NurbCurve3dData value) { InitializeSingle(value); }
+        public InspectorViewModel(NurbCurve3dFitData value) { InitializeSingle(value); }
+        public InspectorViewModel(Transparency value) { InitializeSingle(value); }
+        public InspectorViewModel(FullDwgVersion value) { InitializeSingle(value); }
+        public InspectorViewModel(PlotStyleDescriptor value) { InitializeSingle(value); }
+        public InspectorViewModel(PhotographicExposureParameters value) { InitializeSingle(value); }
+        public InspectorViewModel(Complex value) { InitializeSingle(value); }
+        public InspectorViewModel(Shell value) { InitializeSingle(value); }
+        public InspectorViewModel(AcBr.Face value) { InitializeSingle(value); }
+        public InspectorViewModel(BoundaryLoop value) { InitializeSingle(value); }
+        public InspectorViewModel(Edge value) { InitializeSingle(value); }
+        public InspectorViewModel(AcBr.Vertex value) { InitializeSingle(value); }
+        public InspectorViewModel(Entity3d value) { InitializeSingle(value, typeof(DisposableWrapper)); }
+        public InspectorViewModel(Entity2d value) { InitializeSingle(value, typeof(DisposableWrapper)); }
+        public InspectorViewModel(GeomRef value) { InitializeSingle(value, typeof(DisposableWrapper)); }
+        public InspectorViewModel(Brep brep)
+        {
+            BrepSolid = brep.Solid;
+            BrepSurf = brep.Surf;
+            var item = new InspectableItem(
+                brep,
+                true,
+                true,
+                brep.Complexes
+                .Select(c => new InspectableItem(c, children: c.Shells
+                    .Select(s => new InspectableItem(s, children: s.Faces
+                        .Select(f => new InspectableItem(f, children: f.Loops
+                        .Select(l => new InspectableItem(l, children: l.Edges
+                            .Select(e => new InspectableItem(e)))))))))));
+            ItemTree = new[] { item };
+            Properties = ListProperties(brep);
+        }
+
+        private void InitializeSingle<T>(T value, Func<T, IEnumerable<PropertyItem>> listFunction = null)
+        {
+            var item = new InspectableItem(value, true);
+            ItemTree = new[] { item };
+            Properties = listFunction == null ? ListProperties(value) : listFunction(value);
+        }
+
+        private void InitializeSingle<T>(T value, Type topBaseType)
+        {
+            var item = new InspectableItem(value, true);
+            ItemTree = new[] { item };
+            Properties = ListGroupedProperties(value, topBaseType);
+        }
+        #endregion
+        #endregion
+
         #region Properties
+        public Entity BrepSurf { get; private set; }
+        public Entity BrepSolid { get; private set; }
+
         public IEnumerable<InspectableItem> ItemTree
         {
             get { return inspectables; }
@@ -607,6 +367,26 @@ namespace Gile.AutoCAD.Inspector
                         case Transparency transparency: viewModel = new InspectorViewModel(transparency); break;
                         case PlotStyleDescriptor plotStyleDescriptor: viewModel = new InspectorViewModel(plotStyleDescriptor); break;
                         case PhotographicExposureParameters parameters: viewModel = new InspectorViewModel(parameters); break;
+                        case Brep brep: viewModel = new InspectorViewModel(brep); break;
+                        case Complex complex: viewModel = new InspectorViewModel(complex); break;
+                        case Shell shell: viewModel = new InspectorViewModel(shell); break;
+                        case AcBr.Face face: viewModel = new InspectorViewModel(face); break;
+                        case BoundaryLoop loop: viewModel = new InspectorViewModel(loop); break;
+                        case Edge edge: viewModel = new InspectorViewModel(edge); break;
+                        case AcBr.Vertex vertex: viewModel = new InspectorViewModel(vertex); break;
+                        case BrepVertexCollection vertices: viewModel = new InspectorViewModel(vertices); break;
+                        case BrepEdgeCollection edges: viewModel = new InspectorViewModel(edges); break;
+                        case BrepComplexCollection complexes: viewModel = new InspectorViewModel(complexes); break;
+                        case BrepFaceCollection faces: viewModel = new InspectorViewModel(faces); break;
+                        case BrepShellCollection vertex: viewModel = new InspectorViewModel(vertex); break;
+                        case FaceLoopCollection loops: viewModel = new InspectorViewModel(loops); break;
+                        case EdgeLoopCollection loops: viewModel = new InspectorViewModel(loops); break;
+                        case ComplexShellCollection shells: viewModel = new InspectorViewModel(shells); break;
+                        case ShellFaceCollection faces: viewModel = new InspectorViewModel(faces); break;
+                        case LoopVertexCollection vertices: viewModel = new InspectorViewModel(vertices); break;
+                        case LoopEdgeCollection edges: viewModel = new InspectorViewModel(edges); break;
+                        case VertexEdgeCollection edges: viewModel = new InspectorViewModel(edges); break;
+                        case VertexLoopCollection loops: viewModel = new InspectorViewModel(loops); break;
                         default: break;
                     }
                     viewModel?.ShowDialog();
@@ -631,21 +411,32 @@ namespace Gile.AutoCAD.Inspector
                 case ResultBuffer resbuf: Properties = ListResultBufferProperties(resbuf); break;
                 case PolylineVertex vertex: Properties = ListProperties(vertex); break;
                 case Point3dCollection points: Properties = ListCollection(points); break;
-                case DoubleCollection doubles:Properties = ListCollection(doubles); break;
-                case LayerFilter filter:Properties = ListLayerFilterProperties(filter); break;
+                case DoubleCollection doubles: Properties = ListCollection(doubles); break;
+                case LayerFilter filter: Properties = ListLayerFilterProperties(filter); break;
                 case DBObject dBObject: Properties = ListDBObjectProperties(dBObject); break;
                 case MlineStyleElement mlElement: Properties = ListProperties(mlElement); break;
                 case CellBorder border: Properties = ListProperties(border); break;
-                case Row row:Properties = ListProperties(row); break;
+                case Row row: Properties = ListProperties(row); break;
                 case Column column: Properties = ListProperties(column); break;
                 case HyperLink hyperLink: Properties = ListProperties(hyperLink); break;
                 case GeomRef geomRef: Properties = ListProperties(geomRef); break;
                 case HatchLoop loop: Properties = ListProperties(loop); break;
-                case Entity2d entity2d: Properties = ListProperties(entity2d); break;
+                case Entity2d entity2d: Properties = ListGroupedProperties(entity2d, typeof(DisposableWrapper)); break;
                 case BulgeVertex vertex: Properties = ListProperties(vertex); break;
+                case Complex complex: Properties = ListProperties(complex); break;
+                case Shell shell: Properties = ListProperties(shell); break;
+                case AcBr.Face face: Properties = ListProperties(face); break;
+                case BoundaryLoop vertex: Properties = ListProperties(vertex); break;
+                case Edge edge: Properties = ListProperties(edge); break;
                 default:
                     break;
             }
+        }
+
+        public void OnWindowClosing(object sender, CancelEventArgs e)
+        {
+            BrepSolid?.Dispose();
+            BrepSurf?.Dispose();
         }
 
         #region ListProperties methods
@@ -691,6 +482,14 @@ namespace Gile.AutoCAD.Inspector
                 {
                     yield return new PropertyItem("Hatch Loops", new HatchLoopCollection(hatch), typeof(Hatch), true);
                 }
+                if (dbObj is Region || dbObj is Solid3d || dbObj is AcDb.Surface)
+                {
+                    yield return new PropertyItem("Boundary representation", new Brep((Entity)dbObj), dbObj.GetType(), true);
+                    //using (var brep = new Brep((Entity)dbObj))
+                    //{
+                    //    yield return new PropertyItem("Boundary representation", brep, dbObj.GetType(), true);
+                    //}
+                }
                 yield return new PropertyItem("References to", new ReferencesTo(id), typeof(DBObject), true);
                 yield return new PropertyItem("Referenced by", new ReferencedBy(id), typeof(DBObject), true);
                 tr.Commit();
@@ -716,6 +515,7 @@ namespace Gile.AutoCAD.Inspector
                 foreach (var prop in t.GetProperties(flags))
                 {
                     string name = prop.Name;
+                    if (name == "Item") continue;
                     object value;
                     // From Jeff_M http://www.theswamp.org/index.php?topic=57317.msg608371#msg608371
                     var obsAtt = prop.CustomAttributes.FirstOrDefault(x => x.AttributeType.Name == "ObsoleteAttribute");
@@ -754,7 +554,7 @@ namespace Gile.AutoCAD.Inspector
             }
         }
 
-        private IEnumerable<PropertyItem> ListProperties<T>(T item, Type stopType)
+        private IEnumerable<PropertyItem> ListGroupedProperties<T>(T item, Type stopType)
         {
             var types = new List<Type>();
             var type = item.GetType();
@@ -770,6 +570,7 @@ namespace Gile.AutoCAD.Inspector
                 var subType = t;
                 foreach (var prop in t.GetProperties(flags))
                 {
+                    if (prop.Name == "Item") continue;
                     string name = prop.Name;
                     object value;
                     try { value = prop.GetValue(item, null) ?? "(Null)"; }
@@ -786,36 +587,38 @@ namespace Gile.AutoCAD.Inspector
             foreach (var prop in typeof(T).GetProperties(flags))
             {
                 string name = prop.Name;
+                if (name == "Item") continue;
+                if (item is Brep && (name == "Surf" || name == "Solid")) continue;
+                if (item is DynamicBlockReferenceProperty && name == "Value") continue;
                 object value;
                 try { value = prop.GetValue(item, null) ?? "(Null)"; }
                 catch (System.Exception e) { value = e.Message; }
                 bool isInspectable = CheckIsInspectable(value);
                 yield return new PropertyItem(name, value, typeof(T), isInspectable);
             }
-        }
-
-        private IEnumerable<PropertyItem> ListFitDataProperties(FitData data)
-        {
-            foreach (var item in ListProperties(data))
+            if (item is FitData fitData)
             {
-                yield return item;
+                var fitPoints = fitData.GetFitPoints();
+                yield return new PropertyItem("FitPoints", fitPoints, typeof(FitData), 0 < fitPoints.Count);
             }
-            var fitPoints = data.GetFitPoints();
-            yield return new PropertyItem("FitPoints", fitPoints, typeof(FitData), 0 < fitPoints.Count);
-        }
-
-        private IEnumerable<PropertyItem> ListNurbsDataProperties(NurbsData data)
-        {
-            foreach (var item in ListProperties(data))
+            else if (item is NurbsData nurbsData)
             {
-                yield return item;
+                var controlPoints = nurbsData.GetControlPoints();
+                var knots = nurbsData.GetKnots();
+                var weights = nurbsData.GetWeights();
+                yield return new PropertyItem("FitPoints", controlPoints, typeof(NurbsData), 0 < controlPoints.Count);
+                yield return new PropertyItem("Knots", knots, typeof(NurbsData), 0 < knots.Count);
+                yield return new PropertyItem("Weights", weights, typeof(NurbsData), 0 < weights.Count);
             }
-            var controlPoints = data.GetControlPoints();
-            var knots = data.GetKnots();
-            var weights = data.GetWeights();
-            yield return new PropertyItem("FitPoints", controlPoints, typeof(NurbsData), 0 < controlPoints.Count);
-            yield return new PropertyItem("Knots", knots, typeof(NurbsData), 0 < knots.Count);
-            yield return new PropertyItem("Weights", weights, typeof(NurbsData), 0 < weights.Count);
+            else if (item is KnotCollection knotCollection && 0 < knotCollection.Count)
+            {
+                var knots = new DoubleCollection();
+                for (int i = 0; i < knotCollection.Count; i++)
+                {
+                    knots.Add(knotCollection[i]);
+                }
+                yield return new PropertyItem("Knots", knots, typeof(KnotCollection), true);
+            }
         }
 
         private IEnumerable<PropertyItem> ListResultBufferProperties(ResultBuffer resbuf) =>
@@ -834,23 +637,6 @@ namespace Gile.AutoCAD.Inspector
             while (dictEnum.MoveNext())
             {
                 yield return new PropertyItem(dictEnum.Current.Key, dictEnum.Current.Value, typeof(Dictionary<string, string>.Enumerator), false);
-            }
-        }
-
-        private IEnumerable<PropertyItem> ListKnotCollectionProperties(KnotCollection knotCollection)
-        {
-            foreach (var item in ListProperties(knotCollection))
-            {
-                yield return item;
-            }
-            if (0 < knotCollection.Count)
-            {
-                var knots = new DoubleCollection();
-                for (int i = 0; i < knotCollection.Count; i++)
-                {
-                    knots.Add(knotCollection[i]);
-                }
-                yield return new PropertyItem("Knots", knots, typeof(KnotCollection), true);
             }
         }
 
@@ -910,7 +696,27 @@ namespace Gile.AutoCAD.Inspector
             value is FullDwgVersion ||
             value is Transparency ||
             value is PlotStyleDescriptor ||
-            value is PhotographicExposureParameters;
+            value is PhotographicExposureParameters ||
+            value is Brep ||
+            value is Complex ||
+            value is Shell ||
+            value is AcBr.Face ||
+            value is BoundaryLoop ||
+            value is Edge ||
+            value is AcBr.Vertex ||
+            value is BrepComplexCollection ||
+            value is BrepShellCollection ||
+            value is ComplexShellCollection ||
+            value is BrepFaceCollection ||
+            value is ShellFaceCollection ||
+            value is FaceLoopCollection ||
+            value is BrepEdgeCollection ||
+            value is EdgeLoopCollection ||
+            value is LoopEdgeCollection ||
+            value is BrepVertexCollection ||
+            value is LoopVertexCollection ||
+            value is VertexEdgeCollection ||
+            value is VertexLoopCollection;
         #endregion
     }
 }

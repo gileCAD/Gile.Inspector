@@ -41,6 +41,10 @@
       <HintPath>C:\ObjectARX 2017\inc\AcDbMgd.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="acdbmgdbrep">
+      <HintPath>C:\ObjectARX 2017\inc\acdbmgdbrep.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="AcMgd">
       <HintPath>C:\ObjectARX 2017\inc\AcMgd.dll</HintPath>
       <Private>False</Private>

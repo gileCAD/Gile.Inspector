@@ -11,6 +11,7 @@ namespace Gile.AutoCAD.Inspector
             InitializeComponent();
             this.viewModel = viewModel;
             DataContext = viewModel;
+            Closing += viewModel.OnWindowClosing;
         }
 
         private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) => 
