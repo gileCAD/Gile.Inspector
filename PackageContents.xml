@@ -15,7 +15,7 @@
     Email="gilecad@orange.fr"
     Url="http://gilecad.azurewebsites.net/" />
   <Components>
-    <RuntimeRequirements OS="Win32|Win64" Platform="AutoCAD*" SeriesMin="R19.0" />
+    <RuntimeRequirements OS="Win32|Win64" Platform="AutoCAD*" SeriesMin="R20.1" />
     <ComponentEntry
       AppName="Gile.Inspector"
       Version="1.0.7"

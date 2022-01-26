@@ -229,7 +229,7 @@ namespace Gile.AutoCAD.Inspector
         public InspectorViewModel(Transparency value) { InitializeSingle(value); }
         public InspectorViewModel(FullDwgVersion value) { InitializeSingle(value); }
         public InspectorViewModel(PlotStyleDescriptor value) { InitializeSingle(value); }
-        public InspectorViewModel(PhotographicExposureParameters value) { InitializeSingle(value); }
+        public InspectorViewModel(PhotographicExposureParameters value) { InitializeSingle(value, typeof(RXObject)); }
         public InspectorViewModel(Complex value) { InitializeSingle(value); }
         public InspectorViewModel(Shell value) { InitializeSingle(value); }
         public InspectorViewModel(AcBr.Face value) { InitializeSingle(value); }
@@ -485,10 +485,6 @@ namespace Gile.AutoCAD.Inspector
                 if (dbObj is Region || dbObj is Solid3d || dbObj is AcDb.Surface)
                 {
                     yield return new PropertyItem("Boundary representation", new Brep((Entity)dbObj), dbObj.GetType(), true);
-                    //using (var brep = new Brep((Entity)dbObj))
-                    //{
-                    //    yield return new PropertyItem("Boundary representation", brep, dbObj.GetType(), true);
-                    //}
                 }
                 yield return new PropertyItem("References to", new ReferencesTo(id), typeof(DBObject), true);
                 yield return new PropertyItem("Referenced by", new ReferencedBy(id), typeof(DBObject), true);

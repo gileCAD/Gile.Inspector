@@ -46,12 +46,6 @@
         "Entry"
         {
         "MsmKey" = "8:_469476D61A348127AAE3D271962AAE7F"
-        "OwnerKey" = "8:_541F7DFAC31700A3EA86C09FF1787D91"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_469476D61A348127AAE3D271962AAE7F"
         "OwnerKey" = "8:_1F94D2F8B210B71EDB24897CDA093AC3"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -59,6 +53,12 @@
         {
         "MsmKey" = "8:_469476D61A348127AAE3D271962AAE7F"
         "OwnerKey" = "8:_4056F63CF226C5557CD2A6DAC5205072"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_469476D61A348127AAE3D271962AAE7F"
+        "OwnerKey" = "8:_541F7DFAC31700A3EA86C09FF1787D91"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -130,12 +130,6 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_541F7DFAC31700A3EA86C09FF1787D91"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_4056F63CF226C5557CD2A6DAC5205072"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -149,6 +143,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_1F94D2F8B210B71EDB24897CDA093AC3"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_541F7DFAC31700A3EA86C09FF1787D91"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -578,7 +578,7 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:InspectorSetup"
+        "ProductName" = "8:Gile.Inspector"
         "ProductCode" = "8:{2469A7AC-1B21-4AF2-A111-B812DB93967F}"
         "PackageCode" = "8:{7A45DA86-A044-424D-906E-B4FDB142BD67}"
         "UpgradeCode" = "8:{593AC09A-0221-43F6-B541-5A9F8542D1FC}"
@@ -588,15 +588,15 @@
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
         "ProductVersion" = "8:1.0.7"
-        "Manufacturer" = "8:HP Inc."
+        "Manufacturer" = "8:gileCAD"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
-        "Title" = "8:InspectorSetup"
+        "Title" = "8:Inspector"
         "Subject" = "8:"
-        "ARPCONTACT" = "8:HP Inc."
+        "ARPCONTACT" = "8:Gilles Chanteau"
         "Keywords" = "8:"
         "ARPCOMMENTS" = "8:"
-        "ARPURLINFOABOUT" = "8:"
+        "ARPURLINFOABOUT" = "8:https://gilecad.azurewebsites.net/Default.aspx"
         "ARPPRODUCTICON" = "8:"
         "ARPIconIndex" = "3:0"
         "SearchPath" = "8:"
