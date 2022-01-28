@@ -6,7 +6,7 @@ namespace Gile.AutoCAD.Inspector
 {
     public class HatchLoopCollection
     {
-    public List<HatchLoop> Loops { get; }
+        public List<HatchLoop> Loops { get; }
         public HatchLoopCollection(Hatch hatch)
         {
             Loops = new List<HatchLoop>();

@@ -34,7 +34,7 @@ namespace Gile.AutoCAD.Inspector
                         using (var tr = id.Database.TransactionManager.StartTransaction())
                         {
                             var dbObject = tr.GetObject(id, OpenMode.ForRead);
-                            Label = $"< {dbObject.GetType().Name}\t{dbObject.Handle} >";
+                            Label = $"< {dbObject.GetType().Name} \t{dbObject.Handle} >";
                         }
                     }
                     break;
@@ -52,7 +52,7 @@ namespace Gile.AutoCAD.Inspector
                     Label = ((IFormattable)value).ToString(Commands.NumberFormat, CultureInfo.CurrentCulture);
                     break;
                 case DBObject dBObject:
-                    Label = $"< {value.GetType().Name}\t{dBObject.Handle} >";
+                    Label = $"< {value.GetType().Name} \t{dBObject.Handle} >";
                     break;
                 case Dictionary<string, string>.Enumerator _:
                     Label = "Custom properties";
