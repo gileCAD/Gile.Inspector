@@ -1,4 +1,5 @@
 ﻿using Autodesk.AutoCAD.DatabaseServices;
+using Autodesk.AutoCAD.LayerManager;
 
 using System.Collections;
 using System.Collections.Generic;
@@ -24,8 +25,16 @@ namespace Gile.AutoCAD.Inspector
             IsExpanded = isExpanded;
             if (value is ObjectId id)
                 Initialize(id, name);
+            else if (value is LayerFilter filter)
+                Initialize(filter);
             else
                 Name = name ?? Label;
+        }
+
+        private void Initialize(LayerFilter filter)
+        {
+            Name = filter.Name;
+            Children = filter.NestedFilters.Cast<LayerFilter>().Select(f => new InspectableItem(f));
         }
 
         private void Initialize(ObjectId id, string name)

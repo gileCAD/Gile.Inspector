@@ -2,6 +2,7 @@
 using Autodesk.AutoCAD.Geometry;
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 
 namespace Gile.AutoCAD.Inspector
@@ -52,6 +53,9 @@ namespace Gile.AutoCAD.Inspector
                     break;
                 case DBObject dBObject:
                     Label = $"< {value.GetType().Name}\t{dBObject.Handle} >";
+                    break;
+                case Dictionary<string, string>.Enumerator _:
+                    Label = "Custom properties";
                     break;
                 default:
                     var type = value.GetType();

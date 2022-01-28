@@ -79,7 +79,7 @@ namespace Gile.AutoCAD.Inspector
                 .NestedFilters
                 .Cast<LayerFilter>()
                 .Select(f => new InspectableItem(f));
-            var items = filter.NestedFilters.Cast<LayerFilter>().Select(f => new InspectableItem(f)); 
+            var items = filter.NestedFilters.Cast<LayerFilter>().Select(f => new InspectableItem(f));
             items.First().IsSelected = true;
             ItemTree = items;
             Properties = ListProperties(filter);
@@ -229,13 +229,22 @@ namespace Gile.AutoCAD.Inspector
         public InspectorViewModel(Transparency value) { InitializeSingle(value); }
         public InspectorViewModel(FullDwgVersion value) { InitializeSingle(value); }
         public InspectorViewModel(PlotStyleDescriptor value) { InitializeSingle(value); }
-        public InspectorViewModel(PhotographicExposureParameters value) { InitializeSingle(value, typeof(RXObject)); }
         public InspectorViewModel(Complex value) { InitializeSingle(value); }
         public InspectorViewModel(Shell value) { InitializeSingle(value); }
         public InspectorViewModel(AcBr.Face value) { InitializeSingle(value); }
         public InspectorViewModel(BoundaryLoop value) { InitializeSingle(value); }
         public InspectorViewModel(Edge value) { InitializeSingle(value); }
         public InspectorViewModel(AcBr.Vertex value) { InitializeSingle(value); }
+        public InspectorViewModel(MaterialColor value) { InitializeSingle(value); }
+        public InspectorViewModel(MaterialMap value) { InitializeSingle(value); }
+        public InspectorViewModel(MaterialTexture value) { InitializeSingle(value, typeof(RXObject)); }
+        public InspectorViewModel(MaterialNormalMapComponent value) { InitializeSingle(value); }
+        public InspectorViewModel(MaterialRefractionComponent value) { InitializeSingle(value); }
+        public InspectorViewModel(MaterialOpacityComponent value) { InitializeSingle(value); }
+        public InspectorViewModel(MaterialSpecularComponent value) { InitializeSingle(value); }
+        public InspectorViewModel(MaterialDiffuseComponent value) { InitializeSingle(value); }
+        //public InspectorViewModel(ImageFileTexture value) { InitializeSingle(value); }
+        public InspectorViewModel(PhotographicExposureParameters value) { InitializeSingle(value, typeof(RXObject)); }
         public InspectorViewModel(Entity3d value) { InitializeSingle(value, typeof(DisposableWrapper)); }
         public InspectorViewModel(Entity2d value) { InitializeSingle(value, typeof(DisposableWrapper)); }
         public InspectorViewModel(GeomRef value) { InitializeSingle(value, typeof(DisposableWrapper)); }
@@ -259,14 +268,14 @@ namespace Gile.AutoCAD.Inspector
 
         private void InitializeSingle<T>(T value, Func<T, IEnumerable<PropertyItem>> listFunction = null)
         {
-            var item = new InspectableItem(value, true);
+            var item = new InspectableItem(value, true, true);
             ItemTree = new[] { item };
             Properties = listFunction == null ? ListProperties(value) : listFunction(value);
         }
 
         private void InitializeSingle<T>(T value, Type topBaseType)
         {
-            var item = new InspectableItem(value, true);
+            var item = new InspectableItem(value, true, true);
             ItemTree = new[] { item };
             Properties = ListGroupedProperties(value, topBaseType);
         }
@@ -387,6 +396,14 @@ namespace Gile.AutoCAD.Inspector
                         case LoopEdgeCollection edges: viewModel = new InspectorViewModel(edges); break;
                         case VertexEdgeCollection edges: viewModel = new InspectorViewModel(edges); break;
                         case VertexLoopCollection loops: viewModel = new InspectorViewModel(loops); break;
+                        case MaterialColor color: viewModel = new InspectorViewModel(color); break;
+                        case MaterialMap map: viewModel = new InspectorViewModel(map); break;
+                        case MaterialTexture texture: viewModel = new InspectorViewModel(texture); break;
+                        case MaterialNormalMapComponent normalMap: viewModel = new InspectorViewModel(normalMap); break;
+                        case MaterialRefractionComponent refraction: viewModel = new InspectorViewModel(refraction); break;
+                        case MaterialOpacityComponent opacity: viewModel = new InspectorViewModel(opacity); break;
+                        case MaterialSpecularComponent specular: viewModel = new InspectorViewModel(specular); break;
+                        case MaterialDiffuseComponent diffuse: viewModel = new InspectorViewModel(diffuse); break;
                         default: break;
                     }
                     viewModel?.ShowDialog();
@@ -712,7 +729,15 @@ namespace Gile.AutoCAD.Inspector
             value is BrepVertexCollection ||
             value is LoopVertexCollection ||
             value is VertexEdgeCollection ||
-            value is VertexLoopCollection;
+            value is VertexLoopCollection ||
+            value is MaterialColor ||
+            value is MaterialMap ||
+            value is MaterialTexture ||
+            value is MaterialNormalMapComponent ||
+            value is MaterialRefractionComponent ||
+            value is MaterialOpacityComponent ||
+            value is MaterialSpecularComponent ||
+            value is MaterialDiffuseComponent;
         #endregion
     }
 }
