@@ -95,8 +95,8 @@ namespace Gile.AutoCAD.Inspector
                     case BulgeVertexCollection collection: InitializeCollection<BulgeVertex>(collection); break;
                     case IEnumerable<Entity> collection: InitializeIEnumerable(collection); break;
                     case IEnumerable<Profile3d> collection: InitializeIEnumerable(collection); break;
-                    case IEnumerable<RowsCollection> collection: InitializeIEnumerable(collection); break;
-                    case IEnumerable<ColumnsCollection> collection: InitializeIEnumerable(collection); break;
+                    case RowsCollection collection: InitializeIEnumerable(collection); break;
+                    case ColumnsCollection collection: InitializeIEnumerable(collection); break;
                     case BrepVertexCollection collection: InitializeIEnumerable(collection); break;
                     case BrepEdgeCollection collection: InitializeIEnumerable(collection); break;
                     case BrepFaceCollection collection: InitializeIEnumerable(collection); break;
