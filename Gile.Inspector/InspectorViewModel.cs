@@ -184,7 +184,7 @@ namespace Gile.AutoCAD.Inspector
                         };
                         Properties = new PropertyItem[0];
                         break;
-                    case MlineVertices vertices: InitializeSingle(vertices); break;
+                    case MlineVertices vertices: InitializeSingle(vertices.Vertices, ListCollection); break;
                     default:
                         break;
                 }
