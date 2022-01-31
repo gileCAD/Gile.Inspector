@@ -274,7 +274,7 @@ namespace Gile.AutoCAD.Inspector
                 case DoubleCollection doubles: Properties = ListCollection(doubles); break;
                 case Point3dCollection points: Properties = ListCollection(points); break;
                 case LayerFilter filter: Properties = ListLayerFilterProperties(filter); break;
-                default: ListProperties(item.Value); break;
+                default: Properties = ListProperties(item.Value); break;
             }
         }
 
@@ -407,7 +407,7 @@ namespace Gile.AutoCAD.Inspector
             }
         }
 
-        private IEnumerable<PropertyItem> ListProperties<T>(T item)
+        private IEnumerable<PropertyItem> ListProperties (object item)
         {
             var types = new List<Type>();
             var type = item.GetType();
