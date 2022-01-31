@@ -29,7 +29,6 @@ namespace Gile.AutoCAD.Inspector
 
         #region INotitfyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
-
         protected void NotifyPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -270,29 +269,12 @@ namespace Gile.AutoCAD.Inspector
             switch (item.Value)
             {
                 case ObjectId id when !id.IsNull: Properties = ListObjectIdProperties(id); break;
-                case DynamicBlockReferenceProperty prop: Properties = ListProperties(prop); break;
-                case ResultBuffer resbuf: Properties = ListResultBufferProperties(resbuf); break;
-                case PolylineVertex vertex: Properties = ListProperties(vertex); break;
-                case Point3dCollection points: Properties = ListCollection(points); break;
-                case DoubleCollection doubles: Properties = ListCollection(doubles); break;
-                case LayerFilter filter: Properties = ListLayerFilterProperties(filter); break;
                 case DBObject dBObject: Properties = ListDBObjectProperties(dBObject); break;
-                case MlineStyleElement mlElement: Properties = ListProperties(mlElement); break;
-                case CellBorder border: Properties = ListProperties(border); break;
-                case Row row: Properties = ListProperties(row); break;
-                case Column column: Properties = ListProperties(column); break;
-                case HyperLink hyperLink: Properties = ListProperties(hyperLink); break;
-                case GeomRef geomRef: Properties = ListProperties(geomRef); break;
-                case HatchLoop loop: Properties = ListProperties(loop); break;
-                case Entity2d entity2d: Properties = ListProperties(entity2d); break;
-                case BulgeVertex vertex: Properties = ListProperties(vertex); break;
-                case Complex complex: Properties = ListProperties(complex); break;
-                case Shell shell: Properties = ListProperties(shell); break;
-                case AcBr.Face face: Properties = ListProperties(face); break;
-                case BoundaryLoop vertex: Properties = ListProperties(vertex); break;
-                case Edge edge: Properties = ListProperties(edge); break;
-                default:
-                    break;
+                case ResultBuffer resbuf: Properties = ListResultBufferProperties(resbuf); break;
+                case DoubleCollection doubles: Properties = ListCollection(doubles); break;
+                case Point3dCollection points: Properties = ListCollection(points); break;
+                case LayerFilter filter: Properties = ListLayerFilterProperties(filter); break;
+                default: ListProperties(item.Value); break;
             }
         }
 
@@ -497,91 +479,23 @@ namespace Gile.AutoCAD.Inspector
             }
         }
 
-        private static bool CheckIsInspectable(object value) =>
-            (value is ObjectId id && !id.IsNull) ||
-            (value is ResultBuffer && value != null) ||
-            value is Matrix3d ||
-            (value is Extents3d && value != null) ||
-            (value is Extents2d && value != null) ||
-            value is CoordinateSystem3d ||
-            (value is AcDb.AttributeCollection attCol && 0 < attCol.Count) ||
-            (value is DynamicBlockReferencePropertyCollection props && 0 < props.Count) ||
-            value is EntityColor ||
-            value is Color ||
-            value is Entity3d ||
-            value is FitData ||
-            value is NurbsData ||
-            value is DBObject ||
-            value is Database ||
-            value is LayerFilterTree ||
-            (value is LayerFilterCollection filters && 0 < filters.Count) ||
-            value is LayerFilter ||
-            value is LayerFilterDisplayImages ||
-            value is DatabaseSummaryInfo ||
-            (value is Dictionary<string, string>.Enumerator dictEnum && dictEnum.MoveNext()) ||
-            value is AnnotationScale ||
-            value is FontDescriptor ||
-            value is Profile3d ||
-            (value is Entity[] entities && 0 < entities.Length) ||
-            (value is Profile3d[] profiles && 0 < profiles.Length) ||
-            value is LoftOptions ||
-            value is SweepOptions ||
-            value is RevolveOptions ||
-            value is Solid3dMassProperties ||
-            (value is MlineStyleElementCollection styles && 0 < styles.Count) ||
-            value is MlineVertices ||
-            value is CellRange ||
-            value is CellBorders ||
-            value is DataTypeParameter ||
-            value is RowsCollection ||
-            value is ColumnsCollection ||
-            (value is HyperLinkCollection links && 0 < links.Count) ||
-            value is GeomRef ||
-            (value is EdgeRef[] edges && 0 < edges.Length) ||
-            value is SubentityId ||
-            value is CompoundObjectId ||
-            (value is Curve2dCollection curves && 0 < curves.Count) ||
-            (value is BulgeVertexCollection vertices && 0 < vertices.Count) ||
-            value is Entity2d ||
-            value is Tolerance ||
-            (value is Point2dCollection points && 0 < points.Count) ||
-            value is KnotCollection ||
-            value is NurbCurve2dData ||
-            value is NurbCurve2dFitData ||
-            value is NurbCurve3dData ||
-            value is NurbCurve3dFitData ||
-            value is FullDwgVersion ||
-            value is Transparency ||
-            value is PlotStyleDescriptor ||
-            value is PhotographicExposureParameters ||
-            value is Brep ||
-            value is Complex ||
-            value is Shell ||
-            value is AcBr.Face ||
-            value is BoundaryLoop ||
-            value is Edge ||
-            value is AcBr.Vertex ||
-            (value is BrepComplexCollection brepComplexes && brepComplexes.Any()) ||
-            (value is BrepShellCollection brepShells && brepShells.Any()) ||
-            (value is ComplexShellCollection complexShells && complexShells.Any()) ||
-            (value is BrepFaceCollection brepFaces && brepFaces.Any()) ||
-            (value is ShellFaceCollection shellFaces && shellFaces.Any()) ||
-            (value is FaceLoopCollection faceLoops && faceLoops.Any()) ||
-            (value is BrepEdgeCollection brepEdges && brepEdges.Any()) ||
-            (value is EdgeLoopCollection edgeLoops && edgeLoops.Any()) ||
-            (value is LoopEdgeCollection loopEdges && loopEdges.Any()) ||
-            (value is BrepVertexCollection brepVertices && brepVertices.Any()) ||
-            (value is LoopVertexCollection loopVertices && loopVertices.Any()) ||
-            (value is VertexEdgeCollection vertexEdges && vertexEdges.Any()) ||
-            (value is VertexLoopCollection vertexLoop && vertexLoop.Any()) ||
-            value is MaterialColor ||
-            value is MaterialMap ||
-            value is MaterialTexture ||
-            value is MaterialNormalMapComponent ||
-            value is MaterialRefractionComponent ||
-            value is MaterialOpacityComponent ||
-            value is MaterialSpecularComponent ||
-            value is MaterialDiffuseComponent;
+        private static bool CheckIsInspectable(object value)
+        {
+            if (value is Dictionary<string, string>.Enumerator dictEnum && dictEnum.MoveNext())
+                return true;
+            var type = value.GetType();
+            if (!type.Namespace.StartsWith("Autodesk.AutoCAD") && type.Namespace != "Gile.AutoCAD.Inspector")
+                return false;
+            if (value is ObjectId id && id.IsNull)
+                return false;
+            if (type.IsClass && value == null)
+                return false;
+            if (value is IEnumerable collection && !collection.GetEnumerator().MoveNext())
+                return false;
+            if (type.IsPrimitive || value is Enum || value is Point2d || value is Point3d || value is Vector2d || value is Vector3d)
+                return false;
+            return true;
+        }
         #endregion
     }
 }
