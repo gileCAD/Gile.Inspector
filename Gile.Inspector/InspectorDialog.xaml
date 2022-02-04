@@ -40,7 +40,6 @@
                 </TreeView.Resources>
             </TreeView>
 
-            <!--<ListView Grid.Column="1" Margin="5" ItemsSource="{Binding Properties}" SelectedItem="{Binding SelectedProperty}">-->
             <ListView Grid.Column="1" Margin="5" ItemsSource="{Binding Source={StaticResource viewSource}}" SelectedItem="{Binding SelectedProperty}">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="{x:Type ListViewItem}">
@@ -56,8 +55,8 @@
                 </ListView.ItemContainerStyle>
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="Field" Width="Auto" DisplayMemberBinding="{Binding Name}" />
-                        <GridViewColumn Header="Value" Width="Auto" DisplayMemberBinding="{Binding Label}" />
+                        <GridViewColumn Header="Field" Width="200" DisplayMemberBinding="{Binding Name}" />
+                        <GridViewColumn Header="Value" Width="300" DisplayMemberBinding="{Binding Label}" />
                     </GridView>
                 </ListView.View>
                 <ListView.GroupStyle>

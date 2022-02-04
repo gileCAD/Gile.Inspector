@@ -303,39 +303,6 @@ namespace Gile.AutoCAD.Inspector
                 {
                     yield return item;
                 }
-                if (dbObj is AcDb.Polyline pl)
-                    yield return new PropertyItem("Vertices", new PolylineVertices(pl), typeof(AcDb.Polyline), true);
-                else if (dbObj is Polyline3d pl3d)
-                    yield return new PropertyItem("Vertices", new Polyline3dVertices(pl3d), typeof(Polyline3d), true);
-                else if (dbObj is Polyline2d pl2d)
-                    yield return new PropertyItem("Vertices", new Polyline2dVertices(pl2d), typeof(Polyline2d), true);
-                else if (dbObj is Mline mline)
-                    yield return new PropertyItem("Vertices", new MlineVertices(mline), typeof(Mline), true);
-                else if (dbObj is BlockTableRecord)
-                {
-                    var btr = (BlockTableRecord)dbObj;
-                    var ids = new ObjectIdCollection();
-                    foreach (ObjectId oId in btr)
-                    {
-                        ids.Add(oId);
-                    }
-                    yield return new PropertyItem("Entities within block", ids, typeof(BlockTableRecord), 0 < ids.Count);
-                    if (!btr.IsLayout)
-                    {
-                        ids = btr.GetBlockReferenceIds(true, true);
-                        yield return new PropertyItem("Block reference Ids (directOnly = true)", ids, typeof(BlockTableRecord), 0 < ids.Count);
-                        ids = btr.GetBlockReferenceIds(false, true);
-                        yield return new PropertyItem("Block reference Ids (directOnly = false)", ids, typeof(BlockTableRecord), 0 < ids.Count);
-                    }
-                }
-                if (dbObj is Hatch hatch)
-                {
-                    yield return new PropertyItem("Hatch Loops", new HatchLoopCollection(hatch), typeof(Hatch), true);
-                }
-                if (dbObj is Region || dbObj is Solid3d || dbObj is AcDb.Surface)
-                {
-                    yield return new PropertyItem("Boundary representation", new Brep((Entity)dbObj), dbObj.GetType(), true);
-                }
                 yield return new PropertyItem("References to", new ReferencesTo(id), typeof(DBObject), true);
                 yield return new PropertyItem("Referenced by", new ReferencedBy(id), typeof(DBObject), true);
                 tr.Commit();
@@ -387,6 +354,39 @@ namespace Gile.AutoCAD.Inspector
             {
                 yield return new PropertyItem("Control points", new SplineControlPoints(spline), typeof(Spline), 0 < spline.NumControlPoints);
                 yield return new PropertyItem("Fit points", new SplineFitPoints(spline), typeof(Spline), 0 < spline.NumFitPoints);
+            }
+            else if (dbObj is AcDb.Polyline pl)
+                yield return new PropertyItem("Vertices", new PolylineVertices(pl), typeof(AcDb.Polyline), true);
+            else if (dbObj is Polyline3d pl3d)
+                yield return new PropertyItem("Vertices", new Polyline3dVertices(pl3d), typeof(Polyline3d), true);
+            else if (dbObj is Polyline2d pl2d)
+                yield return new PropertyItem("Vertices", new Polyline2dVertices(pl2d), typeof(Polyline2d), true);
+            else if (dbObj is Mline mline)
+                yield return new PropertyItem("Vertices", new MlineVertices(mline), typeof(Mline), true);
+            else if (dbObj is BlockTableRecord)
+            {
+                var btr = (BlockTableRecord)dbObj;
+                var ids = new ObjectIdCollection();
+                foreach (ObjectId oId in btr)
+                {
+                    ids.Add(oId);
+                }
+                yield return new PropertyItem("Entities within block", ids, typeof(BlockTableRecord), 0 < ids.Count);
+                if (!btr.IsLayout)
+                {
+                    ids = btr.GetBlockReferenceIds(true, true);
+                    yield return new PropertyItem("Block reference Ids (directOnly = true)", ids, typeof(BlockTableRecord), 0 < ids.Count);
+                    ids = btr.GetBlockReferenceIds(false, true);
+                    yield return new PropertyItem("Block reference Ids (directOnly = false)", ids, typeof(BlockTableRecord), 0 < ids.Count);
+                }
+            }
+            if (dbObj is Hatch hatch)
+            {
+                yield return new PropertyItem("Hatch Loops", new HatchLoopCollection(hatch), typeof(Hatch), true);
+            }
+            if (dbObj is Region || dbObj is Solid3d || dbObj is AcDb.Surface)
+            {
+                yield return new PropertyItem("Boundary representation", new Brep((Entity)dbObj), dbObj.GetType(), true);
             }
         }
 
@@ -461,13 +461,14 @@ namespace Gile.AutoCAD.Inspector
         }
 
         private IEnumerable<PropertyItem> ListResultBufferProperties(ResultBuffer resbuf) =>
-            resbuf.Cast<TypedValue>().Select(tv => new PropertyItem(tv.TypeCode.ToString(), tv.Value, typeof(ResultBuffer), false));
+            resbuf.Cast<TypedValue>().Select(tv => new PropertyItem(tv.TypeCode.ToString(), tv.Value, typeof(ResultBuffer), CheckIsInspectable(tv.Value)));
 
         private IEnumerable<PropertyItem> ListCollection(IList collection)
         {
+            bool isInspectable = CheckIsInspectable(collection[0]);
             for (int i = 0; i < collection.Count; i++)
             {
-                yield return new PropertyItem($"[{i}]", collection[i], collection.GetType(), false);
+                yield return new PropertyItem($"[{i}]", collection[i], collection.GetType(), isInspectable);
             }
         }
 

@@ -384,7 +384,7 @@
             "SharedLegacy" = "11:FALSE"
             "PackageAs" = "3:1"
             "Register" = "3:1"
-            "Exclude" = "11:FALSE"
+            "Exclude" = "11:TRUE"
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
@@ -579,15 +579,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Gile.Inspector"
-        "ProductCode" = "8:{706A581E-EEFE-444D-A5EF-84AB1C4C1B7C}"
-        "PackageCode" = "8:{A084C9B2-E6C2-43CA-A0E7-4516DD4C85D5}"
+        "ProductCode" = "8:{3C501B60-3CCB-4FB1-A933-27AF9B5A397C}"
+        "PackageCode" = "8:{6100543A-4754-4219-B70A-A8E61E0D74EC}"
         "UpgradeCode" = "8:{593AC09A-0221-43F6-B541-5A9F8542D1FC}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.9"
+        "ProductVersion" = "8:1.0.10"
         "Manufacturer" = "8:gileCAD"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -1044,7 +1044,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_3537704F49874E2CA7D84AA94A60CD23"
             {
-            "SourcePath" = "8:..\\Gile.Inspector\\obj\\Release\\Gile.Inspector.dll"
+            "SourcePath" = "8:"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_186FDE9CF97B44008E259858DFB78448"
