@@ -3,10 +3,20 @@ using Autodesk.AutoCAD.Geometry;
 
 namespace Gile.AutoCAD.Inspector
 {
+    /// <summary>
+    /// Describes a collection of Mline vertices
+    /// </summary>
     public class MlineVertices
     {
+        /// <summary>
+        /// Gets the vertices collection.
+        /// </summary>
         public Point3dCollection Vertices { get; }
 
+        /// <summary>
+        /// Creates a new instance of MlineVertices.
+        /// </summary>
+        /// <param name="mline">Mline instance.</param>
         public MlineVertices(Mline mline)
         {
             Vertices = new Point3dCollection();

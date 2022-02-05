@@ -9,7 +9,7 @@
     <Window.Resources>
         <CollectionViewSource x:Key="viewSource" Source="{Binding Properties}">
             <CollectionViewSource.GroupDescriptions>
-                <PropertyGroupDescription PropertyName="SubType.Name" />
+                <PropertyGroupDescription PropertyName="BaseType.Name" />
             </CollectionViewSource.GroupDescriptions>
         </CollectionViewSource>
     </Window.Resources>

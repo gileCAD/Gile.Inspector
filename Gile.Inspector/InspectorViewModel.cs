@@ -36,6 +36,11 @@ namespace Gile.AutoCAD.Inspector
         #endregion
 
         #region Constructor
+        /// <summary>
+        /// Creates a new intance of InspectorViewModel.
+        /// Set the the values of ItemTree and Properties.
+        /// </summary>
+        /// <param name="value">Object to be inspected.</param>
         public InspectorViewModel(object value)
         {
             var type = value.GetType();
@@ -224,16 +229,33 @@ namespace Gile.AutoCAD.Inspector
         #endregion
 
         #region Properties
+        /// <summary>
+        /// Gets the Surface entity associated to Brep instance.
+        /// </summary>
         public Entity BrepSurf { get; private set; }
+
+        /// <summary>
+        /// Gets the Solid3d entity associated to Brep instance.
+        /// </summary>
         public Entity BrepSolid { get; private set; }
+
+        /// <summary>
+        /// Gets the list of objects to be disposed on WindowClosing event.
+        /// </summary>
         public List<DBObject> ToDispose { get; private set; } = new List<DBObject>();
 
+        /// <summary>
+        /// Gets or sets the items to be displayed in the TreeView.
+        /// </summary>
         public IEnumerable<InspectableItem> ItemTree
         {
             get { return inspectables; }
             set { inspectables = value; NotifyPropertyChanged(nameof(ItemTree)); }
         }
 
+        /// <summary>
+        /// Gets or sets the items to be displayed in the ListView.
+        /// </summary>
         public IEnumerable<PropertyItem> Properties
         {
             get { return properties; }
@@ -244,6 +266,9 @@ namespace Gile.AutoCAD.Inspector
             }
         }
 
+        /// <summary>
+        /// Handles the SelectedItem event of the ListView.
+        /// </summary>
         public PropertyItem SelectedProperty
         {
             get { return null; }
@@ -257,6 +282,9 @@ namespace Gile.AutoCAD.Inspector
         }
         #endregion
 
+        /// <summary>
+        /// Shows a new InpectorDialog window bounded to the current instance.
+        /// </summary>
         public void ShowDialog() => AcAp.ShowModalWindow(new InspectorDialog(this));
 
         /// <summary>
@@ -278,6 +306,11 @@ namespace Gile.AutoCAD.Inspector
             }
         }
 
+        /// <summary>
+        /// Handles the WindowClosing event.
+        /// </summary>
+        /// <param name="sender">Sender.</param>
+        /// <param name="e">Event args.</param>
         public void OnWindowClosing(object sender, CancelEventArgs e)
         {
             BrepSolid?.Dispose();

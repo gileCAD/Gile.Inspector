@@ -12,10 +12,20 @@ namespace Gile.AutoCAD.Inspector
     /// </summary>
     public abstract class ItemBase
     {
+        /// <summary>
+        /// Gets the value of the property.
+        /// </summary>
         public object Value { get; }
 
+        /// <summary>
+        /// Gets the string representing the value in the ListView.
+        /// </summary>
         public string Label { get; private set; }
 
+        /// <summary>
+        /// Creates a new intance of ItemBase.
+        /// </summary>
+        /// <param name="value">Value of the property.</param>
         public ItemBase(object value)
         {
             Value = value;

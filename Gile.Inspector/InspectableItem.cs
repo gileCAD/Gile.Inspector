@@ -12,9 +12,21 @@ namespace Gile.AutoCAD.Inspector
     /// </summary>
     public class InspectableItem : ItemBase
     {
+        /// <summary>
+        /// Gets the children tree of the current item.
+        /// </summary>
         public IEnumerable<InspectableItem> Children { get; protected set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating if the node is exapanded.
+        /// </summary>
         public bool IsExpanded { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating if the node is selected.
+        /// </summary>
         public bool IsSelected { get; set; }
+
         public string Name { get; protected set; }
 
         public InspectableItem(object value, bool isSelected = false, bool isExpanded = false, IEnumerable<InspectableItem> children = null, string name = null)

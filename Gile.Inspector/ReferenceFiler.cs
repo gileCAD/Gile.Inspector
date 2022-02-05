@@ -10,34 +10,65 @@ using System.Threading.Tasks;
 
 namespace Gile.AutoCAD.Inspector
 {
+    /// <summary>
+    /// Defines a reference filer.
+    /// </summary>
     class ReferenceFiler : DwgFiler
     {
+        /// <summary>
+        /// Gets the soft pointers.
+        /// </summary>
         public ObjectIdCollection SoftPointerIds { get; } = new ObjectIdCollection();
 
+        /// <summary>
+        /// Gets the hard pointers.
+        /// </summary>
         public ObjectIdCollection HardPointerIds { get; } = new ObjectIdCollection();
 
+        /// <summary>
+        /// Gets the soft ownerships.
+        /// </summary>
         public ObjectIdCollection SoftOwnershipIds { get; } = new ObjectIdCollection();
 
+        /// <summary>
+        /// Gets the hard ownerships.
+        /// </summary>
         public ObjectIdCollection HardOwnershipIds { get; } = new ObjectIdCollection();
 
+        /// <summary>
+        /// Writes the hard ownership collection.
+        /// </summary>
+        /// <param name="id">Instance of ObjectId.</param>
         public override void WriteHardOwnershipId(ObjectId id)
         {
             if (!id.IsNull)
                 HardOwnershipIds.Add(id);
         }
 
+        /// <summary>
+        /// Writes the hard pointer collection.
+        /// </summary>
+        /// <param name="id">Instance of ObjectId.</param>
         public override void WriteHardPointerId(ObjectId id)
         {
             if (!id.IsNull)
                 HardPointerIds.Add(id);
         }
 
+        /// <summary>
+        /// Writes the soft ownership collection.
+        /// </summary>
+        /// <param name="id">Instance of ObjectId.</param>
         public override void WriteSoftOwnershipId(ObjectId id)
         {
             if (!id.IsNull)
                 SoftOwnershipIds.Add(id);
         }
 
+        /// <summary>
+        /// Writes the soft pointer collection.
+        /// </summary>
+        /// <param name="id">Instance of ObjectId.</param>
         public override void WriteSoftPointerId(ObjectId id)
         {
             if (!id.IsNull)

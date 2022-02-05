@@ -98,7 +98,7 @@
     </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <PostBuildEvent>cd $(OutDir) 
 del start.scr</PostBuildEvent>
   </PropertyGroup>

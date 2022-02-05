@@ -8,10 +8,16 @@ using AcAp = Autodesk.AutoCAD.ApplicationServices.Application;
 
 namespace Gile.AutoCAD.Inspector
 {
+    /// <summary>
+    /// Defines the application initialization.
+    /// </summary>
     public class Initialization : IExtensionApplication
     {
         static InspectorContextMenu contextMenu;
 
+        /// <summary>
+        /// Initializes the application.
+        /// </summary>
         public void Initialize()
         {
             contextMenu = new InspectorContextMenu();
@@ -29,6 +35,9 @@ namespace Gile.AutoCAD.Inspector
             }
         }
 
+        /// <summary>
+        /// Terminates the application.
+        /// </summary>
         public void Terminate()
         {
             AcAp.RemoveDefaultContextMenuExtension(contextMenu);

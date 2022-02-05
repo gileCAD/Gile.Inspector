@@ -3,15 +3,37 @@ using Autodesk.AutoCAD.DatabaseServices;
 
 namespace Gile.AutoCAD.Inspector
 {
+    /// <summary>
+    /// Describes the objects referenced by a DBObject.
+    /// </summary>
     public class ReferencedBy : IReferences
     {
         private ObjectId sourceId;
 
+        /// <summary>
+        /// Gets the soft pointers.
+        /// </summary>
         public ObjectIdCollection SoftPointerIds { get; }
+
+        /// <summary>
+        /// Gets the harde pointers.
+        /// </summary>
         public ObjectIdCollection HardPointerIds { get; }
+
+        /// <summary>
+        /// Gets the soft ownerships.
+        /// </summary>
         public ObjectIdCollection SoftOwnershipIds { get; }
+
+        /// <summary>
+        /// Gets the hard ownerships.
+        /// </summary>
         public ObjectIdCollection HardOwnershipIds { get; }
 
+        /// <summary>
+        /// Creates a new instance of ReferencedBy.
+        /// </summary>
+        /// <param name="id">Instance of ObjectId.</param>
         public ReferencedBy(ObjectId id)
         {
             sourceId = id;

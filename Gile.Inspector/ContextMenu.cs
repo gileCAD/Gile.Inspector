@@ -5,10 +5,16 @@ using System;
 
 namespace Gile.AutoCAD.Inspector
 {
+    /// <summary>
+    /// Defines a context menu extension.
+    /// </summary>
     class InspectorContextMenu : ContextMenuExtension
     {
         private static Document ActiveDocument => Application.DocumentManager.MdiActiveDocument;
 
+        /// <summary>
+        /// Creates a new instance of InspectorContextMenu.
+        /// </summary>
         public InspectorContextMenu()
         {
             Title = "Inspector";
