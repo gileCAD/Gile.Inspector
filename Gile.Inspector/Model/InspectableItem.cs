@@ -27,8 +27,19 @@ namespace Gile.AutoCAD.Inspector
         /// </summary>
         public bool IsSelected { get; set; }
 
+        /// <summary>
+        /// Gets the name of the item.
+        /// </summary>
         public string Name { get; protected set; }
 
+        /// <summary>
+        /// Creates a new instance of InspectableItem
+        /// </summary>
+        /// <param name="value">Object to be inspected.</param>
+        /// <param name="isSelected">Value indicating if the item is selected.</param>
+        /// <param name="isExpanded">Value indicating if the item is expanded.</param>
+        /// <param name="children">Children of the object.</param>
+        /// <param name="name">Name of the object.</param>
         public InspectableItem(object value, bool isSelected = false, bool isExpanded = false, IEnumerable<InspectableItem> children = null, string name = null)
             : base(value)
         {
@@ -56,14 +67,15 @@ namespace Gile.AutoCAD.Inspector
                 var dbObj = tr.GetObject(id, OpenMode.ForRead);
                 if (string.IsNullOrEmpty(name))
                 {
-                    Name = dbObj is SymbolTableRecord r ? r.Name : $"< {dbObj.GetType().Name}\t{dbObj.Handle} >";
+                    Name = dbObj is SymbolTableRecord r ? r.Name : $"< {dbObj.GetType().Name} \t{dbObj.Handle} >";
                 }
-                else 
+                else if (name == "<_>")
                 {
-                    if (name == "<_>")
-                        Name = $"< {dbObj.GetType().Name}\t{dbObj.Handle} >";
-                    else
-                        Name = name;
+                    Name = $"< {dbObj.GetType().Name} \t{dbObj.Handle} >";
+                }
+                else
+                {
+                    Name = name;
                 }
 
                 if (dbObj is SymbolTable)

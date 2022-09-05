@@ -76,7 +76,7 @@ namespace Gile.AutoCAD.Inspector
                     }
                     else if (nspace.StartsWith("Gile.AutoCAD.Inspector"))
                     {
-                        Label = $"[ {type.Name} ]";
+                        Label = $"< Inspector.{type.Name} >";
                     }
                     else
                     {

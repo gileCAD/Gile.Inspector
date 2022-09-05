@@ -1,5 +1,4 @@
 ﻿using Autodesk.AutoCAD.BoundaryRepresentation;
-using Autodesk.AutoCAD.Colors;
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.Geometry;
 using Autodesk.AutoCAD.GraphicsInterface;
@@ -15,7 +14,6 @@ using System.Reflection;
 
 using AcAp = Autodesk.AutoCAD.ApplicationServices.Core.Application;
 using AcDb = Autodesk.AutoCAD.DatabaseServices;
-using AcBr = Autodesk.AutoCAD.BoundaryRepresentation;
 
 namespace Gile.AutoCAD.Inspector
 {
@@ -26,6 +24,9 @@ namespace Gile.AutoCAD.Inspector
     {
         private IEnumerable<PropertyItem> properties;
         private IEnumerable<InspectableItem> inspectables;
+        private readonly Entity brepSurf;
+        private readonly Entity brepSolid;
+        private readonly List<DBObject> toDispose = new List<DBObject>();
 
         #region INotitfyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
@@ -121,8 +122,8 @@ namespace Gile.AutoCAD.Inspector
                     case MlineVertices vertices: InitializeSingle(vertices.Vertices); break;
                     case LayerFilterTree filterTree: InitializeSingle(filterTree.Root); break;
                     case Brep brep:
-                        BrepSolid = brep.Solid;
-                        BrepSurf = brep.Surf;
+                        brepSolid = brep.Solid;
+                        brepSurf = brep.Surf;
                         var item = new InspectableItem(
                             brep,
                             true,
@@ -230,21 +231,6 @@ namespace Gile.AutoCAD.Inspector
 
         #region Properties
         /// <summary>
-        /// Gets the Surface entity associated to Brep instance.
-        /// </summary>
-        public Entity BrepSurf { get; private set; }
-
-        /// <summary>
-        /// Gets the Solid3d entity associated to Brep instance.
-        /// </summary>
-        public Entity BrepSolid { get; private set; }
-
-        /// <summary>
-        /// Gets the list of objects to be disposed on WindowClosing event.
-        /// </summary>
-        public List<DBObject> ToDispose { get; private set; } = new List<DBObject>();
-
-        /// <summary>
         /// Gets or sets the items to be displayed in the TreeView.
         /// </summary>
         public IEnumerable<InspectableItem> ItemTree
@@ -313,9 +299,9 @@ namespace Gile.AutoCAD.Inspector
         /// <param name="e">Event args.</param>
         public void OnWindowClosing(object sender, CancelEventArgs e)
         {
-            BrepSolid?.Dispose();
-            BrepSurf?.Dispose();
-            foreach (var item in ToDispose)
+            brepSolid?.Dispose();
+            brepSurf?.Dispose();
+            foreach (var item in toDispose)
             {
                 if (!item.IsDisposed)
                     item.Dispose();
@@ -375,7 +361,7 @@ namespace Gile.AutoCAD.Inspector
                         catch (System.Exception e) { value = e.Message; }
                     }
                     if (value is DBObject dbo && dbo.Handle == default)
-                        ToDispose.Add(dbo);
+                        toDispose.Add(dbo);
                     bool isInspectable =
                         CheckIsInspectable(value) &&
                         !((value is ObjectId id) && id == dbObj.ObjectId) &&
@@ -440,7 +426,7 @@ namespace Gile.AutoCAD.Inspector
             }
         }
 
-        private IEnumerable<PropertyItem> ListProperties (object item)
+        private IEnumerable<PropertyItem> ListProperties(object item)
         {
             var types = new List<Type>();
             var type = item.GetType();
