@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Gile.AutoCAD.Inspector"
         mc:Ignorable="d"
-        Title="Inspector" Width="700">
+        Title="Inspector" Width="700" ResizeMode="NoResize" >
     <Window.Resources>
         <CollectionViewSource x:Key="viewSource" Source="{Binding Properties}">
             <CollectionViewSource.GroupDescriptions>
