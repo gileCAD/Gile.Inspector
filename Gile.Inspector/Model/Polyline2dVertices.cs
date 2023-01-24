@@ -12,7 +12,7 @@ namespace Gile.AutoCAD.Inspector
         /// <summary>
         /// Gets the vertices collection.
         /// </summary>
-        public ObjectIdCollection Vertices { get; }
+        public DBObjectCollection Vertices { get; }
 
         /// <summary>
         /// Creates a new instance of Polyline2dVertices.
@@ -20,10 +20,13 @@ namespace Gile.AutoCAD.Inspector
         /// <param name="pline">Polyline2d instance.</param>
         public Polyline2dVertices(Polyline2d pline)
         {
-            Vertices = new ObjectIdCollection();
-            foreach (ObjectId id in pline)
+            Vertices = new DBObjectCollection();
+            foreach (var obj in pline)
             {
-                Vertices.Add(id);
+                if (obj is ObjectId id)
+                    Vertices.Add((Vertex2d)id.GetObject(OpenMode.ForRead));
+                else
+                    Vertices.Add((Vertex2d)obj);
             }
         }
     }
