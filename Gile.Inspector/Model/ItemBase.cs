@@ -4,6 +4,7 @@ using Autodesk.AutoCAD.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Runtime.ExceptionServices;
 
 namespace Gile.AutoCAD.Inspector
 {
@@ -29,10 +30,16 @@ namespace Gile.AutoCAD.Inspector
         public ItemBase(object value)
         {
             Value = value;
+            SetLabel(value);
+        }
+
+        [HandleProcessCorruptedStateExceptions()]
+        private void SetLabel(object value)
+        {
             switch (value)
             {
                 case null:
-                    Label = "(Null)"; 
+                    Label = "(Null)";
                     break;
                 case ObjectId id:
                     if (id.IsNull)
@@ -41,11 +48,15 @@ namespace Gile.AutoCAD.Inspector
                     }
                     else
                     {
-                        using (var tr = id.Database.TransactionManager.StartTransaction())
+                        try
                         {
-                            var dbObject = tr.GetObject(id, OpenMode.ForRead);
-                            Label = $"< {dbObject.GetType().Name} \t{dbObject.Handle} >";
+                            using (var tr = new OpenCloseTransaction())
+                            {
+                                var dbObject = tr.GetObject(id, OpenMode.ForRead);
+                                Label = $"< {dbObject.GetType().Name} \t{dbObject.Handle} >";
+                            }
                         }
+                        catch (Exception ex) { Label = ex.Message; }
                     }
                     break;
                 case double d:

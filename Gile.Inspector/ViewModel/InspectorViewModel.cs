@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.ExceptionServices;
 
 using AcAp = Autodesk.AutoCAD.ApplicationServices.Core.Application;
 using AcDb = Autodesk.AutoCAD.DatabaseServices;
@@ -152,16 +153,16 @@ namespace Gile.AutoCAD.Inspector
                         Properties = ListProperties(vertices.Vertices[0]);
                         break;
                     case Polyline3dVertices vertices:
-                        items = vertices.Vertices.Cast<ObjectId>().Select(id => new InspectableItem(id));
+                        items = vertices.Vertices.Cast<DBObject>().Select(obj => new InspectableItem(obj));
                         items.First().IsSelected = true;
                         ItemTree = items;
-                        Properties = ListObjectIdProperties(vertices.Vertices[0]);
+                        Properties = ListDBObjectProperties(vertices.Vertices[0]);
                         break;
                     case Polyline2dVertices vertices:
-                        items = vertices.Vertices.Cast<ObjectId>().Select(id => new InspectableItem(id));
+                        items = vertices.Vertices.Cast<DBObject>().Select(id => new InspectableItem(id));
                         items.First().IsSelected = true;
                         ItemTree = items;
-                        Properties = ListObjectIdProperties(vertices.Vertices[0]);
+                        Properties = ListDBObjectProperties(vertices.Vertices[0]);
                         break;
                     case HatchLoopCollection loops:
                         items = loops.Loops.Select(l => new InspectableItem(l));
@@ -499,6 +500,7 @@ namespace Gile.AutoCAD.Inspector
             }
         }
 
+        [HandleProcessCorruptedStateExceptions()]
         private static bool CheckIsInspectable(object value)
         {
             if (value is Dictionary<string, string>.Enumerator dictEnum && dictEnum.MoveNext())
@@ -506,8 +508,15 @@ namespace Gile.AutoCAD.Inspector
             var type = value.GetType();
             if (!type.Namespace.StartsWith("Autodesk.AutoCAD") && type.Namespace != "Gile.AutoCAD.Inspector")
                 return false;
-            if (value is ObjectId id && id.IsNull)
-                return false;
+            if (value is ObjectId id)
+            {
+                if (id.IsNull)
+                    return false;
+                try { var objectClass = id.ObjectClass; }
+                catch { return false; }
+            }
+            if (value is Handle handle && handle == default) 
+                return false;  
             if (type.IsClass && value == null)
                 return false;
             if (value is IEnumerable collection && !collection.GetEnumerator().MoveNext())
