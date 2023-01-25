@@ -66,10 +66,10 @@
     <Compile Include="Model\ContextMenu.cs" />
     <Compile Include="Model\HatchLoopCollection.cs" />
     <Compile Include="Model\IReferences.cs" />
-    <Compile Include="Model\ItemBase.cs" />
+    <Compile Include="ViewModel\ItemBase.cs" />
     <Compile Include="Model\Commands.cs" />
     <Compile Include="Model\Initialization.cs" />
-    <Compile Include="Model\InspectableItem.cs" />
+    <Compile Include="ViewModel\InspectableItem.cs" />
     <Compile Include="View\InspectorDialog.xaml.cs">
       <DependentUpon>InspectorDialog.xaml</DependentUpon>
     </Compile>
@@ -78,7 +78,7 @@
     <Compile Include="Model\Polyline3dVertices.cs" />
     <Compile Include="Model\PolylineVertex.cs" />
     <Compile Include="Model\PolylineVertices.cs" />
-    <Compile Include="Model\PropertyItem.cs" />
+    <Compile Include="ViewModel\PropertyItem.cs" />
     <Compile Include="ViewModel\InspectorViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Model\ReferencedBy.cs" />

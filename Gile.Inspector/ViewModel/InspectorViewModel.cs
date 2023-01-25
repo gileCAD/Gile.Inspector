@@ -25,6 +25,7 @@ namespace Gile.AutoCAD.Inspector
     {
         private IEnumerable<PropertyItem> properties;
         private IEnumerable<InspectableItem> inspectables;
+        private IEnumerable<InspectableItem> items;
         private readonly Entity brepSurf;
         private readonly Entity brepSolid;
         private readonly List<DBObject> toDispose = new List<DBObject>();
@@ -46,25 +47,18 @@ namespace Gile.AutoCAD.Inspector
         public InspectorViewModel(object value)
         {
             var type = value.GetType();
-            ObservableCollection<InspectableItem> items;
             if (type.Namespace.StartsWith("Autodesk.AutoCAD"))
             {
                 switch (value)
                 {
                     case ObjectIdCollection ids:
-                        items = new ObservableCollection<InspectableItem>(
-                            ids.Cast<ObjectId>().Select(id => new InspectableItem(id, name: "<_>")));
-                        items.First().IsSelected = true;
-                        ItemTree = items;
+                        items = ids.Cast<ObjectId>().Select(id => new InspectableItem(id, name: "<_>"));
                         break;
                     case LayerFilter filter:
-                        items = new ObservableCollection<InspectableItem>(
-                            filter.NestedFilters.Cast<LayerFilter>().Select(f => new InspectableItem(f)));
-                        items.First().IsSelected = true;
-                        ItemTree = items;
+                        items = filter.NestedFilters.Cast<LayerFilter>().Select(f => new InspectableItem(f));
                         break;
                     case CellBorders borders:
-                        ItemTree = new ObservableCollection<InspectableItem>(new[]
+                        items = new[]
                         {
                             new InspectableItem(borders.Vertical, true, name: "Vertical"),
                             new InspectableItem(borders.Horizontal, name: "Horizontal"),
@@ -72,25 +66,19 @@ namespace Gile.AutoCAD.Inspector
                             new InspectableItem(borders.Right, name: "Right"),
                             new InspectableItem(borders.Top, name: "Top"),
                             new InspectableItem(borders.Left, name: "Left")
-                        });
+                        };
                         break;
                     case EdgeRef[] edges:
-                        items = new ObservableCollection<InspectableItem>(edges.Select(e => new InspectableItem(e)));
-                        items.First().IsSelected = true;
-                        ItemTree = items;
+                        items = edges.Select(e => new InspectableItem(e));
                         break;
                     case HatchLoopCollection loops:
-                        items = new ObservableCollection<InspectableItem>(loops.Loops.Select(l => new InspectableItem(l)));
-                        items.First().IsSelected = true;
-                        ItemTree = items;
+                        items = loops.Loops.Select(l => new InspectableItem(l));
                         break;
                     case Curve2dCollection curves:
-                        items = new ObservableCollection<InspectableItem>(curves.Cast<Entity2d>().Select(e => new InspectableItem(e)));
-                        items.First().IsSelected = true;
-                        ItemTree = items;
+                        items = curves.Cast<Entity2d>().Select(e => new InspectableItem(e));
                         break;
-                    case LayerFilterCollection collection: InitializeCollection<LayerFilter>(collection, ListLayerFilterProperties); break;
-                    case AcDb.AttributeCollection collection: InitializeCollection<ObjectId>(collection, ListObjectIdProperties); break;
+                    case LayerFilterCollection collection: InitializeCollection<LayerFilter>(collection); break;
+                    case AcDb.AttributeCollection collection: InitializeCollection<ObjectId>(collection); break;
                     case MlineStyleElementCollection collection: InitializeCollection<MlineStyleElement>(collection); break;
                     case DynamicBlockReferencePropertyCollection collection: InitializeCollection<DynamicBlockReferenceProperty>(collection); break;
                     case HyperLinkCollection collection: InitializeCollection<HyperLink>(collection); break;
@@ -112,10 +100,10 @@ namespace Gile.AutoCAD.Inspector
                     case LoopEdgeCollection collection: InitializeIEnumerable(collection); break;
                     case VertexEdgeCollection collection: InitializeIEnumerable(collection); break;
                     case VertexLoopCollection collection: InitializeIEnumerable(collection); break;
-                    case ObjectId id: InitializeSingle(id, ListObjectIdProperties); break;
-                    case DBObject dbObj: InitializeSingle(dbObj, ListDBObjectProperties); break;
-                    case Dictionary<string, string>.Enumerator dict: InitializeSingle(dict, ListDictEnumProperties); break;
-                    case Point2dCollection pts: InitializeSingle(pts, ListCollection); break;
+                    case ObjectId id: InitializeSingle(id); break;
+                    case DBObject dbObj: InitializeSingle(dbObj); break;
+                    case Dictionary<string, string>.Enumerator dict: InitializeSingle(dict); break;
+                    case Point2dCollection pts: InitializeSingle(pts); break;
                     case MlineVertices vertices: InitializeSingle(vertices.Vertices); break;
                     case LayerFilterTree filterTree: InitializeSingle(filterTree.Root); break;
                     case Brep brep:
@@ -131,7 +119,7 @@ namespace Gile.AutoCAD.Inspector
                                     .Select(f => new InspectableItem(f, children: f.Loops
                                         .Select(l => new InspectableItem(l, children: l.Edges
                                             .Select(e => new InspectableItem(e)))))))))));
-                        ItemTree = new ObservableCollection<InspectableItem>(new[] { item });
+                        items = new[] { item };
                         break;
                     default: InitializeSingle(value); break;
                 }
@@ -142,46 +130,38 @@ namespace Gile.AutoCAD.Inspector
                 switch (value)
                 {
                     case PolylineVertices vertices:
-                        items = new ObservableCollection<InspectableItem>(vertices.Vertices.Select(v => new InspectableItem(v)));
-                        items.First().IsSelected = true;
-                        ItemTree = items;
+                        items = vertices.Vertices.Select(v => new InspectableItem(v));
                         break;
                     case Polyline3dVertices vertices:
-                        items = new ObservableCollection<InspectableItem>(vertices.Vertices.Cast<DBObject>().Select(obj => new InspectableItem(obj)));
-                        items.First().IsSelected = true;
-                        ItemTree = items;
+                        items = vertices.Vertices.Cast<DBObject>().Select(obj => new InspectableItem(obj));
                         break;
                     case Polyline2dVertices vertices:
-                        items = new ObservableCollection<InspectableItem>(vertices.Vertices.Cast<DBObject>().Select(id => new InspectableItem(id)));
-                        items.First().IsSelected = true;
-                        ItemTree = items;
+                        items = vertices.Vertices.Cast<DBObject>().Select(id => new InspectableItem(id));
                         break;
                     case HatchLoopCollection loops:
-                        items = new ObservableCollection<InspectableItem>(loops.Loops.Select(l => new InspectableItem(l)));
-                        items.First().IsSelected = true;
-                        ItemTree = items;
+                        items = loops.Loops.Select(l => new InspectableItem(l));
                         break;
                     case SplineControlPoints points:
-                        InitializeSingle(points.ControlPoints, ListCollection);
+                        InitializeSingle(points.ControlPoints);
                         break;
                     case SplineFitPoints points:
-                        InitializeSingle(points.FitPoints, ListCollection);
+                        InitializeSingle(points.FitPoints);
                         break;
                     case IReferences references:
                         IEnumerable<InspectableItem> getChildren(ObjectIdCollection ids) =>
                             ids
                             .Cast<ObjectId>()
                             .Select(id => new InspectableItem(id, name: "<_>"));
-                        ItemTree = new ObservableCollection<InspectableItem>(
+                        items =
                             new[]
                             {
                                 new InspectableItem(references.HardPointerIds, true, true, getChildren(references.HardPointerIds), name: "Hard pointer"),
                                 new InspectableItem(references.SoftPointerIds, false, true, getChildren(references.SoftPointerIds), name: "Soft pointer"),
                                 new InspectableItem(references.HardOwnershipIds, false, true, getChildren(references.HardOwnershipIds), name: "Hard ownership"),
                                 new InspectableItem(references.SoftOwnershipIds, false, true, getChildren(references.SoftOwnershipIds), name: "Soft ownership"),
-                            });
+                            };
                         break;
-                    case MlineVertices vertices: InitializeSingle(vertices.Vertices, ListCollection); break;
+                    case MlineVertices vertices: InitializeSingle(vertices.Vertices); break;
                     default:
                         break;
                 }
@@ -189,28 +169,27 @@ namespace Gile.AutoCAD.Inspector
             else
             {
                 if (value is Dictionary<string, string>.Enumerator dict)
-                    InitializeSingle(dict, ListDictEnumProperties);
+                    InitializeSingle(dict);
             }
-        }
 
-        private void InitializeCollection<T>(ICollection collection, Func<T, IEnumerable<PropertyItem>> listFunction = null)
-        {
-            var items = collection.Cast<T>().Select(x => new InspectableItem(x)).ToList();
-            items[0].IsSelected = true;
             ItemTree = new ObservableCollection<InspectableItem>(items);
+            ItemTree.First().IsSelected= true;
         }
 
-        private void InitializeIEnumerable<T>(IEnumerable<T> collection, Func<T, IEnumerable<PropertyItem>> listFunction = null)
+        private void InitializeCollection<T>(ICollection collection)
         {
-            var items = collection.Select(e => new InspectableItem(e)).ToList();
-            items[0].IsSelected = true;
-            ItemTree = new ObservableCollection<InspectableItem>(items);
+            items = collection.Cast<T>().Select(x => new InspectableItem(x)).ToList();
         }
 
-        private void InitializeSingle<T>(T value, Func<T, IEnumerable<PropertyItem>> listFunction = null)
+        private void InitializeIEnumerable<T>(IEnumerable<T> collection)
+        {
+            items = collection.Select(e => new InspectableItem(e));
+        }
+
+        private void InitializeSingle<T>(T value)
         {
             var item = new InspectableItem(value, true, true);
-            ItemTree = new ObservableCollection<InspectableItem>(new[] { item });
+            items = new[] { item };
         }
         #endregion
 
@@ -272,7 +251,9 @@ namespace Gile.AutoCAD.Inspector
                 case ResultBuffer resbuf: Properties = ListResultBufferProperties(resbuf); break;
                 case DoubleCollection doubles: Properties = ListCollection(doubles); break;
                 case Point3dCollection points: Properties = ListCollection(points); break;
+                case Point2dCollection points: Properties = ListCollection(points); break;
                 case LayerFilter filter: Properties = ListLayerFilterProperties(filter); break;
+                case Dictionary<string, string>.Enumerator dict: Properties = ListDictEnumProperties(dict); break;
                 default: Properties = ListProperties(item.Value); break;
             }
         }
