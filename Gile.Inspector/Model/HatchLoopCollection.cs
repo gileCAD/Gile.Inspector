@@ -15,7 +15,7 @@ namespace Gile.AutoCAD.Inspector
         public List<HatchLoop> Loops { get; }
 
         /// <summary>
-        /// Creates a nes instance of HatchLoopCollection;
+        /// Creates a new instance of HatchLoopCollection;
         /// </summary>
         /// <param name="hatch">Hatch instance.</param>
         public HatchLoopCollection(Hatch hatch)

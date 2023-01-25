@@ -136,10 +136,13 @@ namespace Gile.AutoCAD.Inspector
                         items = vertices.Vertices.Cast<DBObject>().Select(obj => new InspectableItem(obj));
                         break;
                     case Polyline2dVertices vertices:
-                        items = vertices.Vertices.Cast<DBObject>().Select(id => new InspectableItem(id));
+                        InitializeSingle(vertices.Vertices);
                         break;
                     case HatchLoopCollection loops:
                         items = loops.Loops.Select(l => new InspectableItem(l));
+                        break;
+                    case ViewportCollection viewports:
+                        items = viewports.Viewports.Cast<ObjectId>().Select(id => new InspectableItem(id));
                         break;
                     case SplineControlPoints points:
                         InitializeSingle(points.ControlPoints);
@@ -171,14 +174,16 @@ namespace Gile.AutoCAD.Inspector
                 if (value is Dictionary<string, string>.Enumerator dict)
                     InitializeSingle(dict);
             }
-
-            ItemTree = new ObservableCollection<InspectableItem>(items);
-            ItemTree.First().IsSelected= true;
+            if (items.Any())
+            {
+                ItemTree = new ObservableCollection<InspectableItem>(items);
+                ItemTree.First().IsSelected = true;
+            }
         }
 
         private void InitializeCollection<T>(ICollection collection)
         {
-            items = collection.Cast<T>().Select(x => new InspectableItem(x)).ToList();
+            items = collection.Cast<T>().Select(x => new InspectableItem(x));
         }
 
         private void InitializeIEnumerable<T>(IEnumerable<T> collection)
@@ -375,6 +380,11 @@ namespace Gile.AutoCAD.Inspector
             if (dbObj is Hatch hatch)
             {
                 yield return new PropertyItem("Hatch Loops", new HatchLoopCollection(hatch), typeof(Hatch), true);
+            }
+            if (dbObj is Layout layout)
+            {
+                var vpCol = new ViewportCollection(layout);
+                yield return new PropertyItem("Viewports", vpCol, typeof(Layout), 0 < vpCol.Viewports.Count);
             }
             if (dbObj is Region || dbObj is Solid3d || dbObj is AcDb.Surface)
             {
