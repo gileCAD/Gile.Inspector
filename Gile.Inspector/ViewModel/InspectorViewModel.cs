@@ -11,7 +11,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.ExceptionServices;
 
 using AcAp = Autodesk.AutoCAD.ApplicationServices.Core.Application;
 using AcDb = Autodesk.AutoCAD.DatabaseServices;
@@ -349,7 +348,13 @@ namespace Gile.AutoCAD.Inspector
                 {
                     string name = prop.Name;
                     if (name == "Item") continue;
+                    if (name == "OwnerId" && dbObj.Handle == default(Handle))
+                    {
+                        yield return new PropertyItem(name, "(Null)", subType, false);
+                        continue;
+                    }
                     object value;
+                    bool isInspectable = true;
                     // From Jeff_M http://www.theswamp.org/index.php?topic=57317.msg608371#msg608371
                     var obsAtt = prop.CustomAttributes.FirstOrDefault(x => x.AttributeType.Name == "ObsoleteAttribute");
                     if (obsAtt != null)
@@ -359,11 +364,12 @@ namespace Gile.AutoCAD.Inspector
                     else
                     {
                         try { value = prop.GetValue(dbObj, null) ?? "(Null)"; }
-                        catch (System.Exception e) { value = e.Message; }
+                        catch (System.Exception e) { value = e.Message; isInspectable = false; }
                     }
                     if (value is DBObject dbo && dbo.Handle == default)
                         toDispose.Add(dbo);
-                    bool isInspectable =
+                    isInspectable =
+                        isInspectable &&
                         CheckIsInspectable(value) &&
                         !((value is ObjectId id) && id == dbObj.ObjectId) &&
                         !((value is DBObject obj) && obj.GetType() == dbObj.GetType() && obj.Handle == dbObj.Handle);
@@ -416,10 +422,11 @@ namespace Gile.AutoCAD.Inspector
             foreach (var prop in typeof(LayerFilter).GetProperties(flags))
             {
                 string name = prop.Name;
+                bool isInspectable = true;
                 object value;
                 try { value = prop.GetValue(layerFilter, null) ?? "(Null)"; }
-                catch (System.Exception e) { value = e.Message; }
-                bool isInspectable = CheckIsInspectable(value);
+                catch (System.Exception e) { value = e.Message; isInspectable = false; }
+                isInspectable = isInspectable && CheckIsInspectable(value);
                 if (name == "Parent" && value is LayerFilter f)
                     yield return new PropertyItem(name, f.Parent, typeof(LayerFilter), isInspectable && f.Parent != null);
                 else
@@ -449,9 +456,10 @@ namespace Gile.AutoCAD.Inspector
                     if (item is Brep && (name == "Surf" || name == "Solid")) continue;
                     if (item is DynamicBlockReferenceProperty && name == "Value") continue;
                     object value;
+                    bool isInspectable = true;
                     try { value = prop.GetValue(item, null) ?? "(Null)"; }
-                    catch (System.Exception e) { value = e.Message; }
-                    bool isInspectable = !item.Equals(value) && CheckIsInspectable(value);
+                    catch (System.Exception e) { value = e.Message; isInspectable = false; }
+                    isInspectable = isInspectable && !item.Equals(value) && CheckIsInspectable(value);
                     yield return new PropertyItem(name, value, subType, isInspectable);
                 }
             }
@@ -500,7 +508,6 @@ namespace Gile.AutoCAD.Inspector
             }
         }
 
-        [HandleProcessCorruptedStateExceptions()]
         private static bool CheckIsInspectable(object value)
         {
             if (value is Dictionary<string, string>.Enumerator dictEnum && dictEnum.MoveNext())
@@ -508,12 +515,9 @@ namespace Gile.AutoCAD.Inspector
             var type = value.GetType();
             if (!type.Namespace.StartsWith("Autodesk.AutoCAD") && type.Namespace != "Gile.AutoCAD.Inspector")
                 return false;
-            if (value is ObjectId id)
+            if (value is ObjectId id && id.IsNull)
             {
-                if (id.IsNull)
-                    return false;
-                try { var objectClass = id.ObjectClass; }
-                catch { return false; }
+                return false;
             }
             if (value is Handle handle && handle == default) 
                 return false;  
