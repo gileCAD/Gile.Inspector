@@ -3,6 +3,7 @@ using Autodesk.AutoCAD.LayerManager;
 
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 
 namespace Gile.AutoCAD.Inspector
@@ -10,8 +11,17 @@ namespace Gile.AutoCAD.Inspector
     /// <summary>
     /// Type bounded to the items of the TreeView control.
     /// </summary>
-    public class InspectableItem : ItemBase
+    public class InspectableItem : ItemBase, INotifyPropertyChanged
     {
+        #region INotitfyPropertyChanged
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void NotifyPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+        #endregion
+
+        bool isExpanded, isSelected;
         /// <summary>
         /// Gets the children tree of the current item.
         /// </summary>
@@ -20,12 +30,20 @@ namespace Gile.AutoCAD.Inspector
         /// <summary>
         /// Gets or sets a value indicating if the node is exapanded.
         /// </summary>
-        public bool IsExpanded { get; set; }
+        public bool IsExpanded
+        {
+            get { return isExpanded; }
+            set { isExpanded = value; NotifyPropertyChanged(nameof(IsExpanded)); }
+        }
 
         /// <summary>
         /// Gets or sets a value indicating if the node is selected.
         /// </summary>
-        public bool IsSelected { get; set; }
+        public bool IsSelected
+        {
+            get { return isSelected; }
+            set { isSelected = value; NotifyPropertyChanged(nameof(isSelected)); }
+        }
 
         /// <summary>
         /// Gets the name of the item.

@@ -8,6 +8,7 @@ using Autodesk.AutoCAD.Runtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
@@ -39,31 +40,31 @@ namespace Gile.AutoCAD.Inspector
         #region Constructor
         /// <summary>
         /// Creates a new intance of InspectorViewModel.
-        /// Set the the values of ItemTree and Properties.
+        /// Set the the values of ItemTree.
         /// </summary>
         /// <param name="value">Object to be inspected.</param>
         public InspectorViewModel(object value)
         {
             var type = value.GetType();
-            IEnumerable<InspectableItem> items;
+            ObservableCollection<InspectableItem> items;
             if (type.Namespace.StartsWith("Autodesk.AutoCAD"))
             {
                 switch (value)
                 {
                     case ObjectIdCollection ids:
-                        items = ids.Cast<ObjectId>().Select(id => new InspectableItem(id, name: "<_>"));
+                        items = new ObservableCollection<InspectableItem>(
+                            ids.Cast<ObjectId>().Select(id => new InspectableItem(id, name: "<_>")));
                         items.First().IsSelected = true;
                         ItemTree = items;
-                        Properties = ListObjectIdProperties(ids[0]);
                         break;
                     case LayerFilter filter:
-                        items = filter.NestedFilters.Cast<LayerFilter>().Select(f => new InspectableItem(f));
+                        items = new ObservableCollection<InspectableItem>(
+                            filter.NestedFilters.Cast<LayerFilter>().Select(f => new InspectableItem(f)));
                         items.First().IsSelected = true;
                         ItemTree = items;
-                        Properties = ListProperties(filter);
                         break;
                     case CellBorders borders:
-                        ItemTree = new[]
+                        ItemTree = new ObservableCollection<InspectableItem>(new[]
                         {
                             new InspectableItem(borders.Vertical, true, name: "Vertical"),
                             new InspectableItem(borders.Horizontal, name: "Horizontal"),
@@ -71,26 +72,22 @@ namespace Gile.AutoCAD.Inspector
                             new InspectableItem(borders.Right, name: "Right"),
                             new InspectableItem(borders.Top, name: "Top"),
                             new InspectableItem(borders.Left, name: "Left")
-                        };
-                        Properties = ListProperties(borders.Vertical);
+                        });
                         break;
                     case EdgeRef[] edges:
-                        items = edges.Select(e => new InspectableItem(e));
+                        items = new ObservableCollection<InspectableItem>(edges.Select(e => new InspectableItem(e)));
                         items.First().IsSelected = true;
                         ItemTree = items;
-                        Properties = ListProperties(edges[0]);
                         break;
                     case HatchLoopCollection loops:
-                        items = loops.Loops.Select(l => new InspectableItem(l));
+                        items = new ObservableCollection<InspectableItem>(loops.Loops.Select(l => new InspectableItem(l)));
                         items.First().IsSelected = true;
                         ItemTree = items;
-                        Properties = ListProperties(loops.Loops[0]);
                         break;
                     case Curve2dCollection curves:
-                        items = curves.Cast<Entity2d>().Select(e => new InspectableItem(e));
+                        items = new ObservableCollection<InspectableItem>(curves.Cast<Entity2d>().Select(e => new InspectableItem(e)));
                         items.First().IsSelected = true;
                         ItemTree = items;
-                        Properties = ListProperties(curves[0]);
                         break;
                     case LayerFilterCollection collection: InitializeCollection<LayerFilter>(collection, ListLayerFilterProperties); break;
                     case AcDb.AttributeCollection collection: InitializeCollection<ObjectId>(collection, ListObjectIdProperties); break;
@@ -134,8 +131,7 @@ namespace Gile.AutoCAD.Inspector
                                     .Select(f => new InspectableItem(f, children: f.Loops
                                         .Select(l => new InspectableItem(l, children: l.Edges
                                             .Select(e => new InspectableItem(e)))))))))));
-                        ItemTree = new[] { item };
-                        Properties = ListProperties(brep);
+                        ItemTree = new ObservableCollection<InspectableItem>(new[] { item });
                         break;
                     default: InitializeSingle(value); break;
                 }
@@ -146,28 +142,24 @@ namespace Gile.AutoCAD.Inspector
                 switch (value)
                 {
                     case PolylineVertices vertices:
-                        items = vertices.Vertices.Select(v => new InspectableItem(v));
+                        items = new ObservableCollection<InspectableItem>(vertices.Vertices.Select(v => new InspectableItem(v)));
                         items.First().IsSelected = true;
                         ItemTree = items;
-                        Properties = ListProperties(vertices.Vertices[0]);
                         break;
                     case Polyline3dVertices vertices:
-                        items = vertices.Vertices.Cast<DBObject>().Select(obj => new InspectableItem(obj));
+                        items = new ObservableCollection<InspectableItem>(vertices.Vertices.Cast<DBObject>().Select(obj => new InspectableItem(obj)));
                         items.First().IsSelected = true;
                         ItemTree = items;
-                        Properties = ListDBObjectProperties(vertices.Vertices[0]);
                         break;
                     case Polyline2dVertices vertices:
-                        items = vertices.Vertices.Cast<DBObject>().Select(id => new InspectableItem(id));
+                        items = new ObservableCollection<InspectableItem>(vertices.Vertices.Cast<DBObject>().Select(id => new InspectableItem(id)));
                         items.First().IsSelected = true;
                         ItemTree = items;
-                        Properties = ListDBObjectProperties(vertices.Vertices[0]);
                         break;
                     case HatchLoopCollection loops:
-                        items = loops.Loops.Select(l => new InspectableItem(l));
+                        items = new ObservableCollection<InspectableItem>(loops.Loops.Select(l => new InspectableItem(l)));
                         items.First().IsSelected = true;
                         ItemTree = items;
-                        Properties = ListProperties(loops.Loops[0]);
                         break;
                     case SplineControlPoints points:
                         InitializeSingle(points.ControlPoints, ListCollection);
@@ -180,14 +172,14 @@ namespace Gile.AutoCAD.Inspector
                             ids
                             .Cast<ObjectId>()
                             .Select(id => new InspectableItem(id, name: "<_>"));
-                        ItemTree = new[]
-                        {
-                            new InspectableItem(references.HardPointerIds, true, true, getChildren(references.HardPointerIds), name: "Hard pointer"),
-                            new InspectableItem(references.SoftPointerIds, false, true, getChildren(references.SoftPointerIds), name: "Soft pointer"),
-                            new InspectableItem(references.HardOwnershipIds, false, true, getChildren(references.HardOwnershipIds), name: "Hard ownership"),
-                            new InspectableItem(references.SoftOwnershipIds, false, true, getChildren(references.SoftOwnershipIds), name: "Soft ownership"),
-                        };
-                        Properties = new PropertyItem[0];
+                        ItemTree = new ObservableCollection<InspectableItem>(
+                            new[]
+                            {
+                                new InspectableItem(references.HardPointerIds, true, true, getChildren(references.HardPointerIds), name: "Hard pointer"),
+                                new InspectableItem(references.SoftPointerIds, false, true, getChildren(references.SoftPointerIds), name: "Soft pointer"),
+                                new InspectableItem(references.HardOwnershipIds, false, true, getChildren(references.HardOwnershipIds), name: "Hard ownership"),
+                                new InspectableItem(references.SoftOwnershipIds, false, true, getChildren(references.SoftOwnershipIds), name: "Soft ownership"),
+                            });
                         break;
                     case MlineVertices vertices: InitializeSingle(vertices.Vertices, ListCollection); break;
                     default:
@@ -205,27 +197,20 @@ namespace Gile.AutoCAD.Inspector
         {
             var items = collection.Cast<T>().Select(x => new InspectableItem(x)).ToList();
             items[0].IsSelected = true;
-            ItemTree = items;
-            Properties = listFunction == null ?
-                ListProperties(collection.Cast<T>().First()) :
-                listFunction(collection.Cast<T>().First());
+            ItemTree = new ObservableCollection<InspectableItem>(items);
         }
 
         private void InitializeIEnumerable<T>(IEnumerable<T> collection, Func<T, IEnumerable<PropertyItem>> listFunction = null)
         {
             var items = collection.Select(e => new InspectableItem(e)).ToList();
             items[0].IsSelected = true;
-            ItemTree = items;
-            Properties = listFunction == null ?
-                ListProperties(collection.First()) :
-                listFunction(collection.First());
+            ItemTree = new ObservableCollection<InspectableItem>(items);
         }
 
         private void InitializeSingle<T>(T value, Func<T, IEnumerable<PropertyItem>> listFunction = null)
         {
             var item = new InspectableItem(value, true, true);
-            ItemTree = new[] { item };
-            Properties = listFunction == null ? ListProperties(value) : listFunction(value);
+            ItemTree = new ObservableCollection<InspectableItem>(new[] { item });
         }
         #endregion
 
@@ -233,9 +218,9 @@ namespace Gile.AutoCAD.Inspector
         /// <summary>
         /// Gets or sets the items to be displayed in the TreeView.
         /// </summary>
-        public IEnumerable<InspectableItem> ItemTree
+        public ObservableCollection<InspectableItem> ItemTree
         {
-            get { return inspectables; }
+            get { return new ObservableCollection<InspectableItem>(inspectables); }
             set { inspectables = value; NotifyPropertyChanged(nameof(ItemTree)); }
         }
 

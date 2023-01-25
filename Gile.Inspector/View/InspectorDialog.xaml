@@ -25,12 +25,18 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <TreeView Grid.Column="0" Margin="5" MinWidth="150" ItemsSource="{Binding ItemTree}" SelectedItemChanged="TreeView_SelectedItemChanged">
+            <TreeView  Grid.Column="0" Margin="5" MinWidth="150" ItemsSource="{Binding ItemTree}" SelectedItemChanged="TreeView_SelectedItemChanged">
                 <TreeView.ItemContainerStyle>
                     <Style TargetType="{x:Type TreeViewItem}">
                         <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
                         <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
                         <Setter Property="HorizontalAlignment" Value="Left"/>
+                        <Setter Property="FontWeight" Value="Normal" />
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="FontWeight" Value="Bold" />
+                            </Trigger>
+                        </Style.Triggers>
                     </Style>
                 </TreeView.ItemContainerStyle>
                 <TreeView.Resources>
