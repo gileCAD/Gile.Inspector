@@ -21,7 +21,7 @@ namespace Gile.AutoCAD.Inspector
             Closing += viewModel.OnWindowClosing;
         }
 
-        private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) => 
+        private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) =>
             viewModel.SetProperties(e.NewValue);
     }
 }
