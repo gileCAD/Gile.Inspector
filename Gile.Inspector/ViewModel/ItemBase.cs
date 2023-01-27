@@ -29,11 +29,6 @@ namespace Gile.AutoCAD.Inspector
         public ItemBase(object value)
         {
             Value = value;
-            SetLabel(value);
-        }
-
-        private void SetLabel(object value)
-        {
             switch (value)
             {
                 case null:
@@ -54,7 +49,7 @@ namespace Gile.AutoCAD.Inspector
                     }
                     break;
                 case double d:
-                    Label = d.ToString(Commands.NumberFormat);
+                    Label = d.ToString(NumberFormat());
                     break;
                 case Enum _:
                 case Handle _:
@@ -64,7 +59,7 @@ namespace Gile.AutoCAD.Inspector
                 case Point3d _:
                 case Vector2d _:
                 case Vector3d _:
-                    Label = ((IFormattable)value).ToString(Commands.NumberFormat, CultureInfo.CurrentCulture);
+                    Label = ((IFormattable)value).ToString(NumberFormat(), CultureInfo.CurrentCulture);
                     break;
                 case DBObject dBObject:
                     Label = $"< {value.GetType().Name} \t{dBObject.Handle} >";
@@ -89,6 +84,18 @@ namespace Gile.AutoCAD.Inspector
                     }
                     break;
             }
+        }
+
+        private string NumberFormat()
+        {
+            int luprec = HostApplicationServices.WorkingDatabase.Luprec;
+            string format = "0";
+            if (0 < luprec)
+            {
+                format += ".";
+                for (int i = 0; i < luprec; i++) format += "0";
+            }
+            return format;
         }
     }
 }
