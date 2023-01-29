@@ -47,48 +47,49 @@ namespace Gile.AutoCAD.Inspector
         {
             var items = Enumerable.Empty<InspectableItem>();
 
-            void initializeCollection<T>(ICollection collection) =>
-                items = collection.Cast<T>().Select(x => new InspectableItem(x));
+            IEnumerable< InspectableItem> fromICollection<T>(ICollection collection) =>
+                collection.Cast<T>().Select(x => new InspectableItem(x));
 
-            void initializeIEnumerable<T>(IEnumerable<T> collection) =>
-                items = collection.Select(e => new InspectableItem(e));
+            IEnumerable<InspectableItem> fromIEnumerable<T>(IEnumerable<T> sequence) =>
+                sequence.Select(e => new InspectableItem(e));
 
-            void initializeObject<T>(T obj) =>
-                items = new[] { new InspectableItem(obj, true, true) };
+            IEnumerable<InspectableItem> fromObject<T>(T obj) =>
+                new[] { new InspectableItem(obj, true, true) };
 
             var type = value.GetType();
             if (type.Namespace.StartsWith("Autodesk.AutoCAD"))
             {
                 switch (value)
                 {
-                    case ObjectId id: initializeObject(id); break;
-                    case DBObject dbObj: initializeObject(dbObj); break;
-                    case Point2dCollection pts: initializeObject(pts); break;
-                    case LayerFilterTree filterTree: initializeObject(filterTree.Root); break;
-                    case LayerFilter filter: initializeCollection<LayerFilter>(filter.NestedFilters); break;
-                    case LayerFilterCollection collection: initializeCollection<LayerFilter>(collection); break;
-                    case Curve2dCollection curves: initializeCollection<Entity2d>(curves); break;
-                    case AcDb.AttributeCollection collection: initializeCollection<ObjectId>(collection); break;
-                    case MlineStyleElementCollection collection: initializeCollection<MlineStyleElement>(collection); break;
-                    case DynamicBlockReferencePropertyCollection collection: initializeCollection<DynamicBlockReferenceProperty>(collection); break;
-                    case HyperLinkCollection collection: initializeCollection<HyperLink>(collection); break;
-                    case BulgeVertexCollection collection: initializeCollection<BulgeVertex>(collection); break;
-                    case EdgeRef[] edges: initializeIEnumerable(edges); break;
-                    case RowsCollection collection: initializeIEnumerable(collection); break;
-                    case ColumnsCollection collection: initializeIEnumerable(collection); break;
-                    case BrepVertexCollection collection: initializeIEnumerable(collection); break;
-                    case BrepEdgeCollection collection: initializeIEnumerable(collection); break;
-                    case BrepFaceCollection collection: initializeIEnumerable(collection); break;
-                    case BrepComplexCollection collection: initializeIEnumerable(collection); break;
-                    case BrepShellCollection collection: initializeIEnumerable(collection); break;
-                    case FaceLoopCollection collection: initializeIEnumerable(collection); break;
-                    case EdgeLoopCollection collection: initializeIEnumerable(collection); break;
-                    case ComplexShellCollection collection: initializeIEnumerable(collection); break;
-                    case ShellFaceCollection collection: initializeIEnumerable(collection); break;
-                    case LoopVertexCollection collection: initializeIEnumerable(collection); break;
-                    case LoopEdgeCollection collection: initializeIEnumerable(collection); break;
-                    case VertexEdgeCollection collection: initializeIEnumerable(collection); break;
-                    case VertexLoopCollection collection: initializeIEnumerable(collection); break;
+                    case ObjectId id: items = fromObject(id); break;
+                    case DBObject dbObj: items = fromObject(dbObj); break;
+                    case Point2dCollection pts: items = fromObject(pts); break;
+                    case LayerFilterTree filterTree: items = fromObject(filterTree.Root); break;
+                    case LayerFilter filter: items = fromICollection<LayerFilter>(filter.NestedFilters); break;
+                    case LayerFilterCollection collection: items = fromICollection<LayerFilter>(collection); break;
+                    case Curve2dCollection collection: items = fromICollection<Entity2d>(collection); break;
+                    case AcDb.AttributeCollection collection: items = fromICollection<ObjectId>(collection); break;
+                    case MlineStyleElementCollection collection: items = fromICollection<MlineStyleElement>(collection); break;
+                    case DynamicBlockReferencePropertyCollection collection: items = fromICollection<DynamicBlockReferenceProperty>(collection); break;
+                    case HyperLinkCollection collection: items = fromICollection<HyperLink>(collection); break;
+                    case BulgeVertexCollection collection: items = fromICollection<BulgeVertex>(collection); break;
+                    case IEnumerable<DBObject> sequence: items = fromIEnumerable(sequence); break;
+                    case EdgeRef[] edges: items = fromIEnumerable(edges); break;
+                    case RowsCollection sequence: items = fromIEnumerable(sequence); break;
+                    case ColumnsCollection sequence: items = fromIEnumerable(sequence); break;
+                    case BrepVertexCollection sequence: items = fromIEnumerable(sequence); break;
+                    case BrepEdgeCollection sequence: items = fromIEnumerable(sequence); break;
+                    case BrepFaceCollection sequence: items = fromIEnumerable(sequence); break;
+                    case BrepComplexCollection sequence: items = fromIEnumerable(sequence); break;
+                    case BrepShellCollection sequence: items = fromIEnumerable(sequence); break;
+                    case FaceLoopCollection sequence: items = fromIEnumerable(sequence); break;
+                    case EdgeLoopCollection sequence: items = fromIEnumerable(sequence); break;
+                    case ComplexShellCollection sequence: items = fromIEnumerable(sequence); break;
+                    case ShellFaceCollection sequence: items = fromIEnumerable(sequence); break;
+                    case LoopVertexCollection sequence: items = fromIEnumerable(sequence); break;
+                    case LoopEdgeCollection sequence: items = fromIEnumerable(sequence); break;
+                    case VertexEdgeCollection sequence: items = fromIEnumerable(sequence); break;
+                    case VertexLoopCollection sequence: items = fromIEnumerable(sequence); break;
                     case ObjectIdCollection ids:
                         items = ids.Cast<ObjectId>().Select(id => new InspectableItem(id, name: "<_>"));
                         break;
@@ -118,21 +119,21 @@ namespace Gile.AutoCAD.Inspector
                                             .Select(e => new InspectableItem(e)))))))))));
                         items = new[] { item };
                         break;
-                    default: initializeObject(value); break;
+                    default: items = fromObject(value); break;
                 }
             }
             else if (type.Namespace == "Gile.AutoCAD.Inspector")
             {
                 switch (value)
                 {
-                    case MlineVertices vertices: initializeObject(vertices.Vertices); break;
-                    case SplineControlPoints points: initializeObject(points.ControlPoints); break;
-                    case SplineFitPoints points: initializeObject(points.FitPoints); break;
-                    case HatchLoopCollection loops: initializeIEnumerable(loops.Loops); break;
-                    case PolylineVertices vertices: initializeIEnumerable(vertices.Vertices); break;
-                    case Polyline3dVertices vertices: initializeCollection<DBObject>(vertices.Vertices); break;
-                    case Polyline2dVertices vertices: initializeCollection<DBObject>(vertices.Vertices); break;
-                    case ViewportCollection viewports: initializeCollection<ObjectId>(viewports.Viewports); break;
+                    case MlineVertices vertices: items = fromObject(vertices.Vertices); break;
+                    case SplineControlPoints points: items = fromObject(points.ControlPoints); break;
+                    case SplineFitPoints points: items = fromObject(points.FitPoints); break;
+                    case HatchLoopCollection loops: items = fromIEnumerable(loops.Loops); break;
+                    case PolylineVertices vertices: items = fromIEnumerable(vertices.Vertices); break;
+                    case Polyline3dVertices vertices: items = fromICollection<DBObject>(vertices.Vertices); break;
+                    case Polyline2dVertices vertices: items = fromICollection<DBObject>(vertices.Vertices); break;
+                    case ViewportCollection viewports: items = fromICollection<ObjectId>(viewports.Viewports); break;
                     case IReferences references:
                         IEnumerable<InspectableItem> getChildren(ObjectIdCollection ids) =>
                             ids
@@ -154,15 +155,15 @@ namespace Gile.AutoCAD.Inspector
             {
                 switch (value)
                 {
-                    case IEnumerable<Entity> collection: initializeIEnumerable(collection); break;
-                    case IEnumerable<Profile3d> collection: initializeIEnumerable(collection); break;
-                    case Dictionary<string, string>.Enumerator dict: initializeObject(dict); break;
+                    case IEnumerable<Entity> collection: items = fromIEnumerable(collection); break;
+                    case IEnumerable<Profile3d> collection: items = fromIEnumerable(collection); break;
+                    case Dictionary<string, string>.Enumerator dict: items = fromObject(dict); break;
                     default: break;
                 }
             }
-            
+
             ItemTree = new ObservableCollection<InspectableItem>(items);
-            if (items.Any()) 
+            if (items.Any())
                 ItemTree.First().IsSelected = true;
         }
         #endregion
@@ -464,8 +465,8 @@ namespace Gile.AutoCAD.Inspector
             {
                 return false;
             }
-            if (value is Handle handle && handle == default) 
-                return false;  
+            if (value is Handle handle && handle == default)
+                return false;
             if (type.IsClass && value == null)
                 return false;
             if (value is IEnumerable collection && !collection.GetEnumerator().MoveNext())
