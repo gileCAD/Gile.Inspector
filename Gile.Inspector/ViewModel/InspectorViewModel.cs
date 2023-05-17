@@ -330,9 +330,8 @@ namespace Gile.AutoCAD.Inspector
                 yield return new PropertyItem("Vertices", new Polyline2dVertices(pl2d), typeof(Polyline2d), true);
             else if (dbObj is Mline mline)
                 yield return new PropertyItem("Vertices", new MlineVertices(mline), typeof(Mline), true);
-            else if (dbObj is BlockTableRecord)
+            else if (dbObj is BlockTableRecord btr)
             {
-                var btr = (BlockTableRecord)dbObj;
                 var ids = new ObjectIdCollection();
                 foreach (ObjectId oId in btr)
                 {
@@ -347,18 +346,27 @@ namespace Gile.AutoCAD.Inspector
                     yield return new PropertyItem("Block reference Ids (directOnly = false)", ids, typeof(BlockTableRecord), 0 < ids.Count);
                 }
             }
-            if (dbObj is Hatch hatch)
+            else if (dbObj is Hatch hatch)
             {
                 yield return new PropertyItem("Hatch Loops", new HatchLoopCollection(hatch), typeof(Hatch), true);
             }
-            if (dbObj is Layout layout)
+            else if (dbObj is Layout layout)
             {
                 var vpCol = new ViewportCollection(layout);
                 yield return new PropertyItem("Viewports", vpCol, typeof(Layout), 0 < vpCol.Viewports.Count);
             }
-            if (dbObj is Region || dbObj is Solid3d || dbObj is AcDb.Surface)
+            else if (dbObj is Region || dbObj is Solid3d || dbObj is AcDb.Surface)
             {
                 yield return new PropertyItem("Boundary representation", new Brep((Entity)dbObj), dbObj.GetType(), true);
+            }
+            else if (dbObj is Group group)
+            {
+                var ids = new ObjectIdCollection();
+                foreach (var id in group.GetAllEntityIds())
+                {
+                    ids.Add(id);
+                }
+                yield return new PropertyItem("Entities within group", ids, typeof(Group), 0 < ids.Count);
             }
         }
 
