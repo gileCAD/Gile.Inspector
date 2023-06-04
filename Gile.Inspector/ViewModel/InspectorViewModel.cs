@@ -427,7 +427,7 @@ namespace Gile.AutoCAD.Inspector
                 var controlPoints = nurbsData.GetControlPoints();
                 var knots = nurbsData.GetKnots();
                 var weights = nurbsData.GetWeights();
-                yield return new PropertyItem("FitPoints", controlPoints, typeof(NurbsData), 0 < controlPoints.Count);
+                yield return new PropertyItem("ControlPoints", controlPoints, typeof(NurbsData), 0 < controlPoints.Count);
                 yield return new PropertyItem("Knots", knots, typeof(NurbsData), 0 < knots.Count);
                 yield return new PropertyItem("Weights", weights, typeof(NurbsData), 0 < weights.Count);
             }
