@@ -47,7 +47,7 @@ namespace Gile.AutoCAD.Inspector
         {
             var items = Enumerable.Empty<InspectableItem>();
 
-            IEnumerable< InspectableItem> fromICollection<T>(ICollection collection) =>
+            IEnumerable<InspectableItem> fromICollection<T>(ICollection collection) =>
                 collection.Cast<T>().Select(x => new InspectableItem(x));
 
             IEnumerable<InspectableItem> fromIEnumerable<T>(IEnumerable<T> sequence) =>
@@ -158,6 +158,7 @@ namespace Gile.AutoCAD.Inspector
                     case IEnumerable<Entity> collection: items = fromIEnumerable(collection); break;
                     case IEnumerable<Profile3d> collection: items = fromIEnumerable(collection); break;
                     case Dictionary<string, string>.Enumerator dict: items = fromObject(dict); break;
+                    case object[] objs: items = fromObject(objs); break;
                     default: break;
                 }
             }
@@ -229,6 +230,7 @@ namespace Gile.AutoCAD.Inspector
                 case Point2dCollection points: Properties = ListCollection(points); break;
                 case LayerFilter filter: Properties = ListLayerFilterProperties(filter); break;
                 case Dictionary<string, string>.Enumerator dict: Properties = ListDictEnumProperties(dict); break;
+                case object[] objs: Properties = ListCollection(objs); break;
                 default: Properties = ListProperties(item.Value); break;
             }
         }
@@ -317,56 +319,62 @@ namespace Gile.AutoCAD.Inspector
                     yield return new PropertyItem(name, value, subType, isInspectable);
                 }
             }
-            if (dbObj is Spline spline)
+            ObjectIdCollection ids;
+            switch (dbObj)
             {
-                yield return new PropertyItem("Control points", new SplineControlPoints(spline), typeof(Spline), 0 < spline.NumControlPoints);
-                yield return new PropertyItem("Fit points", new SplineFitPoints(spline), typeof(Spline), 0 < spline.NumFitPoints);
-            }
-            else if (dbObj is AcDb.Polyline pl)
-                yield return new PropertyItem("Vertices", new PolylineVertices(pl), typeof(AcDb.Polyline), true);
-            else if (dbObj is Polyline3d pl3d)
-                yield return new PropertyItem("Vertices", new Polyline3dVertices(pl3d), typeof(Polyline3d), true);
-            else if (dbObj is Polyline2d pl2d)
-                yield return new PropertyItem("Vertices", new Polyline2dVertices(pl2d), typeof(Polyline2d), true);
-            else if (dbObj is Mline mline)
-                yield return new PropertyItem("Vertices", new MlineVertices(mline), typeof(Mline), true);
-            else if (dbObj is BlockTableRecord btr)
-            {
-                var ids = new ObjectIdCollection();
-                foreach (ObjectId oId in btr)
-                {
-                    ids.Add(oId);
-                }
-                yield return new PropertyItem("Entities within block", ids, typeof(BlockTableRecord), 0 < ids.Count);
-                if (!btr.IsLayout)
-                {
-                    ids = btr.GetBlockReferenceIds(true, true);
-                    yield return new PropertyItem("Block reference Ids (directOnly = true)", ids, typeof(BlockTableRecord), 0 < ids.Count);
-                    ids = btr.GetBlockReferenceIds(false, true);
-                    yield return new PropertyItem("Block reference Ids (directOnly = false)", ids, typeof(BlockTableRecord), 0 < ids.Count);
-                }
-            }
-            else if (dbObj is Hatch hatch)
-            {
-                yield return new PropertyItem("Hatch Loops", new HatchLoopCollection(hatch), typeof(Hatch), true);
-            }
-            else if (dbObj is Layout layout)
-            {
-                var vpCol = new ViewportCollection(layout);
-                yield return new PropertyItem("Viewports", vpCol, typeof(Layout), 0 < vpCol.Viewports.Count);
-            }
-            else if (dbObj is Region || dbObj is Solid3d || dbObj is AcDb.Surface)
-            {
-                yield return new PropertyItem("Boundary representation", new Brep((Entity)dbObj), dbObj.GetType(), true);
-            }
-            else if (dbObj is Group group)
-            {
-                var ids = new ObjectIdCollection();
-                foreach (var id in group.GetAllEntityIds())
-                {
-                    ids.Add(id);
-                }
-                yield return new PropertyItem("Entities within group", ids, typeof(Group), 0 < ids.Count);
+                case Spline spline:
+                    yield return new PropertyItem("Control points", new SplineControlPoints(spline), typeof(Spline), 0 < spline.NumControlPoints);
+                    yield return new PropertyItem("Fit points", new SplineFitPoints(spline), typeof(Spline), 0 < spline.NumFitPoints);
+                    break;
+                case AcDb.Polyline pl:
+                    yield return new PropertyItem("Vertices", new PolylineVertices(pl), typeof(AcDb.Polyline), true);
+                    break;
+                case Polyline3d pl3d:
+                    yield return new PropertyItem("Vertices", new Polyline3dVertices(pl3d), typeof(Polyline3d), true);
+                    break;
+                case Polyline2d pl2d:
+                    yield return new PropertyItem("Vertices", new Polyline2dVertices(pl2d), typeof(Polyline2d), true);
+                    break;
+                case Mline mline:
+                    yield return new PropertyItem("Vertices", new MlineVertices(mline), typeof(Mline), true);
+                    break;
+                case BlockTableRecord btr:
+                    ids = new ObjectIdCollection();
+                    foreach (ObjectId oId in btr)
+                    {
+                        ids.Add(oId);
+                    }
+                    yield return new PropertyItem("Entities within block", ids, typeof(BlockTableRecord), 0 < ids.Count);
+                    if (!btr.IsLayout)
+                    {
+                        ids = btr.GetBlockReferenceIds(true, true);
+                        yield return new PropertyItem("Block reference Ids (directOnly = true)", ids, typeof(BlockTableRecord), 0 < ids.Count);
+                        ids = btr.GetBlockReferenceIds(false, true);
+                        yield return new PropertyItem("Block reference Ids (directOnly = false)", ids, typeof(BlockTableRecord), 0 < ids.Count);
+                    }
+                    break;
+                case Hatch hatch:
+                    yield return new PropertyItem("Hatch Loops", new HatchLoopCollection(hatch), typeof(Hatch), true);
+                    break;
+                case Layout layout:
+                    var vpCol = new ViewportCollection(layout);
+                    yield return new PropertyItem("Viewports", vpCol, typeof(Layout), 0 < vpCol.Viewports.Count);
+                    break;
+                case Region _:
+                case Solid3d _:
+                case AcDb.Surface _:
+                    yield return new PropertyItem("Boundary representation", new Brep((Entity)dbObj), dbObj.GetType(), true);
+                    break;
+                case Group group:
+                    ids = new ObjectIdCollection();
+                    foreach (var id in group.GetAllEntityIds())
+                    {
+                        ids.Add(id);
+                    }
+                    yield return new PropertyItem("Entities within group", ids, typeof(Group), 0 < ids.Count);
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -417,28 +425,35 @@ namespace Gile.AutoCAD.Inspector
                     yield return new PropertyItem(name, value, subType, isInspectable);
                 }
             }
-            if (item is FitData fitData)
+            switch (item)
             {
-                var fitPoints = fitData.GetFitPoints();
-                yield return new PropertyItem("FitPoints", fitPoints, typeof(FitData), 0 < fitPoints.Count);
-            }
-            else if (item is NurbsData nurbsData)
-            {
-                var controlPoints = nurbsData.GetControlPoints();
-                var knots = nurbsData.GetKnots();
-                var weights = nurbsData.GetWeights();
-                yield return new PropertyItem("ControlPoints", controlPoints, typeof(NurbsData), 0 < controlPoints.Count);
-                yield return new PropertyItem("Knots", knots, typeof(NurbsData), 0 < knots.Count);
-                yield return new PropertyItem("Weights", weights, typeof(NurbsData), 0 < weights.Count);
-            }
-            else if (item is KnotCollection knotCollection && 0 < knotCollection.Count)
-            {
-                var knots = new DoubleCollection();
-                for (int i = 0; i < knotCollection.Count; i++)
-                {
-                    knots.Add(knotCollection[i]);
-                }
-                yield return new PropertyItem("Knots", knots, typeof(KnotCollection), true);
+                case FitData fitData:
+                    var fitPoints = fitData.GetFitPoints();
+                    yield return new PropertyItem("FitPoints", fitPoints, typeof(FitData), 0 < fitPoints.Count);
+                    break;
+                case NurbsData nurbsData:
+                    var controlPoints = nurbsData.GetControlPoints();
+                    var knots = nurbsData.GetKnots();
+                    var weights = nurbsData.GetWeights();
+                    yield return new PropertyItem("ControlPoints", controlPoints, typeof(NurbsData), 0 < controlPoints.Count);
+                    yield return new PropertyItem("Knots", knots, typeof(NurbsData), 0 < knots.Count);
+                    yield return new PropertyItem("Weights", weights, typeof(NurbsData), 0 < weights.Count);
+                    break;
+                case KnotCollection knotCollection when 0 < knotCollection.Count:
+                    var knotCol = new DoubleCollection();
+                    for (int i = 0; i < knotCollection.Count; i++)
+                    {
+                        knotCol.Add(knotCollection[i]);
+                    }
+                    yield return new PropertyItem("Knots", knotCol, typeof(KnotCollection), true);
+                    break;
+                case DynamicBlockReferenceProperty dynProp:
+                    var allowedValues = dynProp.GetAllowedValues();
+                    yield return new PropertyItem(
+                        "AllowedValues", allowedValues, typeof(DynamicBlockReferenceProperty), 0 < allowedValues.Length);
+                    break;
+                default:
+                    break;
             }
         }
 
