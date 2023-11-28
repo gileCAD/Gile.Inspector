@@ -306,8 +306,15 @@ namespace Gile.AutoCAD.Inspector
                     }
                     else
                     {
-                        try { value = prop.GetValue(dbObj, null) ?? "(Null)"; }
-                        catch (System.Exception e) { value = e.Message; isInspectable = false; }
+                        if (dbObj is MPolygon && prop.Name == "PatternColor")
+                        {
+                            value = "eNotApplicable";
+                        }
+                        else
+                        {
+                            try { value = prop.GetValue(dbObj, null) ?? "(Null)"; }
+                            catch (System.Exception e) { value = e.Message; isInspectable = false; }
+                        }
                     }
                     if (value is DBObject dbo && dbo.Handle == default)
                         toDispose.Add(dbo);
