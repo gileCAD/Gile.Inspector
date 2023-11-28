@@ -306,9 +306,9 @@ namespace Gile.AutoCAD.Inspector
                     }
                     else
                     {
-                        if (dbObj is MPolygon && prop.Name == "PatternColor")
+                        if (prop.DeclaringType.Name == "MPolygon" && prop.Name == "PatternColor")
                         {
-                            value = "eNotApplicable";
+                            value = "NotAccessible";
                         }
                         else
                         {
