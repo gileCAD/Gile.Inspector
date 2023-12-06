@@ -63,6 +63,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Model\ContextMenu.cs" />
+    <Compile Include="Model\DataCellCollection.cs" />
+    <Compile Include="Model\DataColumnCollection.cs" />
+    <Compile Include="Model\DataRow.cs" />
+    <Compile Include="Model\DataRowCollection.cs" />
     <Compile Include="Model\HatchLoopCollection.cs" />
     <Compile Include="Model\IReferences.cs" />
     <Compile Include="Model\ViewportCollection.cs" />

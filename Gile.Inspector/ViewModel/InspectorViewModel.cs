@@ -10,6 +10,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Data.Common;
 using System.Linq;
 using System.Reflection;
 
@@ -130,6 +131,9 @@ namespace Gile.AutoCAD.Inspector
                     case SplineControlPoints points: items = fromObject(points.ControlPoints); break;
                     case SplineFitPoints points: items = fromObject(points.FitPoints); break;
                     case HatchLoopCollection loops: items = fromIEnumerable(loops.Loops); break;
+                    case DataColumnCollection columns: items = fromIEnumerable(columns.Columns); break;
+                    case DataRowCollection rows: items = fromIEnumerable(rows.Rows); break;
+                    case DataCellCollection cells: items = fromIEnumerable(cells.Cells); break;
                     case PolylineVertices vertices: items = fromIEnumerable(vertices.Vertices); break;
                     case Polyline3dVertices vertices: items = fromICollection<DBObject>(vertices.Vertices); break;
                     case Polyline2dVertices vertices: items = fromICollection<DBObject>(vertices.Vertices); break;
@@ -291,7 +295,7 @@ namespace Gile.AutoCAD.Inspector
                 {
                     string name = prop.Name;
                     if (name == "Item") continue;
-                    if (name == "OwnerId" && dbObj.Handle == default(Handle))
+                    if (name == "OwnerId" && dbObj.Handle == default)
                     {
                         yield return new PropertyItem(name, "(Null)", subType, false);
                         continue;
@@ -308,7 +312,8 @@ namespace Gile.AutoCAD.Inspector
                     {
                         if (prop.DeclaringType.Name == "MPolygon" && prop.Name == "PatternColor")
                         {
-                            value = "NotAccessible";
+                            value = new AccessViolationException().Message;
+                            isInspectable = false;
                         }
                         else
                         {
@@ -362,6 +367,10 @@ namespace Gile.AutoCAD.Inspector
                     break;
                 case Hatch hatch:
                     yield return new PropertyItem("Hatch Loops", new HatchLoopCollection(hatch), typeof(Hatch), true);
+                    break;
+                case DataTable table:
+                    yield return new PropertyItem("Columns", new DataColumnCollection(table), typeof(DataTable), true);
+                    yield return new PropertyItem("Rows", new DataRowCollection(table), typeof(DataTable), true);
                     break;
                 case Layout layout:
                     var vpCol = new ViewportCollection(layout);
@@ -459,6 +468,10 @@ namespace Gile.AutoCAD.Inspector
                     yield return new PropertyItem(
                         "AllowedValues", allowedValues, typeof(DynamicBlockReferenceProperty), 0 < allowedValues.Length);
                     break;
+                case DataColumn column:
+                    var cells = new DataCellCollection(column);
+                    yield return new PropertyItem("Cells", cells, typeof(DataColumn), true);
+                    break;
                 default:
                     break;
             }
@@ -486,24 +499,24 @@ namespace Gile.AutoCAD.Inspector
 
         private static bool CheckIsInspectable(object value)
         {
-            if (value is Dictionary<string, string>.Enumerator dictEnum && dictEnum.MoveNext())
-                return true;
+            if (value == null)
+                return false;
             var type = value.GetType();
-            if (!type.Namespace.StartsWith("Autodesk.AutoCAD") && type.Namespace != "Gile.AutoCAD.Inspector")
-                return false;
-            if (value is ObjectId id && id.IsNull)
-            {
-                return false;
-            }
-            if (value is Handle handle && handle == default)
-                return false;
-            if (type.IsClass && value == null)
-                return false;
-            if (value is IEnumerable collection && !collection.GetEnumerator().MoveNext())
-                return false;
-            if (type.IsPrimitive || value is Enum || value is Point2d || value is Point3d || value is Vector2d || value is Vector3d)
-                return false;
-            return true;
+            string nameSpace = type.Namespace;
+            return
+                nameSpace != null &&
+                (nameSpace.StartsWith("Autodesk.AutoCAD") || nameSpace == "Gile.AutoCAD.Inspector") &&
+                !type.IsPrimitive &&
+                !(value is string) &&
+                !(value is Enum) &&
+                !(value is Point2d) &&
+                !(value is Point3d) &&
+                !(value is Vector2d) &&
+                !(value is Vector3d) &&
+                !(value is ObjectId id && id.IsNull) &&
+                !(value is Handle handle && handle == default) &&
+                !(value is Dictionary<string, string>.Enumerator dictEnum && !dictEnum.MoveNext()) &&
+                !(value is IEnumerable collection && !collection.GetEnumerator().MoveNext());
         }
         #endregion
     }
