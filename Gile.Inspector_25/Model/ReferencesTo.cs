@@ -1,5 +1,4 @@
-﻿using Autodesk.AutoCAD.ApplicationServices.Core;
-using Autodesk.AutoCAD.DatabaseServices;
+﻿using Autodesk.AutoCAD.DatabaseServices;
 
 namespace Gile.AutoCAD.Inspector
 {
@@ -34,23 +33,21 @@ namespace Gile.AutoCAD.Inspector
         /// <param name="id">Instance of ObjectId.</param>
         public ReferencesTo(ObjectId id)
         {
-            SoftPointerIds = new ObjectIdCollection();
-            HardPointerIds = new ObjectIdCollection();
-            SoftOwnershipIds = new ObjectIdCollection();
-            HardOwnershipIds = new ObjectIdCollection();
+            SoftPointerIds = [];
+            HardPointerIds = [];
+            SoftOwnershipIds = [];
+            HardOwnershipIds = [];
             if (!id.IsNull)
             {
-                using (var tr = id.Database.TransactionManager.StartTransaction())
-                {
-                    var dbObj = tr.GetObject(id, OpenMode.ForRead);
-                    var filer = new ReferenceFiler();
-                    dbObj.DwgOut(filer);
-                    HardOwnershipIds = filer.HardOwnershipIds;
-                    SoftOwnershipIds = filer.SoftOwnershipIds;
-                    HardPointerIds = filer.HardPointerIds;
-                    SoftPointerIds = filer.SoftPointerIds;
-                    tr.Commit();
-                }
+                using var tr = id.Database.TransactionManager.StartTransaction();
+                var dbObj = tr.GetObject(id, OpenMode.ForRead);
+                var filer = new ReferenceFiler();
+                dbObj.DwgOut(filer);
+                HardOwnershipIds = filer.HardOwnershipIds;
+                SoftOwnershipIds = filer.SoftOwnershipIds;
+                HardPointerIds = filer.HardPointerIds;
+                SoftPointerIds = filer.SoftPointerIds;
+                tr.Commit();
             }
         }
     }

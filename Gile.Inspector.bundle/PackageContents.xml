@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ApplicationPackage
   SchemaVersion="1.0"
-  AppVersion=1.1.0
+  AppVersion="1.1.0"
   Author="Gilles Chanteau"
   ProductCode="{4A5A4262-462D-4FEB-B992-BB3ADD5BC011}"
   UpgradeCode="{D9ED5A2B-11C8-437E-9694-8D2F4555011D}"
@@ -18,8 +18,19 @@
     <RuntimeRequirements OS="Win32|Win64" Platform="AutoCAD*" SeriesMin="R19.0" SeriesMax="R24.3" />
     <ComponentEntry
       AppName="Gile.Inspector"
-      Version=1.1.0
-      ModuleName="./Contents/Gile.Inspector.dll"
+      Version="1.1.0"
+      ModuleName="./Contents/Gile.Inspector_19.dll"
+      AppDescription="Drawing Database inspection tools (AutoCAD .NET API)"
+      AppDescriptionFra="Outils d'inspection de la base de données du dessin (AutoCAD .NET API)"
+      LoadOnAutoCADStartup="True">
+    </ComponentEntry>
+  </Components>
+  <Components>
+    <RuntimeRequirements OS="Win32|Win64" Platform="AutoCAD*" SeriesMin="R25.0" />
+    <ComponentEntry
+      AppName="Gile.Inspector"
+      Version="1.1.0"
+      ModuleName="./Contents/Gile.Inspector_25.dll"
       AppDescription="Drawing Database inspection tools (AutoCAD .NET API)"
       AppDescriptionFra="Outils d'inspection de la base de données du dessin (AutoCAD .NET API)"
       LoadOnAutoCADStartup="True">

@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Gile.AutoCAD.Inspector</RootNamespace>
-    <AssemblyName>Gile.Inspector</AssemblyName>
+    <AssemblyName>Gile.Inspector_19</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -22,32 +22,32 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <StartAction>Program</StartAction>
-    <StartProgram>C:\Program Files\Autodesk\AutoCAD 2017\acad.exe</StartProgram>
+    <StartProgram>F:\Program Files\Autodesk\AutoCAD 2024\acad.exe</StartProgram>
     <StartArguments>/nologo /b "start.scr"</StartArguments>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\Gile.Inspector.bundle\Contents\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AcCoreMgd">
-      <HintPath>C:\ObjectARX 2017\inc\AcCoreMgd.dll</HintPath>
+      <HintPath>F:\ObjectARX 2015\inc\AcCoreMgd.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="AcDbMgd">
-      <HintPath>C:\ObjectARX 2017\inc\AcDbMgd.dll</HintPath>
+      <HintPath>F:\ObjectARX 2015\inc\AcDbMgd.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="acdbmgdbrep">
-      <HintPath>C:\ObjectARX 2017\inc\acdbmgdbrep.dll</HintPath>
+      <HintPath>F:\ObjectARX 2015\inc\acdbmgdbrep.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="AcMgd">
-      <HintPath>C:\ObjectARX 2017\inc\AcMgd.dll</HintPath>
+      <HintPath>F:\ObjectARX 2015\inc\AcMgd.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="PresentationCore" />
@@ -63,6 +63,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Model\ContextMenu.cs" />
+    <Compile Include="Model\DataCellCollection.cs" />
+    <Compile Include="Model\DataColumnCollection.cs" />
+    <Compile Include="Model\DataRow.cs" />
+    <Compile Include="Model\DataRowCollection.cs" />
     <Compile Include="Model\HatchLoopCollection.cs" />
     <Compile Include="Model\IReferences.cs" />
     <Compile Include="Model\ViewportCollection.cs" />
@@ -103,6 +107,9 @@
     <PostBuildEvent>cd $(OutDir) 
 del start.scr</PostBuildEvent>
   </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent />
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
@@ -110,4 +117,7 @@ del start.scr</PostBuildEvent>
   <Target Name="AfterBuild">
   </Target>
   -->
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <PostBuildEvent>copy "$(TargetDir)$(TargetName).dll" "$(SolutionDir)Gile.Inspector.bundle\Contents\"</PostBuildEvent>
+  </PropertyGroup>
 </Project>

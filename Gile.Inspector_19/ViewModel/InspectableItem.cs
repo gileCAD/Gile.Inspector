@@ -96,9 +96,9 @@ namespace Gile.AutoCAD.Inspector
                     Name = name;
                 }
 
-                if (dbObj is SymbolTable)
+                if (dbObj is SymbolTable table)
                 {
-                    Children = ((SymbolTable)dbObj)
+                    Children = table
                         .Cast<ObjectId>()
                         .Select(x => new InspectableItem(x));
                 }

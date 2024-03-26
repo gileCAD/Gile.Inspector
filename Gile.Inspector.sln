@@ -1,14 +1,16 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31624.102
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34309.116
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gile.Inspector", "Gile.Inspector\Gile.Inspector.csproj", "{295A9EE6-DEA2-41FB-B2BD-B3DA641A7D50}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gile.Inspector_19", "Gile.Inspector_19\Gile.Inspector_19.csproj", "{295A9EE6-DEA2-41FB-B2BD-B3DA641A7D50}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8CA74755-7E52-4196-968D-4831E6DCC092}"
 	ProjectSection(SolutionItems) = preProject
 		Gile.Inspector.bundle\PackageContents.xml = Gile.Inspector.bundle\PackageContents.xml
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gile.Inspector_25", "Gile.Inspector_25\Gile.Inspector_25.csproj", "{F96D76C5-1EDF-41A4-8B74-14E322AD3165}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,6 +22,10 @@ Global
 		{295A9EE6-DEA2-41FB-B2BD-B3DA641A7D50}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{295A9EE6-DEA2-41FB-B2BD-B3DA641A7D50}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{295A9EE6-DEA2-41FB-B2BD-B3DA641A7D50}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F96D76C5-1EDF-41A4-8B74-14E322AD3165}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F96D76C5-1EDF-41A4-8B74-14E322AD3165}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F96D76C5-1EDF-41A4-8B74-14E322AD3165}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F96D76C5-1EDF-41A4-8B74-14E322AD3165}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

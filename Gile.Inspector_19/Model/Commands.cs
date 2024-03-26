@@ -13,8 +13,6 @@ namespace Gile.AutoCAD.Inspector
     /// </summary>
     public class Commands
     {
-        public static string NumberFormat { get; private set; }
-
         /// <summary>
         /// Inspects the Database contents of the active drawing.
         /// </summary>

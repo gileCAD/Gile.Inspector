@@ -7,7 +7,7 @@ namespace Gile.AutoCAD.Inspector
     /// </summary>
     public partial class InspectorDialog : Window
     {
-        InspectorViewModel viewModel;
+        readonly InspectorViewModel viewModel;
 
         /// <summary>
         /// Creates a new instance of InspectorDialog.
