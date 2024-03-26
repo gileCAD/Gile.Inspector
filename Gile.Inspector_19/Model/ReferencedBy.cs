@@ -1,5 +1,4 @@
-﻿using Autodesk.AutoCAD.ApplicationServices.Core;
-using Autodesk.AutoCAD.DatabaseServices;
+﻿using Autodesk.AutoCAD.DatabaseServices;
 
 namespace Gile.AutoCAD.Inspector
 {

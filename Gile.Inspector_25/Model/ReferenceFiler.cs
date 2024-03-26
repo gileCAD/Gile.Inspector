@@ -3,10 +3,6 @@ using Autodesk.AutoCAD.Geometry;
 using Autodesk.AutoCAD.Runtime;
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Gile.AutoCAD.Inspector
 {
@@ -18,22 +14,22 @@ namespace Gile.AutoCAD.Inspector
         /// <summary>
         /// Gets the soft pointers.
         /// </summary>
-        public ObjectIdCollection SoftPointerIds { get; } = new ObjectIdCollection();
+        public ObjectIdCollection SoftPointerIds { get; } = [];
 
         /// <summary>
         /// Gets the hard pointers.
         /// </summary>
-        public ObjectIdCollection HardPointerIds { get; } = new ObjectIdCollection();
+        public ObjectIdCollection HardPointerIds { get; } = [];
 
         /// <summary>
         /// Gets the soft ownerships.
         /// </summary>
-        public ObjectIdCollection SoftOwnershipIds { get; } = new ObjectIdCollection();
+        public ObjectIdCollection SoftOwnershipIds { get; } = [];
 
         /// <summary>
         /// Gets the hard ownerships.
         /// </summary>
-        public ObjectIdCollection HardOwnershipIds { get; } = new ObjectIdCollection();
+        public ObjectIdCollection HardOwnershipIds { get; } = [];
 
         /// <summary>
         /// Writes the hard ownership collection.
@@ -84,27 +80,27 @@ namespace Gile.AutoCAD.Inspector
             set { }
         }
         public override IntPtr ReadAddress() => IntPtr.Zero;
-        public override byte[] ReadBinaryChunk() => new byte[0];
+        public override byte[] ReadBinaryChunk() => Array.Empty<byte>();
         public override bool ReadBoolean() => false;
         public override byte ReadByte() => 0;
         public override void ReadBytes(byte[] value) { }
         public override double ReadDouble() => 0.0;
-        public override Handle ReadHandle() => new Handle();
+        public override Handle ReadHandle() => new();
         public override ObjectId ReadHardOwnershipId() => ObjectId.Null;
         public override ObjectId ReadHardPointerId() => ObjectId.Null;
         public override short ReadInt16() => 0;
         public override int ReadInt32() => 0;
         public override long ReadInt64() => 0;
-        public override Point2d ReadPoint2d() => new Point2d();
-        public override Point3d ReadPoint3d() => new Point3d();
-        public override Scale3d ReadScale3d() => new Scale3d();
+        public override Point2d ReadPoint2d() => new();
+        public override Point3d ReadPoint3d() => new();
+        public override Scale3d ReadScale3d() => new();
         public override ObjectId ReadSoftOwnershipId() => ObjectId.Null;
         public override ObjectId ReadSoftPointerId() => ObjectId.Null;
         public override string ReadString() => "";
         public override ushort ReadUInt16() => 0;
         public override uint ReadUInt32() => 0;
         public override ulong ReadUInt64() => 0;
-        public override Vector2d ReadVector2d() => new Vector2d();
+        public override Vector2d ReadVector2d() => new();
         public override Vector3d ReadVector3d() => default;
         public override void ResetFilerStatus() { }
         public override void Seek(long offset, int method) { }

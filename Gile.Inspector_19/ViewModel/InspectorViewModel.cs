@@ -313,7 +313,6 @@ namespace Gile.AutoCAD.Inspector
                         if (prop.DeclaringType.Name == "MPolygon" && prop.Name == "PatternColor")
                         {
                             value = new AccessViolationException().Message;
-                            isInspectable = false;
                         }
                         else
                         {

@@ -1,7 +1,5 @@
 ﻿using Autodesk.AutoCAD.DatabaseServices;
 
-using System.Linq;
-
 namespace Gile.AutoCAD.Inspector
 {
     /// <summary>
@@ -20,7 +18,7 @@ namespace Gile.AutoCAD.Inspector
         /// <param name="pline">Polyline2d instance.</param>
         public Polyline2dVertices(Polyline2d pline)
         {
-            Vertices = new DBObjectCollection();
+            Vertices = [];
             foreach (var obj in pline)
             {
                 if (obj is ObjectId id)

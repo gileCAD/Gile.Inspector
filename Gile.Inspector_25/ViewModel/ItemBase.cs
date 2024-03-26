@@ -15,7 +15,7 @@ namespace Gile.AutoCAD.Inspector
         /// <summary>
         /// Gets the value of the property.
         /// </summary>
-        public object Value { get; }
+        public object? Value { get; }
 
         /// <summary>
         /// Gets the string representing the value in the ListView.
@@ -26,7 +26,7 @@ namespace Gile.AutoCAD.Inspector
         /// Creates a new intance of ItemBase.
         /// </summary>
         /// <param name="value">Value of the property.</param>
-        public ItemBase(object value)
+        protected ItemBase(object? value)
         {
             Value = value;
             switch (value)
@@ -41,11 +41,9 @@ namespace Gile.AutoCAD.Inspector
                     }
                     else
                     {
-                        using (var tr = id.Database.TransactionManager.StartTransaction())
-                        {
-                            var dbObject = tr.GetObject(id, OpenMode.ForRead);
-                            Label = $"< {dbObject.GetType().Name} \t{dbObject.Handle} >";
-                        }
+                        using var tr = id.Database.TransactionManager.StartTransaction();
+                        var dbObject = tr.GetObject(id, OpenMode.ForRead);
+                        Label = $"< {dbObject.GetType().Name} \t{dbObject.Handle} >";
                     }
                     break;
                 case double d:
@@ -53,7 +51,7 @@ namespace Gile.AutoCAD.Inspector
                     break;
                 case Enum _:
                 case Handle _:
-                    Label = value.ToString();
+                    Label = value?.ToString() ?? "(Null)";
                     break;
                 case Point2d _:
                 case Point3d _:
@@ -69,24 +67,24 @@ namespace Gile.AutoCAD.Inspector
                     break;
                 default:
                     var type = value.GetType();
-                    string nspace = type.Namespace;
-                    if (nspace.StartsWith("Autodesk.AutoCAD"))
+                    string? nspace = type.Namespace;
+                    if (nspace != null && nspace.StartsWith("Autodesk.AutoCAD"))
                     {
                         Label = $"< {type.Name} >";
                     }
-                    else if (nspace.StartsWith("Gile.AutoCAD.Inspector"))
+                    else if (nspace != null && nspace.StartsWith("Gile.AutoCAD.Inspector"))
                     {
                         Label = $"< Inspector.{type.Name} >";
                     }
                     else
                     {
-                        Label = value.ToString();
+                        Label = value?.ToString() ?? "(Null)";
                     }
                     break;
             }
         }
 
-        private string NumberFormat()
+        private static string NumberFormat()
         {
             int luprec = HostApplicationServices.WorkingDatabase.Luprec;
             string format = "0";

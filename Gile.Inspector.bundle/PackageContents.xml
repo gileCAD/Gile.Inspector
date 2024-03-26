@@ -19,7 +19,18 @@
     <ComponentEntry
       AppName="Gile.Inspector"
       Version="1.1.0"
-      ModuleName="./Contents/Gile.Inspector.dll"
+      ModuleName="./Contents/Gile.Inspector_19.dll"
+      AppDescription="Drawing Database inspection tools (AutoCAD .NET API)"
+      AppDescriptionFra="Outils d'inspection de la base de données du dessin (AutoCAD .NET API)"
+      LoadOnAutoCADStartup="True">
+    </ComponentEntry>
+  </Components>
+  <Components>
+    <RuntimeRequirements OS="Win32|Win64" Platform="AutoCAD*" SeriesMin="R25.0" />
+    <ComponentEntry
+      AppName="Gile.Inspector"
+      Version="1.1.0"
+      ModuleName="./Contents/Gile.Inspector_25.dll"
       AppDescription="Drawing Database inspection tools (AutoCAD .NET API)"
       AppDescriptionFra="Outils d'inspection de la base de données du dessin (AutoCAD .NET API)"
       LoadOnAutoCADStartup="True">
