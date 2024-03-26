@@ -1,4 +1,5 @@
-﻿using Autodesk.AutoCAD.Runtime;
+﻿using Autodesk.AutoCAD.ApplicationServices.Core;
+using Autodesk.AutoCAD.Runtime;
 
 using System;
 
@@ -16,21 +17,21 @@ namespace Gile.AutoCAD.Inspector
         static InspectorContextMenu? contextMenu;
 
         /// <summary>
-        /// Initializes the application.
+        /// Initializes the application, add the context menu.
         /// </summary>
         public void Initialize()
         {
             contextMenu = new InspectorContextMenu();
             AcAp.AddDefaultContextMenuExtension(contextMenu);
-            AcAp.Idle += OnIdle;
+            Application.Idle += OnIdle;
         }
 
         private void OnIdle(object? sender, EventArgs e)
         {
-            var doc = AcAp.DocumentManager.MdiActiveDocument;
+            var doc = Application.DocumentManager.MdiActiveDocument;
             if (doc != null)
             {
-                AcAp.Idle -= OnIdle;
+                Application.Idle -= OnIdle;
                 doc.Editor.WriteMessage("\nGile.Inspector loaded.\n");
             }
         }
