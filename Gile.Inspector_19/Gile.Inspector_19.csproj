@@ -7,7 +7,7 @@
     <ProjectGuid>{295A9EE6-DEA2-41FB-B2BD-B3DA641A7D50}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Gile.AutoCAD.Inspector</RootNamespace>
+    <RootNamespace>Gile.AutoCAD.R19.Inspector</RootNamespace>
     <AssemblyName>Gile.Inspector_19</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

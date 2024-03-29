@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace Gile.AutoCAD.Inspector
+namespace Gile.AutoCAD.R19.Inspector
 {
     /// <summary>
     /// Code behind.

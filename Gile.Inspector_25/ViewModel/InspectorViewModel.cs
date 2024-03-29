@@ -16,7 +16,7 @@ using System.Reflection;
 using AcAp = Autodesk.AutoCAD.ApplicationServices.Core.Application;
 using AcDb = Autodesk.AutoCAD.DatabaseServices;
 
-namespace Gile.AutoCAD.Inspector
+namespace Gile.AutoCAD.R25.Inspector
 {
     /// <summary>
     /// Interaction logic for InspectorDialog.xaml
@@ -122,7 +122,7 @@ namespace Gile.AutoCAD.Inspector
                     default: items = fromObject(value); break;
                 }
             }
-            else if (type.Namespace != null && type.Namespace == "Gile.AutoCAD.Inspector")
+            else if (type.Namespace != null && type.Namespace == "Gile.AutoCAD.R25.Inspector")
             {
                 switch (value)
                 {
@@ -504,7 +504,7 @@ namespace Gile.AutoCAD.Inspector
             string? nameSpace = type.Namespace;
             return
                 nameSpace != null
-                && (nameSpace.StartsWith("Autodesk.AutoCAD") || nameSpace == "Gile.AutoCAD.Inspector")
+                && (nameSpace.StartsWith("Autodesk.AutoCAD") || nameSpace == "Gile.AutoCAD.R25.Inspector")
                 && !type.IsPrimitive
                 && value is not string
                 && value is not Enum
