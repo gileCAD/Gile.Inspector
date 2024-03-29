@@ -1,6 +1,6 @@
 ﻿using Autodesk.AutoCAD.DatabaseServices;
 
-namespace Gile.AutoCAD.Inspector
+namespace Gile.AutoCAD.R25.Inspector
 {
     /// <summary>
     /// Describes a collection of Polyline2d vertices

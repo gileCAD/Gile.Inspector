@@ -4,7 +4,7 @@ using Autodesk.AutoCAD.Runtime;
 
 using System;
 
-namespace Gile.AutoCAD.Inspector
+namespace Gile.AutoCAD.R25.Inspector
 {
     /// <summary>
     /// Defines a reference filer.

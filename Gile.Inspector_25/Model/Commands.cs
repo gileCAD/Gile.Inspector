@@ -4,9 +4,9 @@ using Autodesk.AutoCAD.Runtime;
 
 using AcAp = Autodesk.AutoCAD.ApplicationServices.Core.Application;
 
-[assembly: CommandClass(typeof(Gile.AutoCAD.Inspector.Commands))]
+[assembly: CommandClass(typeof(Gile.AutoCAD.R25.Inspector.Commands))]
 
-namespace Gile.AutoCAD.Inspector
+namespace Gile.AutoCAD.R25.Inspector
 {
     /// <summary>
     /// Defines AutoCAD commands.

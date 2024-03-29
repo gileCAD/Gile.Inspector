@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 
-namespace Gile.AutoCAD.Inspector
+namespace Gile.AutoCAD.R19.Inspector
 {
     /// <summary>
     /// Type bounded to the items of the TreeView control.
