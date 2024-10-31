@@ -30,18 +30,6 @@ namespace Gile.AutoCAD.R25.Inspector
         public static void InspectTable()
         {
             var db = HostApplicationServices.WorkingDatabase;
-            //var ids = new ObjectIdCollection
-            //{
-            //    db.BlockTableId,
-            //    db.DimStyleTableId,
-            //    db.LayerTableId,
-            //    db.LinetypeTableId,
-            //    db.RegAppTableId,
-            //    db.TextStyleTableId,
-            //    db.UcsTableId,
-            //    db.ViewTableId,
-            //    db.ViewportTableId
-            //};
             ObjectIdCollection ids =
                 [
                     db.BlockTableId,
