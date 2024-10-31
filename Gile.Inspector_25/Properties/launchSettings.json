@@ -1,11 +1,8 @@
 {
   "profiles": {
     "Gile.Inspector_25": {
-      "commandName": "Project"
-    },
-    "Profil 1": {
       "commandName": "Executable",
-      "executablePath": "F:\\Program Files\\Autodesk\\AutoCAD Venn Beta\\acad.exe",
+      "executablePath": "F:\\Program Files\\Autodesk\\AutoCAD 2025\\acad.exe",
       "commandLineArgs": "/nologo /b \"start.scr\""
     }
   }
