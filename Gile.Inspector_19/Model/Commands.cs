@@ -30,20 +30,18 @@ namespace Gile.AutoCAD.R19.Inspector
         public static void InspectTable()
         {
             var db = HostApplicationServices.WorkingDatabase;
-            var ids = new ObjectIdCollection();
-            using (var tr = db.TransactionManager.StartOpenCloseTransaction())
+            var ids = new ObjectIdCollection
             {
-                ids.Add(db.BlockTableId);
-                ids.Add(db.DimStyleTableId);
-                ids.Add(db.LayerTableId);
-                ids.Add(db.LinetypeTableId);
-                ids.Add(db.RegAppTableId);
-                ids.Add(db.TextStyleTableId);
-                ids.Add(db.UcsTableId);
-                ids.Add(db.ViewTableId);
-                ids.Add(db.ViewportTableId);
-                tr.Commit();
-            }
+                db.BlockTableId,
+                db.DimStyleTableId,
+                db.LayerTableId,
+                db.LinetypeTableId,
+                db.RegAppTableId,
+                db.TextStyleTableId,
+                db.UcsTableId,
+                db.ViewTableId,
+                db.ViewportTableId
+            };
             new InspectorViewModel(ids).ShowDialog();
         }
 

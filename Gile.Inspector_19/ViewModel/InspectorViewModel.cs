@@ -432,7 +432,7 @@ namespace Gile.AutoCAD.R19.Inspector
                     string name = prop.Name;
                     if (name == "Item") continue;
                     if (item is Brep && (name == "Surf" || name == "Solid")) continue;
-                    if (item is DynamicBlockReferenceProperty && name == "Value") continue;
+                    //if (item is DynamicBlockReferenceProperty && name == "Value") continue;
                     object value;
                     bool isInspectable = true;
                     try { value = prop.GetValue(item, null) ?? "(Null)"; }
