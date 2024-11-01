@@ -377,9 +377,11 @@ namespace Gile.AutoCAD.R19.Inspector
                     break;
                 case Region _:
                 case Solid3d _:
-                case AcDb.Surface _:
                     var fullSubentityPath = new FullSubentityPath(new[] { dbObj.ObjectId }, new SubentityId(SubentityType.Null, IntPtr.Zero));
                     yield return new PropertyItem("Boundary representation", new Brep(fullSubentityPath), dbObj.GetType(), true);
+                    break;
+                case AcDb.Surface _:
+                    yield return new PropertyItem("Boundary representation", new Brep((AcDb.Surface)dbObj), dbObj.GetType(), true);
                     break;
                 case Group group:
                     ids = new ObjectIdCollection();
