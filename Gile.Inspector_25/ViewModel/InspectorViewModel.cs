@@ -429,7 +429,6 @@ namespace Gile.AutoCAD.R25.Inspector
                 {
                     if (prop.Name == "Item") continue;
                     string name = prop.Name;
-                    if (name == "Item") continue;
                     if (item is Brep && (name == "Surf" || name == "Solid")) continue;
                     if (item is DynamicBlockReferenceProperty && name == "Value") continue;
                     object value;
