@@ -316,15 +316,8 @@ namespace Gile.AutoCAD.R25.Inspector
                     }
                     else
                     {
-                        if (prop.DeclaringType?.Name == "MPolygon" && prop.Name == "PatternColor")
-                        {
-                            value = new AccessViolationException().Message;
-                        }
-                        else
-                        {
-                            try { value = prop.GetValue(dbObj, null) ?? "(Null)"; }
-                            catch (System.Exception e) { value = e.Message; isInspectable = false; }
-                        }
+                        try { value = prop.GetValue(dbObj, null) ?? "(Null)"; }
+                        catch (System.Exception e) { value = e.Message; isInspectable = false; }
                     }
                     if (value is DBObject dbo && dbo.Handle == default)
                         toDispose.Add(dbo);
