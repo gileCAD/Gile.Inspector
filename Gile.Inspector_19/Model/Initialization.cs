@@ -4,9 +4,9 @@ using System;
 
 using AcAp = Autodesk.AutoCAD.ApplicationServices.Application;
 
-[assembly: ExtensionApplication(typeof(Gile.AutoCAD.Inspector.Initialization))]
+[assembly: ExtensionApplication(typeof(Gile.AutoCAD.R19.Inspector.Initialization))]
 
-namespace Gile.AutoCAD.Inspector
+namespace Gile.AutoCAD.R19.Inspector
 {
     /// <summary>
     /// Defines the application initialization.

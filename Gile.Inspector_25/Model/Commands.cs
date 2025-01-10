@@ -4,9 +4,9 @@ using Autodesk.AutoCAD.Runtime;
 
 using AcAp = Autodesk.AutoCAD.ApplicationServices.Core.Application;
 
-[assembly: CommandClass(typeof(Gile.AutoCAD.Inspector.Commands))]
+[assembly: CommandClass(typeof(Gile.AutoCAD.R25.Inspector.Commands))]
 
-namespace Gile.AutoCAD.Inspector
+namespace Gile.AutoCAD.R25.Inspector
 {
     /// <summary>
     /// Defines AutoCAD commands.
@@ -30,20 +30,18 @@ namespace Gile.AutoCAD.Inspector
         public static void InspectTable()
         {
             var db = HostApplicationServices.WorkingDatabase;
-            var ids = new ObjectIdCollection();
-            using (var tr = db.TransactionManager.StartOpenCloseTransaction())
-            {
-                ids.Add(db.BlockTableId);
-                ids.Add(db.DimStyleTableId);
-                ids.Add(db.LayerTableId);
-                ids.Add(db.LinetypeTableId);
-                ids.Add(db.RegAppTableId);
-                ids.Add(db.TextStyleTableId);
-                ids.Add(db.UcsTableId);
-                ids.Add(db.ViewTableId);
-                ids.Add(db.ViewportTableId);
-                tr.Commit();
-            }
+            ObjectIdCollection ids =
+                [
+                    db.BlockTableId,
+                    db.DimStyleTableId,
+                    db.LayerTableId,
+                    db.LinetypeTableId,
+                    db.RegAppTableId,
+                    db.TextStyleTableId,
+                    db.UcsTableId,
+                    db.ViewTableId,
+                    db.ViewportTableId
+                ];
             new InspectorViewModel(ids).ShowDialog();
         }
 

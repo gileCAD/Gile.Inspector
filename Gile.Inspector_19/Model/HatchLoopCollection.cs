@@ -2,7 +2,7 @@
 
 using System.Collections.Generic;
 
-namespace Gile.AutoCAD.Inspector
+namespace Gile.AutoCAD.R19.Inspector
 {
     /// <summary>
     /// Describes a collection of hatch loops.

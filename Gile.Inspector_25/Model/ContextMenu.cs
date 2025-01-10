@@ -3,7 +3,7 @@ using Autodesk.AutoCAD.Windows;
 
 using System;
 
-namespace Gile.AutoCAD.Inspector
+namespace Gile.AutoCAD.R25.Inspector
 {
     /// <summary>
     /// Defines a context menu extension.

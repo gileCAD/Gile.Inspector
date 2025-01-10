@@ -1,6 +1,6 @@
 ﻿using Autodesk.AutoCAD.DatabaseServices;
 
-namespace Gile.AutoCAD.Inspector
+namespace Gile.AutoCAD.R19.Inspector
 {
     /// <summary>
     /// Describes a Datatable cell collection (row or column);

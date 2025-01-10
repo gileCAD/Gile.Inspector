@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 
-namespace Gile.AutoCAD.Inspector
+namespace Gile.AutoCAD.R19.Inspector
 {
     /// <summary>
     /// Base class for TreeView and ListView items.
@@ -74,7 +74,7 @@ namespace Gile.AutoCAD.Inspector
                     {
                         Label = $"< {type.Name} >";
                     }
-                    else if (nspace.StartsWith("Gile.AutoCAD.Inspector"))
+                    else if (nspace.StartsWith("Gile.AutoCAD.R19.Inspector"))
                     {
                         Label = $"< Inspector.{type.Name} >";
                     }

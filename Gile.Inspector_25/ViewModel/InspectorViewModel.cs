@@ -16,7 +16,7 @@ using System.Reflection;
 using AcAp = Autodesk.AutoCAD.ApplicationServices.Core.Application;
 using AcDb = Autodesk.AutoCAD.DatabaseServices;
 
-namespace Gile.AutoCAD.Inspector
+namespace Gile.AutoCAD.R25.Inspector
 {
     /// <summary>
     /// Interaction logic for InspectorDialog.xaml
@@ -122,7 +122,7 @@ namespace Gile.AutoCAD.Inspector
                     default: items = fromObject(value); break;
                 }
             }
-            else if (type.Namespace != null && type.Namespace == "Gile.AutoCAD.Inspector")
+            else if (type.Namespace != null && type.Namespace == "Gile.AutoCAD.R25.Inspector")
             {
                 switch (value)
                 {
@@ -316,15 +316,8 @@ namespace Gile.AutoCAD.Inspector
                     }
                     else
                     {
-                        if (prop.DeclaringType?.Name == "MPolygon" && prop.Name == "PatternColor")
-                        {
-                            value = new AccessViolationException().Message;
-                        }
-                        else
-                        {
-                            try { value = prop.GetValue(dbObj, null) ?? "(Null)"; }
-                            catch (System.Exception e) { value = e.Message; isInspectable = false; }
-                        }
+                        try { value = prop.GetValue(dbObj, null) ?? "(Null)"; }
+                        catch (System.Exception e) { value = e.Message; isInspectable = false; }
                     }
                     if (value is DBObject dbo && dbo.Handle == default)
                         toDispose.Add(dbo);
@@ -380,9 +373,11 @@ namespace Gile.AutoCAD.Inspector
                     break;
                 case Region _:
                 case Solid3d _:
-                case AcDb.Surface _:
-                    var fullSubentityPath = new FullSubentityPath(new[] { dbObj.ObjectId }, new SubentityId(SubentityType.Null, IntPtr.Zero));
+                    var fullSubentityPath = new FullSubentityPath([dbObj.ObjectId], new SubentityId(SubentityType.Null, IntPtr.Zero));
                     yield return new PropertyItem("Boundary representation", new Brep(fullSubentityPath), dbObj.GetType(), true);
+                    break;
+                case AcDb.Surface surface:
+                    yield return new PropertyItem("Boundary representation", new Brep(surface), dbObj.GetType(), true);
                     break;
                 case Group group:
                     ids = [.. group.GetAllEntityIds()];
@@ -429,7 +424,6 @@ namespace Gile.AutoCAD.Inspector
                 {
                     if (prop.Name == "Item") continue;
                     string name = prop.Name;
-                    if (name == "Item") continue;
                     if (item is Brep && (name == "Surf" || name == "Solid")) continue;
                     if (item is DynamicBlockReferenceProperty && name == "Value") continue;
                     object value;
@@ -504,7 +498,7 @@ namespace Gile.AutoCAD.Inspector
             string? nameSpace = type.Namespace;
             return
                 nameSpace != null
-                && (nameSpace.StartsWith("Autodesk.AutoCAD") || nameSpace == "Gile.AutoCAD.Inspector")
+                && (nameSpace.StartsWith("Autodesk.AutoCAD") || nameSpace == "Gile.AutoCAD.R25.Inspector")
                 && !type.IsPrimitive
                 && value is not string
                 && value is not Enum
