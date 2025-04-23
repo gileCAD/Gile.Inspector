@@ -1,4 +1,5 @@
-﻿using Autodesk.AutoCAD.Runtime;
+﻿using Autodesk.AutoCAD.DatabaseServices;
+using Autodesk.AutoCAD.Runtime;
 
 using System;
 
@@ -13,15 +14,19 @@ namespace Gile.AutoCAD.R25.Inspector
     /// </summary>
     public class Initialization : IExtensionApplication
     {
-        static InspectorContextMenu? contextMenu;
+        static InspectorContextMenu? defaultContextMenu;
+        static InspectorContextMenu? objectContextMenu;
+        static RXClass entityClass = RXObject.GetClass(typeof(Entity));
 
         /// <summary>
         /// Initializes the application.
         /// </summary>
         public void Initialize()
         {
-            contextMenu = new InspectorContextMenu();
-            AcAp.AddDefaultContextMenuExtension(contextMenu);
+            defaultContextMenu = new InspectorContextMenu(true);
+            AcAp.AddDefaultContextMenuExtension(defaultContextMenu);
+            objectContextMenu = new InspectorContextMenu(false);
+            AcAp.AddObjectContextMenuExtension(entityClass, objectContextMenu);
             AcAp.Idle += OnIdle;
         }
 
@@ -40,7 +45,8 @@ namespace Gile.AutoCAD.R25.Inspector
         /// </summary>
         public void Terminate()
         {
-            AcAp.RemoveDefaultContextMenuExtension(contextMenu);
+            AcAp.RemoveDefaultContextMenuExtension(defaultContextMenu);
+            AcAp.RemoveObjectContextMenuExtension(entityClass, objectContextMenu);
         }
     }
 }

@@ -15,24 +15,28 @@ namespace Gile.AutoCAD.R25.Inspector
         /// <summary>
         /// Creates a new instance of InspectorContextMenu.
         /// </summary>
-        public InspectorContextMenu()
+        public InspectorContextMenu(bool isDefaultContextMenu)
         {
-            Title = "Inspector";
-            var itemEntities = new MenuItem("Entities...");
+            var itemEntities = new MenuItem(isDefaultContextMenu ? "Entities..." : "Inspector...");
             itemEntities.Click += ItemEntities_Click;
             MenuItems.Add(itemEntities);
-            var itemNEntity = new MenuItem("Nested entity...");
-            itemNEntity.Click += ItemNEntity_Click;
-            MenuItems.Add(itemNEntity);
-            var itemDatabase = new MenuItem("Database...");
-            itemDatabase.Click += ItemDatabase_Click;
-            MenuItems.Add(itemDatabase);
-            var itemTables = new MenuItem("Tables...");
-            itemTables.Click += ItemTables_Click;
-            MenuItems.Add(itemTables);
-            var itemDictionaries = new MenuItem("Dictionaries...");
-            itemDictionaries.Click += ItemDict_Click;
-            MenuItems.Add(itemDictionaries);
+
+            if (isDefaultContextMenu)
+            {
+                Title = "Inspector";
+                var itemNEntity = new MenuItem("Nested entity...");
+                itemNEntity.Click += ItemNEntity_Click;
+                MenuItems.Add(itemNEntity);
+                var itemDatabase = new MenuItem("Database...");
+                itemDatabase.Click += ItemDatabase_Click;
+                MenuItems.Add(itemDatabase);
+                var itemTables = new MenuItem("Tables...");
+                itemTables.Click += ItemTables_Click;
+                MenuItems.Add(itemTables);
+                var itemDictionaries = new MenuItem("Dictionaries...");
+                itemDictionaries.Click += ItemDict_Click;
+                MenuItems.Add(itemDictionaries);
+            }
         }
 
         private static void ItemDatabase_Click(object? sender, EventArgs e)
