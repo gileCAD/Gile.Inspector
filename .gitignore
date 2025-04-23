@@ -361,3 +361,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/Gile.Inspector.bundle/Contents/Gile.Inspector_19.dll
+/Gile.Inspector.bundle/Contents/Gile.Inspector_25.dll

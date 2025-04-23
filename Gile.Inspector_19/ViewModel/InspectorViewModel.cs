@@ -391,6 +391,10 @@ namespace Gile.AutoCAD.R19.Inspector
                     }
                     yield return new PropertyItem("Entities within group", ids, typeof(Group), 0 < ids.Count);
                     break;
+                case BlockReference br when AssocArray.IsAssociativeArray(br.ObjectId):
+                    var parameters = AssocArray.GetAssociativeArray(br.ObjectId).GetParameters();
+                    yield return new PropertyItem( "Associative array parameters", parameters, typeof(BlockReference), true);
+                    break;
                 default:
                     break;
             }
