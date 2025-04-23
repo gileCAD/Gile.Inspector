@@ -393,7 +393,7 @@ namespace Gile.AutoCAD.R19.Inspector
                     break;
                 case BlockReference br when AssocArray.IsAssociativeArray(br.ObjectId):
                     var parameters = AssocArray.GetAssociativeArray(br.ObjectId).GetParameters();
-                    yield return new PropertyItem( "Associative array parameters", parameters, typeof(BlockReference), true);
+                    yield return new PropertyItem("Associative array parameters", parameters, typeof(BlockReference), true);
                     break;
                 default:
                     break;
