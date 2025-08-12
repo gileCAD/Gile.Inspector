@@ -138,6 +138,7 @@ namespace Gile.AutoCAD.R19.Inspector
                     case Polyline3dVertices vertices: items = fromICollection<DBObject>(vertices.Vertices); break;
                     case Polyline2dVertices vertices: items = fromICollection<DBObject>(vertices.Vertices); break;
                     case ViewportCollection viewports: items = fromICollection<ObjectId>(viewports.Viewports); break;
+                    case AnnotationScaleCollection scales: items = fromIEnumerable(scales.AnnotationScales); break;
                     case IReferences references:
                         IEnumerable<InspectableItem> getChildren(ObjectIdCollection ids) =>
                             ids
@@ -476,6 +477,10 @@ namespace Gile.AutoCAD.R19.Inspector
                 case DataColumn column:
                     var cells = new DataCellCollection(column);
                     yield return new PropertyItem("Cells", cells, typeof(DataColumn), true);
+                    break;
+                case ObjectContextManager contextManager:
+                    var scales = new AnnotationScaleCollection(contextManager);
+                    yield return new PropertyItem("Annotation Scales", scales, typeof(ObjectContextManager), true);
                     break;
                 default:
                     break;
