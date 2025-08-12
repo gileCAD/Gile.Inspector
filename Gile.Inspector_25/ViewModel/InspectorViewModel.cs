@@ -54,7 +54,7 @@ namespace Gile.AutoCAD.R25.Inspector
                 sequence.Select(e => new InspectableItem(e));
 
             IEnumerable<InspectableItem> fromObject<T>(T obj) =>
-                new[] { new InspectableItem(obj, true, true) };
+                [new InspectableItem(obj, true, true)];
 
             var type = value.GetType();
             if (type.Namespace != null && type.Namespace.StartsWith("Autodesk.AutoCAD"))
@@ -94,15 +94,15 @@ namespace Gile.AutoCAD.R25.Inspector
                         items = ids.Cast<ObjectId>().Select(id => new InspectableItem(id, name: "<_>"));
                         break;
                     case CellBorders borders:
-                        items = new[]
-                        {
+                        items =
+                        [
                             new InspectableItem(borders.Vertical, true, name: "Vertical"),
                             new InspectableItem(borders.Horizontal, name: "Horizontal"),
                             new InspectableItem(borders.Bottom, name: "Bottom"),
                             new InspectableItem(borders.Right, name: "Right"),
                             new InspectableItem(borders.Top, name: "Top"),
                             new InspectableItem(borders.Left, name: "Left")
-                        };
+                        ];
                         break;
                     case Brep brep:
                         brepSolid = brep.Solid;
@@ -117,7 +117,7 @@ namespace Gile.AutoCAD.R25.Inspector
                                     .Select(f => new InspectableItem(f, children: f.Loops
                                         .Select(l => new InspectableItem(l, children: l.Edges
                                             .Select(e => new InspectableItem(e)))))))))));
-                        items = new[] { item };
+                        items = [item];
                         break;
                     default: items = fromObject(value); break;
                 }
@@ -137,19 +137,19 @@ namespace Gile.AutoCAD.R25.Inspector
                     case Polyline3dVertices vertices: items = fromICollection<DBObject>(vertices.Vertices); break;
                     case Polyline2dVertices vertices: items = fromICollection<DBObject>(vertices.Vertices); break;
                     case ViewportCollection viewports: items = fromICollection<ObjectId>(viewports.Viewports); break;
+                    case AnnotationScaleCollection scales: items = fromIEnumerable(scales.AnnotationScales); break;
                     case IReferences references:
                         IEnumerable<InspectableItem> getChildren(ObjectIdCollection ids) =>
                             ids
                             .Cast<ObjectId>()
                             .Select(id => new InspectableItem(id, name: "<_>"));
                         items =
-                            new[]
-                            {
+                            [
                                 new InspectableItem(references.HardPointerIds, true, true, getChildren(references.HardPointerIds), name: "Hard pointer"),
                                 new InspectableItem(references.SoftPointerIds, false, true, getChildren(references.SoftPointerIds), name: "Soft pointer"),
                                 new InspectableItem(references.HardOwnershipIds, false, true, getChildren(references.HardOwnershipIds), name: "Hard ownership"),
                                 new InspectableItem(references.SoftOwnershipIds, false, true, getChildren(references.SoftOwnershipIds), name: "Soft ownership"),
-                            };
+                            ];
                         break;
                     default: break;
                 }
@@ -194,7 +194,7 @@ namespace Gile.AutoCAD.R25.Inspector
         {
             get
             {
-                return properties ?? Enumerable.Empty<PropertyItem>();
+                return properties ?? [];
             }
             set
             {
@@ -233,7 +233,7 @@ namespace Gile.AutoCAD.R25.Inspector
             var item = (InspectableItem)obj;
             Properties = item.Value switch
             {
-                null => Enumerable.Empty<PropertyItem>(),
+                null => [],
                 ObjectId id when !id.IsNull => ListObjectIdProperties(id),
                 DBObject dBObject => ListDBObjectProperties(dBObject),
                 ResultBuffer resbuf => ListResultBufferProperties(resbuf),
@@ -468,6 +468,10 @@ namespace Gile.AutoCAD.R25.Inspector
                 case DataColumn column:
                     var cells = new DataCellCollection(column);
                     yield return new PropertyItem("Cells", cells, typeof(DataColumn), true);
+                    break;
+                case ObjectContextManager contextManager:
+                    var scales = new AnnotationScaleCollection(contextManager);
+                    yield return new PropertyItem("Annotation Scales", scales, typeof(ObjectContextManager), true);
                     break;
                 default:
                     break;

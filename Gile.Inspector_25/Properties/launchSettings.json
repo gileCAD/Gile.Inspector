@@ -2,7 +2,7 @@
   "profiles": {
     "Gile.Inspector_25": {
       "commandName": "Executable",
-      "executablePath": "F:\\Program Files\\Autodesk\\AutoCAD 2025\\acad.exe",
+      "executablePath": "F:\\Program Files\\Autodesk\\AutoCAD 2026\\acad.exe",
       "commandLineArgs": "/nologo /b \"start.scr\""
     }
   }

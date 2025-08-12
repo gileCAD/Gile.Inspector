@@ -62,6 +62,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\AnnotationScaleCollection.cs" />
     <Compile Include="Model\ContextMenu.cs" />
     <Compile Include="Model\DataCellCollection.cs" />
     <Compile Include="Model\DataColumnCollection.cs" />
