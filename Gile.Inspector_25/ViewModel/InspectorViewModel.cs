@@ -136,6 +136,10 @@ namespace Gile.AutoCAD.R25.Inspector
                     case PolylineVertices vertices: items = fromIEnumerable(vertices.Vertices); break;
                     case Polyline3dVertices vertices: items = fromICollection<DBObject>(vertices.Vertices); break;
                     case Polyline2dVertices vertices: items = fromICollection<DBObject>(vertices.Vertices); break;
+                    case PolygonMeshVertices vertices: items = fromICollection<DBObject>(vertices.Vertices); break;
+                    case PolyFaceMeshVertices vertices: items = fromICollection<DBObject>(vertices.Vertices); break;
+                    case PolyFaceMeshFaces faces: items = fromICollection<DBObject>(faces.Faces); break;
+                    case FaceRecordVertices vertices: items = fromObject(vertices.VertexIndices); break;
                     case ViewportCollection viewports: items = fromICollection<ObjectId>(viewports.Viewports); break;
                     case AnnotationScaleCollection scales: items = fromIEnumerable(scales.AnnotationScales); break;
                     case IReferences references:
@@ -342,6 +346,16 @@ namespace Gile.AutoCAD.R25.Inspector
                     break;
                 case Polyline2d pl2d:
                     yield return new PropertyItem("Vertices", new Polyline2dVertices(pl2d), typeof(Polyline2d), true);
+                    break;
+                case PolygonMesh mesh:
+                    yield return new PropertyItem("Vertices", new PolygonMeshVertices(mesh), typeof(PolygonMesh), true);
+                    break;
+                case PolyFaceMesh mesh:
+                    yield return new PropertyItem("Vertices", new PolyFaceMeshVertices(mesh), typeof(PolyFaceMesh), true);
+                    yield return new PropertyItem("Faces", new PolyFaceMeshFaces(mesh), typeof(PolyFaceMesh), true);
+                    break;
+                case FaceRecord face:
+                    yield return new PropertyItem("VertexIndices", new FaceRecordVertices(face), typeof(FaceRecord), true);
                     break;
                 case Mline mline:
                     yield return new PropertyItem("Vertices", new MlineVertices(mline), typeof(Mline), true);
