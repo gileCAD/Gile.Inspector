@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using Gile.AutoCAD.R25.Inspector.ViewModel;
+
+using System.Windows;
 
 namespace Gile.AutoCAD.R25.Inspector
 {

@@ -5,6 +5,8 @@ using Autodesk.AutoCAD.GraphicsInterface;
 using Autodesk.AutoCAD.LayerManager;
 using Autodesk.AutoCAD.Runtime;
 
+using Gile.AutoCAD.R25.Inspector.Model;
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,7 +18,7 @@ using System.Reflection;
 using AcAp = Autodesk.AutoCAD.ApplicationServices.Core.Application;
 using AcDb = Autodesk.AutoCAD.DatabaseServices;
 
-namespace Gile.AutoCAD.R25.Inspector
+namespace Gile.AutoCAD.R25.Inspector.ViewModel
 {
     /// <summary>
     /// Interaction logic for InspectorDialog.xaml
@@ -132,7 +134,7 @@ namespace Gile.AutoCAD.R25.Inspector
                     case HatchLoopCollection loops: items = fromIEnumerable(loops.Loops); break;
                     case DataColumnCollection columns: items = fromIEnumerable(columns.Columns); break;
                     case DataRowCollection rows: items = fromIEnumerable(rows.Rows); break;
-                    case DataCellCollection cells: items = fromIEnumerable(cells.Cells); break;
+                    case Model.DataCellCollection cells: items = fromIEnumerable(cells.Cells); break;
                     case PolylineVertices vertices: items = fromIEnumerable(vertices.Vertices); break;
                     case Polyline3dVertices vertices: items = fromICollection<DBObject>(vertices.Vertices); break;
                     case Polyline2dVertices vertices: items = fromICollection<DBObject>(vertices.Vertices); break;
@@ -326,8 +328,8 @@ namespace Gile.AutoCAD.R25.Inspector
                         value != null &&
                         isInspectable &&
                         CheckIsInspectable(value) &&
-                        !((value is ObjectId id) && id == dbObj.ObjectId) &&
-                        !((value is DBObject obj) && obj.GetType() == dbObj.GetType() && obj.Handle == dbObj.Handle);
+                        !(value is ObjectId id && id == dbObj.ObjectId) &&
+                        !(value is DBObject obj && obj.GetType() == dbObj.GetType() && obj.Handle == dbObj.Handle);
                     yield return new PropertyItem(name, value, subType, isInspectable);
                 }
             }
@@ -384,7 +386,7 @@ namespace Gile.AutoCAD.R25.Inspector
                     break;
                 case Region _:
                 case Solid3d _:
-                    var fullSubentityPath = new FullSubentityPath([dbObj.ObjectId], new SubentityId(SubentityType.Null, IntPtr.Zero));
+                    var fullSubentityPath = new FullSubentityPath([dbObj.ObjectId], new SubentityId(SubentityType.Null, nint.Zero));
                     yield return new PropertyItem("Boundary representation", new Brep(fullSubentityPath), dbObj.GetType(), true);
                     break;
                 case AcDb.Surface surface:
@@ -477,7 +479,7 @@ namespace Gile.AutoCAD.R25.Inspector
                         "AllowedValues", allowedValues, typeof(DynamicBlockReferenceProperty), 0 < allowedValues.Length);
                     break;
                 case DataColumn column:
-                    var cells = new DataCellCollection(column);
+                    var cells = new Model.DataCellCollection(column);
                     yield return new PropertyItem("Cells", cells, typeof(DataColumn), true);
                     break;
                 case ObjectContextManager contextManager:
