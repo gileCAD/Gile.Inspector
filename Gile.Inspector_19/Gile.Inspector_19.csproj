@@ -63,13 +63,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Model\AnnotationScaleCollection.cs" />
+    <Compile Include="Model\ComplexEntityVertices.cs" />
     <Compile Include="Model\ContextMenu.cs" />
     <Compile Include="Model\DataCellCollection.cs" />
     <Compile Include="Model\DataColumnCollection.cs" />
     <Compile Include="Model\DataRow.cs" />
     <Compile Include="Model\DataRowCollection.cs" />
+    <Compile Include="Model\FaceRecordVertices.cs" />
     <Compile Include="Model\HatchLoopCollection.cs" />
     <Compile Include="Model\IReferences.cs" />
+    <Compile Include="Model\PolyFaceMeshFaces.cs" />
+    <Compile Include="Model\PolyFaceMeshVertices.cs" />
+    <Compile Include="Model\PolygonMeshVertices.cs" />
     <Compile Include="Model\ViewportCollection.cs" />
     <Compile Include="ViewModel\ItemBase.cs" />
     <Compile Include="Model\Commands.cs" />
