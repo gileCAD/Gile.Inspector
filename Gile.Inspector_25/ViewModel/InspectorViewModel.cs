@@ -237,12 +237,9 @@ namespace Gile.AutoCAD.R25.Inspector
                 ObjectId id when !id.IsNull => ListObjectIdProperties(id),
                 DBObject dBObject => ListDBObjectProperties(dBObject),
                 ResultBuffer resbuf => ListResultBufferProperties(resbuf),
-                DoubleCollection doubles => ListCollection(doubles),
-                Point3dCollection points => ListCollection(points),
-                Point2dCollection points => ListCollection(points),
                 LayerFilter filter => ListLayerFilterProperties(filter),
                 Dictionary<string, string>.Enumerator dict => ListDictEnumProperties(dict),
-                object[] objs => ListCollection(objs),
+                IList list => ListCollection(list),
                 _ => ListProperties(item.Value)
             };
         }

@@ -230,12 +230,9 @@ namespace Gile.AutoCAD.R19.Inspector
                 case ObjectId id when !id.IsNull: Properties = ListObjectIdProperties(id); break;
                 case DBObject dBObject: Properties = ListDBObjectProperties(dBObject); break;
                 case ResultBuffer resbuf: Properties = ListResultBufferProperties(resbuf); break;
-                case DoubleCollection doubles: Properties = ListCollection(doubles); break;
-                case Point3dCollection points: Properties = ListCollection(points); break;
-                case Point2dCollection points: Properties = ListCollection(points); break;
                 case LayerFilter filter: Properties = ListLayerFilterProperties(filter); break;
                 case Dictionary<string, string>.Enumerator dict: Properties = ListDictEnumProperties(dict); break;
-                case object[] objs: Properties = ListCollection(objs); break;
+                case IList list: Properties = ListCollection(list); break;
                 default: Properties = ListProperties(item.Value); break;
             }
         }
