@@ -4,7 +4,7 @@ using Autodesk.AutoCAD.Runtime;
 
 using System;
 
-namespace Gile.AutoCAD.R25.Inspector
+namespace Gile.AutoCAD.R25.Inspector.Model
 {
     /// <summary>
     /// Defines a reference filer.
@@ -79,7 +79,7 @@ namespace Gile.AutoCAD.R25.Inspector
             get { return ErrorStatus.OK; }
             set { }
         }
-        public override IntPtr ReadAddress() => IntPtr.Zero;
+        public override nint ReadAddress() => nint.Zero;
         public override byte[] ReadBinaryChunk() => Array.Empty<byte>();
         public override bool ReadBoolean() => false;
         public override byte ReadByte() => 0;
@@ -104,7 +104,7 @@ namespace Gile.AutoCAD.R25.Inspector
         public override Vector3d ReadVector3d() => default;
         public override void ResetFilerStatus() { }
         public override void Seek(long offset, int method) { }
-        public override void WriteAddress(IntPtr value) { }
+        public override void WriteAddress(nint value) { }
         public override void WriteBinaryChunk(byte[] chunk) { }
         public override void WriteBoolean(bool value) { }
         public override void WriteByte(byte value) { }

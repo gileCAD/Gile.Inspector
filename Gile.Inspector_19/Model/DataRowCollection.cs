@@ -1,14 +1,6 @@
 ﻿using Autodesk.AutoCAD.DatabaseServices;
 
-using AcDb = Autodesk.AutoCAD.DatabaseServices;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Gile.AutoCAD.R19.Inspector
+namespace Gile.AutoCAD.R19.Inspector.Model
 {
     /// <summary>
     /// Describes the columns of a DataTable.

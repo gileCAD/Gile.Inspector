@@ -3,7 +3,7 @@
     "Gile.Inspector_25": {
       "commandName": "Executable",
       "executablePath": "F:\\Program Files\\Autodesk\\AutoCAD 2026\\acad.exe",
-      "commandLineArgs": "/nologo /b \"start.scr\""
+      "commandLineArgs": "/nologo /b \"$(MSBuildProjectDirectory)\\start.scr\""
     }
   }
 }

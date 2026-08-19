@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 
-namespace Gile.AutoCAD.R19.Inspector
+namespace Gile.AutoCAD.R19.Inspector.ViewModel
 {
     /// <summary>
     /// Base class for TreeView and ListView items.

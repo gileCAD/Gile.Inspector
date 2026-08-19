@@ -1,6 +1,6 @@
 ﻿using Autodesk.AutoCAD.DatabaseServices;
 
-namespace Gile.AutoCAD.R25.Inspector
+namespace Gile.AutoCAD.R25.Inspector.Model
 {
     /// <summary>
     /// Describes the objects that a DBObject references to.

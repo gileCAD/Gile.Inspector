@@ -1,13 +1,15 @@
 ﻿using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.Runtime;
 
+using Gile.AutoCAD.R25.Inspector.Model;
+
 using System;
 
 using AcAp = Autodesk.AutoCAD.ApplicationServices.Application;
 
-[assembly: ExtensionApplication(typeof(Gile.AutoCAD.R25.Inspector.Initialization))]
+[assembly: ExtensionApplication(typeof(Initialization))]
 
-namespace Gile.AutoCAD.R25.Inspector
+namespace Gile.AutoCAD.R25.Inspector.Model
 {
     /// <summary>
     /// Defines the application initialization.
@@ -16,7 +18,7 @@ namespace Gile.AutoCAD.R25.Inspector
     {
         static InspectorContextMenu? defaultContextMenu;
         static InspectorContextMenu? objectContextMenu;
-        static RXClass entityClass = RXObject.GetClass(typeof(Entity));
+        static readonly RXClass entityClass = RXObject.GetClass(typeof(Entity));
 
         /// <summary>
         /// Initializes the application.
@@ -27,15 +29,15 @@ namespace Gile.AutoCAD.R25.Inspector
             AcAp.AddDefaultContextMenuExtension(defaultContextMenu);
             objectContextMenu = new InspectorContextMenu(false);
             AcAp.AddObjectContextMenuExtension(entityClass, objectContextMenu);
-            AcAp.Idle += OnIdle;
+            Autodesk.AutoCAD.ApplicationServices.Core.Application.Idle += OnIdle;
         }
 
         private void OnIdle(object? sender, EventArgs e)
         {
-            var doc = AcAp.DocumentManager.MdiActiveDocument;
+            var doc = Autodesk.AutoCAD.ApplicationServices.Core.Application.DocumentManager.MdiActiveDocument;
             if (doc != null)
             {
-                AcAp.Idle -= OnIdle;
+                Autodesk.AutoCAD.ApplicationServices.Core.Application.Idle -= OnIdle;
                 doc.Editor.WriteMessage("\nGile.Inspector loaded.\n");
             }
         }

@@ -1,6 +1,8 @@
-﻿using System.Windows;
+﻿using Gile.AutoCAD.R25.Inspector.ViewModel;
 
-namespace Gile.AutoCAD.R25.Inspector
+using System.Windows;
+
+namespace Gile.AutoCAD.R25.Inspector.View
 {
     /// <summary>
     /// Code behind.

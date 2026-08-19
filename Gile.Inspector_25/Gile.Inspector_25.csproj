@@ -16,7 +16,7 @@
 	</ItemGroup>
   <ItemGroup>
     <None Update="start.scr">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>

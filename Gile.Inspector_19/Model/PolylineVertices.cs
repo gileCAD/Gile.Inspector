@@ -3,7 +3,7 @@ using Autodesk.AutoCAD.Geometry;
 
 using System.Collections.Generic;
 
-namespace Gile.AutoCAD.R19.Inspector
+namespace Gile.AutoCAD.R19.Inspector.Model
 {
     /// <summary>
     /// Describes a collection of PolylineVertex

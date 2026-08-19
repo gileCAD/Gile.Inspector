@@ -1,6 +1,8 @@
-﻿using System.Windows;
+﻿using Gile.AutoCAD.R19.Inspector.ViewModel;
 
-namespace Gile.AutoCAD.R19.Inspector
+using System.Windows;
+
+namespace Gile.AutoCAD.R19.Inspector.View
 {
     /// <summary>
     /// Code behind.

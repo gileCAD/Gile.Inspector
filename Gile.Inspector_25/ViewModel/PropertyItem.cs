@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Gile.AutoCAD.R25.Inspector
+namespace Gile.AutoCAD.R25.Inspector.ViewModel
 {
     /// <summary>
     /// Type bounded to the items in the ListView control.

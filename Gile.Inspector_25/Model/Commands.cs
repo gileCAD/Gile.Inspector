@@ -2,11 +2,14 @@
 using Autodesk.AutoCAD.EditorInput;
 using Autodesk.AutoCAD.Runtime;
 
+using Gile.AutoCAD.R25.Inspector.Model;
+using Gile.AutoCAD.R25.Inspector.ViewModel;
+
 using AcAp = Autodesk.AutoCAD.ApplicationServices.Core.Application;
 
-[assembly: CommandClass(typeof(Gile.AutoCAD.R25.Inspector.Commands))]
+[assembly: CommandClass(typeof(Commands))]
 
-namespace Gile.AutoCAD.R25.Inspector
+namespace Gile.AutoCAD.R25.Inspector.Model
 {
     /// <summary>
     /// Defines AutoCAD commands.

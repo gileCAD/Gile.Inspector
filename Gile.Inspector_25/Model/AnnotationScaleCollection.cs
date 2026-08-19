@@ -3,28 +3,22 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Gile.AutoCAD.R25.Inspector
+namespace Gile.AutoCAD.R25.Inspector.Model
 {
     /// <summary>
     /// Describes a collection of Annotation Scales.
     /// </summary>
-    public class AnnotationScaleCollection
+    /// <remarks>
+    /// Creates an new instance of AnnotationScales.
+    /// </remarks>
+    /// <param name="contextManager">ObjectContextManager instance.</param>
+    public class AnnotationScaleCollection(ObjectContextManager contextManager)
     {
         /// <summary>
         /// Gets the Annotation Scales list.
         /// </summary>
-        public List<AnnotationScale> AnnotationScales { get; }
-
-        /// <summary>
-        /// Creates an new instance of AnnotationScales.
-        /// </summary>
-        /// <param name="contextManager">ObjectContextManager instance.</param>
-        public AnnotationScaleCollection(ObjectContextManager contextManager)
-        {
-            AnnotationScales = contextManager
+        public List<AnnotationScale> AnnotationScales { get; } = [.. contextManager
                 .GetContextCollection("ACDB_ANNOTATIONSCALES")
-                .Cast<AnnotationScale>()
-                .ToList();
-        }
+                .Cast<AnnotationScale>()];
     }
 }

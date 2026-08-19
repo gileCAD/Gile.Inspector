@@ -3,14 +3,14 @@ using Autodesk.AutoCAD.Windows;
 
 using System;
 
-namespace Gile.AutoCAD.R25.Inspector
+namespace Gile.AutoCAD.R25.Inspector.Model
 {
     /// <summary>
     /// Defines a context menu extension.
     /// </summary>
     class InspectorContextMenu : ContextMenuExtension
     {
-        private static Document ActiveDocument => Application.DocumentManager.MdiActiveDocument;
+        private static Document ActiveDocument => Autodesk.AutoCAD.ApplicationServices.Core.Application.DocumentManager.MdiActiveDocument;
 
         /// <summary>
         /// Creates a new instance of InspectorContextMenu.

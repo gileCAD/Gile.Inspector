@@ -2,7 +2,7 @@
 
 using System.Collections;
 
-namespace Gile.AutoCAD.R19.Inspector
+namespace Gile.AutoCAD.R19.Inspector.Model
 {
     /// <summary>
     /// Base class for complex enities (DXF POLYLINE) vertices;

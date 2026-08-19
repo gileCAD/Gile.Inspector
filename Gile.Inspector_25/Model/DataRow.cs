@@ -1,4 +1,4 @@
-﻿namespace Gile.AutoCAD.R25.Inspector
+﻿namespace Gile.AutoCAD.R25.Inspector.Model
 {
     /// <summary>
     /// Describes a row of DataTable.
