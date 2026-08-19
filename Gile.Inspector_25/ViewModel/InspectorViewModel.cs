@@ -228,7 +228,7 @@ namespace Gile.AutoCAD.R25.Inspector.ViewModel
         /// <summary>
         /// Shows a new InpectorDialog window bounded to the current instance.
         /// </summary>
-        public void ShowDialog() => AcAp.ShowModalWindow(new InspectorDialog(this));
+        public void ShowDialog() => AcAp.ShowModalWindow(new View.InspectorDialog(this));
 
         /// <summary>
         /// Handles the TreeView_SelectedItemChanged event.

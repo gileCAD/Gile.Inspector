@@ -2,7 +2,7 @@
 
 using System.Windows;
 
-namespace Gile.AutoCAD.R25.Inspector
+namespace Gile.AutoCAD.R25.Inspector.View
 {
     /// <summary>
     /// Code behind.
