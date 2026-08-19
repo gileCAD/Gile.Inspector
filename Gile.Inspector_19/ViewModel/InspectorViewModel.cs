@@ -125,7 +125,7 @@ namespace Gile.AutoCAD.R19.Inspector.ViewModel
                     default: items = fromObject(value); break;
                 }
             }
-            else if (type.Namespace == "Gile.AutoCAD.R19.Inspector")
+            else if (type.Namespace == "Gile.AutoCAD.R19.Inspector.Model")
             {
                 switch (value)
                 {

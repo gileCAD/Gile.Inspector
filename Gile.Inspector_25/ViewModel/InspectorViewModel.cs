@@ -124,7 +124,7 @@ namespace Gile.AutoCAD.R25.Inspector.ViewModel
                     default: items = fromObject(value); break;
                 }
             }
-            else if (type.Namespace != null && type.Namespace == "Gile.AutoCAD.R25.Inspector")
+            else if (type.Namespace != null && type.Namespace == "Gile.AutoCAD.R25.Inspector.Model")
             {
                 switch (value)
                 {
